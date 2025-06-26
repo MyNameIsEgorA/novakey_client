@@ -1,0 +1,6 @@
+services:
+  tisit-labs-frontend:
+    build:
+      context: .
+    ports:
+      - "4177:4177"
