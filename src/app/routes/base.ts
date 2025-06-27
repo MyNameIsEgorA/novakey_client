@@ -8,5 +8,6 @@ export const AppRoutes = {
     list: "/buyer/list",
     chats: "/buyer/chats",
     profile: "/buyer/profile",
+    buyer: "/buyer/object_info/:id",
   },
 };

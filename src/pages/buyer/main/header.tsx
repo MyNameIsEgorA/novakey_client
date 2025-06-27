@@ -6,11 +6,13 @@ import type { FC } from "react";
 export interface BuyerHeaderProps {
   title?: string;
   description?: string;
+  hideOnMobile?: boolean; // New prop
 }
 
 export const BuyerHeader: FC<BuyerHeaderProps> = ({
   title = "Главная",
   description = "Найдите идеальную недвижимость",
+  hideOnMobile = false, // Default to false, so it shows on mobile by default
 }) => {
   const isMobile = useIsMobile();
 
@@ -44,34 +46,35 @@ export const BuyerHeader: FC<BuyerHeaderProps> = ({
           </div>
         </header>
       )}
-      {isMobile && (
-        <div className="px-6 pt-12 pb-4 bg-white">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <p className="text-gray-500 text-sm mb-1">Доброе утро,</p>
-              <h1 className="text-black">Анна</h1>
+      {isMobile &&
+        !hideOnMobile && ( // Added conditional rendering based on hideOnMobile
+          <div className="px-6 pt-12 pb-4 bg-white">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <p className="text-gray-500 text-sm mb-1">Доброе утро,</p>
+                <h1 className="text-black">Анна</h1>
+              </div>
+              <button className="w-12 h-12 rounded-full overflow-hidden hover:ring-2 hover:ring-blue-500 transition-all">
+                <ImageWithFallback
+                  src={
+                    "https://images.unsplash.com/photo-1494790108755-2616b612b8db?w=100&h=100&fit=crop&crop=face"
+                  }
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              </button>
             </div>
-            <button className="w-12 h-12 rounded-full overflow-hidden hover:ring-2 hover:ring-blue-500 transition-all">
-              <ImageWithFallback
-                src={
-                  "https://images.unsplash.com/photo-1494790108755-2616b612b8db?w=100&h=100&fit=crop&crop=face"
-                }
-                alt="Profile"
-                className="w-full h-full object-cover"
-              />
-            </button>
-          </div>
 
-          <div className="relative">
-            <input
-              type="text"
-              placeholder={"Поиск квартир, районов..."}
-              className="w-full bg-gray-100 rounded-xl px-4 py-3 pr-10 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
-            />
-            <Search className="w-5 h-5 text-gray-400 absolute right-3 top-1/2 transform -translate-y-1/2" />
+            <div className="relative">
+              <input
+                type="text"
+                placeholder={"Поиск квартир, районов..."}
+                className="w-full bg-gray-100 rounded-xl px-4 py-3 pr-10 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
+              />
+              <Search className="w-5 h-5 text-gray-400 absolute right-3 top-1/2 transform -translate-y-1/2" />
+            </div>
           </div>
-        </div>
-      )}
+        )}
     </>
   );
 };

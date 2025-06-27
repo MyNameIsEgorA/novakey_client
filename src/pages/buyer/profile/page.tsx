@@ -10,6 +10,7 @@ export const BuyerProfilePage = () => {
     <div>
       <BuyerHeader
         title={"Профиль"}
+        hideOnMobile={true}
         description={"Управление профилем и настройками"}
       />
       <Profile
