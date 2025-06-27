@@ -10,4 +10,7 @@ export const AppRoutes = {
     profile: "/buyer/profile",
     buyer: "/buyer/object_info/:id",
   },
+  developer: {
+    main: "/developer/main",
+  },
 };

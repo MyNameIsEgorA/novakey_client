@@ -11,6 +11,8 @@ import { BuyerChatPage } from "@/pages/buyer/chat/page.tsx";
 import { BuyerSearchPage } from "@/pages/buyer/search/page.tsx";
 import { BuyerObjectInfoPage } from "@/pages/buyer/objectInfo/page.tsx";
 import { BuyerMapPage } from "@/pages/buyer/map/page.tsx";
+import { DeveloperLayout } from "@/pages/developer/Layout.tsx";
+import { DeveloperMainPage } from "@/pages/developer/main/page.tsx";
 
 const App: React.FC = () => {
   return (
@@ -32,6 +34,9 @@ const App: React.FC = () => {
             path={"object_info/:id"}
             element={<BuyerObjectInfoPage />}
           ></Route>
+        </Route>
+        <Route path={"/developer"} element={<DeveloperLayout />}>
+          <Route path={"main"} element={<DeveloperMainPage />} />
         </Route>
       </Routes>
     </Router>

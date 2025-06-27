@@ -36,7 +36,9 @@ export function DeveloperAuthPage() {
   const onBack = () => {
     navigate(AppRoutes.authUserSelection);
   };
-  const onSuccess = () => {};
+  const onSuccess = () => {
+    navigate(AppRoutes.developer.main);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

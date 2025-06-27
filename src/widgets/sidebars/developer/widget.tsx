@@ -13,12 +13,11 @@ interface NavigationItem {
   badge?: number;
 }
 
-export const BuyerSidebar = () => {
+export const DeveloperSidebar = () => {
   const navigate = useNavigate();
   const location = useLocation(); // Получаем текущий путь
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  // Обновление ширины окна при ресайзе
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -28,12 +27,12 @@ export const BuyerSidebar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const navigationItems: NavigationItem[] = [
+  let navigationItems: NavigationItem[] = [
     {
       id: "home",
       icon: Home,
       label: "Главная",
-      page: AppRoutes.buyer.home,
+      page: AppRoutes.developer.main,
     },
     {
       id: "map",
@@ -44,19 +43,31 @@ export const BuyerSidebar = () => {
     {
       id: "list",
       icon: Search,
-      label: "Поиск",
+      label: "Мои объекты",
       page: AppRoutes.buyer.list,
     },
     {
       id: "chat",
       icon: MessageSquare,
-      label: "Чаты",
+      label: "CRM",
       page: AppRoutes.buyer.chats,
     },
     {
       id: "profile",
       icon: User,
+      label: "Календарь",
+      page: AppRoutes.buyer.profile,
+    },
+    {
+      id: "profile",
+      icon: User,
       label: "Профиль",
+      page: AppRoutes.buyer.profile,
+    },
+    {
+      id: "profile",
+      icon: User,
+      label: "Добавить объект",
       page: AppRoutes.buyer.profile,
     },
   ];
@@ -68,6 +79,11 @@ export const BuyerSidebar = () => {
   };
 
   const isMobile = windowWidth < 1024;
+
+  if (isMobile) {
+    navigationItems = navigationItems.slice(0, 6);
+  }
+
   const currentScreen = location.pathname;
 
   return (
@@ -77,7 +93,7 @@ export const BuyerSidebar = () => {
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center">
               <NovaKeyLogo className="text-xl" />
-              <span className="ml-2 text-s text-gray-500">Покупатель</span>
+              <span className="ml-2 text-s text-gray-500">Застройщик</span>
             </div>
           </div>
 
@@ -95,7 +111,8 @@ export const BuyerSidebar = () => {
                 <h3 className="text-sm font-medium text-gray-900">
                   Анна Смирнова
                 </h3>
-                <p className="text-xs text-gray-500">Покупатель</p>
+                <p className="text-xs text-gray-500">СтройИнвест</p>
+                <p className="text-emerald-600 text-xs">Рейтинг 4.8 ⭐</p>
               </div>
             </div>
           </div>
@@ -145,7 +162,7 @@ export const BuyerSidebar = () => {
                 <div className="relative">
                   <item.icon className="w-6 h-6" />
                 </div>
-                <span className="text-xs mt-1">{item.label}</span>
+                <span className="text-[10px] mt-1">{item.label}</span>
               </button>
             ))}
           </nav>
