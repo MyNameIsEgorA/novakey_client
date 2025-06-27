@@ -1,11 +1,6 @@
 import { User, Building2 } from "lucide-react";
-import exampleImage from 'figma:asset/abb5945e1527d9b4f8d1325afb28bbc846c8abb9.png';
+import { useNavigate } from "react-router-dom";
 
-interface UserTypeSelectionProps {
-  onSelectUserType: (type: 'buyer' | 'developer') => void;
-}
-
-// Minimalist NovaKey Logo Component
 function NovaKeyLogo({ className = "text-2xl" }: { className?: string }) {
   return (
     <div className={`${className} tracking-tight`}>
@@ -15,7 +10,12 @@ function NovaKeyLogo({ className = "text-2xl" }: { className?: string }) {
   );
 }
 
-export function UserTypeSelection({ onSelectUserType }: UserTypeSelectionProps) {
+export function AuthUserSelectionPage() {
+  const navigate = useNavigate();
+
+  const onSelectUserType = (userType: "buyer" | "developer") => {
+    navigate(`/auth/${userType}`);
+  };
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Mobile Layout */}
@@ -31,7 +31,7 @@ export function UserTypeSelection({ onSelectUserType }: UserTypeSelectionProps) 
           {/* User Type Cards */}
           <div className="space-y-4 mb-8">
             <button
-              onClick={() => onSelectUserType('buyer')}
+              onClick={() => onSelectUserType("buyer")}
               className="w-full p-6 bg-white rounded-2xl border-2 border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300 text-left"
             >
               <div className="flex items-center">
@@ -46,7 +46,7 @@ export function UserTypeSelection({ onSelectUserType }: UserTypeSelectionProps) 
             </button>
 
             <button
-              onClick={() => onSelectUserType('developer')}
+              onClick={() => onSelectUserType("developer")}
               className="w-full p-6 bg-white rounded-2xl border-2 border-gray-200 hover:border-emerald-300 hover:shadow-lg transition-all duration-300 text-left"
             >
               <div className="flex items-center">
@@ -71,50 +71,65 @@ export function UserTypeSelection({ onSelectUserType }: UserTypeSelectionProps) 
             <div className="w-full max-w-lg">
               <div className="grid gap-6">
                 {/* Built for Meaningful Connections Card */}
-                <div 
+                <div
                   className="relative rounded-3xl p-8 text-white overflow-hidden min-h-[200px] flex flex-col justify-between"
-                  style={{ 
-                    background: 'linear-gradient(135deg, #a8e6cf 0%, #dcedc8 50%, #f8bbd9 100%)'
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #a8e6cf 0%, #dcedc8 50%, #f8bbd9 100%)",
                   }}
                 >
-                  <div className="absolute top-6 right-6 text-white/70 text-sm">/ 01</div>
+                  <div className="absolute top-6 right-6 text-white/70 text-sm">
+                    / 01
+                  </div>
                   <h3 className="text-2xl leading-tight">
-                    Создан для значимых<br />
+                    Создан для значимых
+                    <br />
                     подключений
                   </h3>
                 </div>
 
                 <div className="grid grid-cols-2 gap-6">
                   {/* Get the App Card */}
-                  <div 
+                  <div
                     className="relative rounded-3xl p-6 text-white overflow-hidden min-h-[280px]"
-                    style={{ 
-                      background: 'linear-gradient(135deg, #ce93d8 0%, #f8bbd9 100%)'
+                    style={{
+                      background:
+                        "linear-gradient(135deg, #ce93d8 0%, #f8bbd9 100%)",
                     }}
                   >
-                    <div className="absolute top-4 right-4 text-white/70 text-sm">/ 02</div>
+                    <div className="absolute top-4 right-4 text-white/70 text-sm">
+                      / 02
+                    </div>
                     <div className="h-full flex flex-col justify-between">
                       <button className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-sm text-white border border-white/30 self-start">
                         Скачать приложение
                       </button>
                       <div className="text-left">
-                        <div className="text-lg mb-2">"Лучшее приложение для недвижимости"</div>
-                        <div className="text-sm opacity-80">Мария Иванова, Покупатель</div>
+                        <div className="text-lg mb-2">
+                          "Лучшее приложение для недвижимости"
+                        </div>
+                        <div className="text-sm opacity-80">
+                          Мария Иванова, Покупатель
+                        </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Purpose Card */}
-                  <div 
+                  <div
                     className="relative rounded-3xl p-6 text-white overflow-hidden min-h-[280px]"
-                    style={{ 
-                      background: 'linear-gradient(135deg, #4db6ac 0%, #80cbc4 100%)'
+                    style={{
+                      background:
+                        "linear-gradient(135deg, #4db6ac 0%, #80cbc4 100%)",
                     }}
                   >
-                    <div className="absolute top-4 right-4 text-white/70 text-sm">/ 03</div>
+                    <div className="absolute top-4 right-4 text-white/70 text-sm">
+                      / 03
+                    </div>
                     <div className="h-full flex flex-col justify-between">
                       <div className="text-sm">
-                        Вы в одном шаге от<br />
+                        Вы в одном шаге от
+                        <br />
                         следующей главы жизни
                       </div>
                       <div>
@@ -122,7 +137,9 @@ export function UserTypeSelection({ onSelectUserType }: UserTypeSelectionProps) 
                           Присоединиться
                         </button>
                         <div className="text-2xl">50,000+</div>
-                        <div className="text-sm opacity-80">Успешных сделок</div>
+                        <div className="text-sm opacity-80">
+                          Успешных сделок
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -144,7 +161,7 @@ export function UserTypeSelection({ onSelectUserType }: UserTypeSelectionProps) 
 
               <div className="space-y-6">
                 <button
-                  onClick={() => onSelectUserType('buyer')}
+                  onClick={() => onSelectUserType("buyer")}
                   className="w-full p-8 bg-white rounded-2xl border-2 border-gray-200 hover:border-blue-400 hover:shadow-xl transition-all duration-300 text-left group"
                 >
                   <div className="flex items-center">
@@ -161,7 +178,7 @@ export function UserTypeSelection({ onSelectUserType }: UserTypeSelectionProps) 
                 </button>
 
                 <button
-                  onClick={() => onSelectUserType('developer')}
+                  onClick={() => onSelectUserType("developer")}
                   className="w-full p-8 bg-white rounded-2xl border-2 border-gray-200 hover:border-emerald-400 hover:shadow-xl transition-all duration-300 text-left group"
                 >
                   <div className="flex items-center">

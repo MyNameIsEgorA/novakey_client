@@ -1,12 +1,18 @@
 import { useState } from "react";
-import { ArrowLeft, Mail, Phone, User, Lock, Eye, EyeOff, Shield, CheckCircle } from "lucide-react";
+import {
+  ArrowLeft,
+  Mail,
+  Phone,
+  User,
+  Lock,
+  Eye,
+  EyeOff,
+  Shield,
+  CheckCircle,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { AppRoutes } from "@/app/routes/base.ts";
 
-interface BuyerAuthProps {
-  onBack: () => void;
-  onSuccess: () => void;
-}
-
-// Minimalist NovaKey Logo Component
 function NovaKeyLogo({ className = "text-2xl" }: { className?: string }) {
   return (
     <div className={`${className} tracking-tight`}>
@@ -16,22 +22,30 @@ function NovaKeyLogo({ className = "text-2xl" }: { className?: string }) {
   );
 }
 
-export function BuyerAuth({ onBack, onSuccess }: BuyerAuthProps) {
+export function BuyerAuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    password: '',
-    confirmPassword: ''
+    fullName: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
   });
+
+  const navigate = useNavigate();
+
+  const onBack = () => {
+    navigate(AppRoutes.authUserSelection);
+  };
+  const onSuccess = () => {};
+
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       onSuccess();
@@ -40,7 +54,7 @@ export function BuyerAuth({ onBack, onSuccess }: BuyerAuthProps) {
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -50,20 +64,22 @@ export function BuyerAuth({ onBack, onSuccess }: BuyerAuthProps) {
         <div className="max-w-md mx-auto bg-white min-h-screen">
           {/* Mobile Header */}
           <div className="px-6 pt-12 pb-8">
-            <button 
+            <button
               onClick={onBack}
               className="mb-6 p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <ArrowLeft className="w-6 h-6 text-gray-600" />
             </button>
-            
+
             <div className="text-center mb-8">
               <NovaKeyLogo className="text-3xl mb-6" />
               <h1 className="text-2xl text-black mb-2">
-                {isLogin ? 'Вход' : 'Регистрация'}
+                {isLogin ? "Вход" : "Регистрация"}
               </h1>
               <p className="text-gray-600">
-                {isLogin ? 'Добро пожаловать обратно' : 'Создайте аккаунт покупателя'}
+                {isLogin
+                  ? "Добро пожаловать обратно"
+                  : "Создайте аккаунт покупателя"}
               </p>
             </div>
           </div>
@@ -78,7 +94,9 @@ export function BuyerAuth({ onBack, onSuccess }: BuyerAuthProps) {
                     <input
                       type="text"
                       value={formData.fullName}
-                      onChange={(e) => handleInputChange('fullName', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("fullName", e.target.value)
+                      }
                       placeholder="Анна Смирнова"
                       className="w-full bg-gray-100 rounded-xl px-4 py-3 pl-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
                       required={!isLogin}
@@ -94,7 +112,7 @@ export function BuyerAuth({ onBack, onSuccess }: BuyerAuthProps) {
                   <input
                     type="email"
                     value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
                     placeholder="anna@example.com"
                     className="w-full bg-gray-100 rounded-xl px-4 py-3 pl-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
                     required
@@ -110,7 +128,9 @@ export function BuyerAuth({ onBack, onSuccess }: BuyerAuthProps) {
                     <input
                       type="tel"
                       value={formData.phone}
-                      onChange={(e) => handleInputChange('phone', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("phone", e.target.value)
+                      }
                       placeholder="+7 (999) 123-45-67"
                       className="w-full bg-gray-100 rounded-xl px-4 py-3 pl-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
                       required={!isLogin}
@@ -126,7 +146,9 @@ export function BuyerAuth({ onBack, onSuccess }: BuyerAuthProps) {
                   <input
                     type={showPassword ? "text" : "password"}
                     value={formData.password}
-                    onChange={(e) => handleInputChange('password', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("password", e.target.value)
+                    }
                     placeholder="Введите пароль"
                     className="w-full bg-gray-100 rounded-xl px-4 py-3 pl-12 pr-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
                     required
@@ -137,19 +159,27 @@ export function BuyerAuth({ onBack, onSuccess }: BuyerAuthProps) {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
                   </button>
                 </div>
               </div>
 
               {!isLogin && (
                 <div>
-                  <label className="block text-gray-700 mb-2">Подтвердите пароль</label>
+                  <label className="block text-gray-700 mb-2">
+                    Подтвердите пароль
+                  </label>
                   <div className="relative">
                     <input
                       type="password"
                       value={formData.confirmPassword}
-                      onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("confirmPassword", e.target.value)
+                      }
                       placeholder="Повторите пароль"
                       className="w-full bg-gray-100 rounded-xl px-4 py-3 pl-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
                       required={!isLogin}
@@ -164,9 +194,12 @@ export function BuyerAuth({ onBack, onSuccess }: BuyerAuthProps) {
                   <div className="flex items-start">
                     <Shield className="w-5 h-5 text-blue-600 mr-3 mt-0.5" />
                     <div>
-                      <h4 className="text-blue-900 mb-1">Уведомление о госуслугах</h4>
+                      <h4 className="text-blue-900 mb-1">
+                        Уведомление о госуслугах
+                      </h4>
                       <p className="text-blue-700 text-sm">
-                        В будущем планируется интеграция с порталом госуслуг для упрощения процесса покупки недвижимости
+                        В будущем планируется интеграция с порталом госуслуг для
+                        упрощения процесса покупки недвижимости
                       </p>
                     </div>
                   </div>
@@ -181,22 +214,24 @@ export function BuyerAuth({ onBack, onSuccess }: BuyerAuthProps) {
                 {isLoading ? (
                   <>
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
-                    {isLogin ? 'Вход...' : 'Регистрация...'}
+                    {isLogin ? "Вход..." : "Регистрация..."}
                   </>
+                ) : isLogin ? (
+                  "Войти"
                 ) : (
-                  isLogin ? 'Войти' : 'Создать аккаунт'
+                  "Создать аккаунт"
                 )}
               </button>
             </form>
 
             <div className="mt-6 text-center">
               <p className="text-gray-500 text-sm">
-                {isLogin ? 'Нет аккаунта?' : 'Уже есть аккаунт?'}{' '}
-                <button 
+                {isLogin ? "Нет аккаунта?" : "Уже есть аккаунт?"}{" "}
+                <button
                   onClick={() => setIsLogin(!isLogin)}
                   className="text-blue-600 hover:text-blue-700 transition-colors"
                 >
-                  {isLogin ? 'Зарегистрироваться' : 'Войти'}
+                  {isLogin ? "Зарегистрироваться" : "Войти"}
                 </button>
               </p>
             </div>
@@ -212,57 +247,74 @@ export function BuyerAuth({ onBack, onSuccess }: BuyerAuthProps) {
             <div className="w-full max-w-lg">
               <div className="grid gap-6">
                 {/* AR/VR Experience Card */}
-                <div 
+                <div
                   className="relative rounded-3xl p-8 text-white overflow-hidden min-h-[200px] flex flex-col justify-between"
-                  style={{ 
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                   }}
                 >
-                  <div className="absolute top-6 right-6 text-white/70 text-sm">/ 01</div>
+                  <div className="absolute top-6 right-6 text-white/70 text-sm">
+                    / 01
+                  </div>
                   <h3 className="text-2xl leading-tight">
-                    AR/VR просмотры<br />
+                    AR/VR просмотры
+                    <br />
                     недвижимости
                   </h3>
                 </div>
 
                 <div className="grid grid-cols-2 gap-6">
                   {/* Smart Search Card */}
-                  <div 
+                  <div
                     className="relative rounded-3xl p-6 text-white overflow-hidden min-h-[280px]"
-                    style={{ 
-                      background: 'linear-gradient(135deg, #a8e6cf 0%, #88d8c0 100%)'
+                    style={{
+                      background:
+                        "linear-gradient(135deg, #a8e6cf 0%, #88d8c0 100%)",
                     }}
                   >
-                    <div className="absolute top-4 right-4 text-white/70 text-sm">/ 02</div>
+                    <div className="absolute top-4 right-4 text-white/70 text-sm">
+                      / 02
+                    </div>
                     <div className="h-full flex flex-col justify-between">
                       <div className="text-sm">
-                        Умный поиск по<br />
+                        Умный поиск по
+                        <br />
                         всем параметрам
                       </div>
                       <div>
                         <div className="text-2xl mb-2">1000+</div>
-                        <div className="text-sm opacity-80">Объектов в базе</div>
+                        <div className="text-sm opacity-80">
+                          Объектов в базе
+                        </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Testimonial Card */}
-                  <div 
+                  <div
                     className="relative rounded-3xl p-6 text-white overflow-hidden min-h-[280px]"
-                    style={{ 
-                      background: 'linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%)'
+                    style={{
+                      background:
+                        "linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%)",
                     }}
                   >
-                    <div className="absolute top-4 right-4 text-white/70 text-sm">/ 03</div>
+                    <div className="absolute top-4 right-4 text-white/70 text-sm">
+                      / 03
+                    </div>
                     <div className="h-full flex flex-col justify-between">
                       <div className="text-lg">
                         "Нашли квартиру мечты за неделю!"
                       </div>
                       <div>
-                        <div className="text-sm opacity-80 mb-2">Семья Ивановых</div>
+                        <div className="text-sm opacity-80 mb-2">
+                          Семья Ивановых
+                        </div>
                         <div className="flex">
                           {[...Array(5)].map((_, i) => (
-                            <span key={i} className="text-yellow-300 mr-1">★</span>
+                            <span key={i} className="text-yellow-300 mr-1">
+                              ★
+                            </span>
                           ))}
                         </div>
                       </div>
@@ -277,19 +329,21 @@ export function BuyerAuth({ onBack, onSuccess }: BuyerAuthProps) {
           <div className="flex-1 bg-white flex items-center justify-center p-12">
             <div className="max-w-md w-full">
               <div className="text-center mb-8">
-                <button 
+                <button
                   onClick={onBack}
                   className="mb-6 p-3 hover:bg-gray-100 rounded-lg transition-colors self-start"
                 >
                   <ArrowLeft className="w-6 h-6 text-gray-600" />
                 </button>
-                
+
                 <NovaKeyLogo className="text-4xl mb-6" />
                 <h2 className="text-3xl text-black mb-2">
-                  {isLogin ? 'Добро пожаловать' : 'Создать аккаунт'}
+                  {isLogin ? "Добро пожаловать" : "Создать аккаунт"}
                 </h2>
                 <p className="text-gray-600">
-                  {isLogin ? 'Войдите в свой аккаунт покупателя' : 'Зарегистрируйтесь как покупатель'}
+                  {isLogin
+                    ? "Войдите в свой аккаунт покупателя"
+                    : "Зарегистрируйтесь как покупатель"}
                 </p>
               </div>
 
@@ -297,12 +351,16 @@ export function BuyerAuth({ onBack, onSuccess }: BuyerAuthProps) {
                 {/* Desktop form fields - same as mobile but with py-4 */}
                 {!isLogin && (
                   <div>
-                    <label className="block text-gray-700 mb-2">Полное имя</label>
+                    <label className="block text-gray-700 mb-2">
+                      Полное имя
+                    </label>
                     <div className="relative">
                       <input
                         type="text"
                         value={formData.fullName}
-                        onChange={(e) => handleInputChange('fullName', e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("fullName", e.target.value)
+                        }
                         placeholder="Анна Смирнова"
                         className="w-full bg-gray-100 rounded-xl px-4 py-4 pl-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
                         required={!isLogin}
@@ -318,7 +376,9 @@ export function BuyerAuth({ onBack, onSuccess }: BuyerAuthProps) {
                     <input
                       type="email"
                       value={formData.email}
-                      onChange={(e) => handleInputChange('email', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("email", e.target.value)
+                      }
                       placeholder="anna@example.com"
                       className="w-full bg-gray-100 rounded-xl px-4 py-4 pl-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
                       required
@@ -334,7 +394,9 @@ export function BuyerAuth({ onBack, onSuccess }: BuyerAuthProps) {
                       <input
                         type="tel"
                         value={formData.phone}
-                        onChange={(e) => handleInputChange('phone', e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("phone", e.target.value)
+                        }
                         placeholder="+7 (999) 123-45-67"
                         className="w-full bg-gray-100 rounded-xl px-4 py-4 pl-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
                         required={!isLogin}
@@ -350,7 +412,9 @@ export function BuyerAuth({ onBack, onSuccess }: BuyerAuthProps) {
                     <input
                       type={showPassword ? "text" : "password"}
                       value={formData.password}
-                      onChange={(e) => handleInputChange('password', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("password", e.target.value)
+                      }
                       placeholder="Введите пароль"
                       className="w-full bg-gray-100 rounded-xl px-4 py-4 pl-12 pr-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
                       required
@@ -361,19 +425,27 @@ export function BuyerAuth({ onBack, onSuccess }: BuyerAuthProps) {
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                     >
-                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      {showPassword ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
                     </button>
                   </div>
                 </div>
 
                 {!isLogin && (
                   <div>
-                    <label className="block text-gray-700 mb-2">Подтвердите пароль</label>
+                    <label className="block text-gray-700 mb-2">
+                      Подтвердите пароль
+                    </label>
                     <div className="relative">
                       <input
                         type="password"
                         value={formData.confirmPassword}
-                        onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("confirmPassword", e.target.value)
+                        }
                         placeholder="Повторите пароль"
                         className="w-full bg-gray-100 rounded-xl px-4 py-4 pl-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
                         required={!isLogin}
@@ -388,9 +460,12 @@ export function BuyerAuth({ onBack, onSuccess }: BuyerAuthProps) {
                     <div className="flex items-start">
                       <CheckCircle className="w-6 h-6 text-blue-600 mr-3 mt-0.5" />
                       <div>
-                        <h4 className="text-blue-900 mb-2">Интеграция с госуслугами</h4>
+                        <h4 className="text-blue-900 mb-2">
+                          Интеграция с госуслугами
+                        </h4>
                         <p className="text-blue-700 text-sm leading-relaxed">
-                          В скором времени планируется интеграция с порталом госуслуг для упрощения процесса покупки недвижимости
+                          В скором времени планируется интеграция с порталом
+                          госуслуг для упрощения процесса покупки недвижимости
                         </p>
                       </div>
                     </div>
@@ -405,22 +480,24 @@ export function BuyerAuth({ onBack, onSuccess }: BuyerAuthProps) {
                   {isLoading ? (
                     <>
                       <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
-                      {isLogin ? 'Выполняется вход...' : 'Создание аккаунта...'}
+                      {isLogin ? "Выполняется вход..." : "Создание аккаунта..."}
                     </>
+                  ) : isLogin ? (
+                    "Войти в аккаунт"
                   ) : (
-                    isLogin ? 'Войти в аккаунт' : 'Создать аккаунт'
+                    "Создать аккаунт"
                   )}
                 </button>
               </form>
 
               <div className="mt-8 text-center">
                 <p className="text-gray-500">
-                  {isLogin ? 'Нет аккаунта?' : 'Уже есть аккаунт?'}{' '}
-                  <button 
+                  {isLogin ? "Нет аккаунта?" : "Уже есть аккаунт?"}{" "}
+                  <button
                     onClick={() => setIsLogin(!isLogin)}
                     className="text-blue-600 hover:text-blue-700 transition-colors"
                   >
-                    {isLogin ? 'Зарегистрироваться' : 'Войти'}
+                    {isLogin ? "Зарегистрироваться" : "Войти"}
                   </button>
                 </p>
               </div>
