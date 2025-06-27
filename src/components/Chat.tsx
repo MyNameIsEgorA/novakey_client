@@ -12,6 +12,7 @@ import {
   Info,
 } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { BuyerHeader } from "@/pages/buyer/main/header.tsx";
 
 interface ChatProps {
   propertyId?: string | null;
@@ -125,7 +126,6 @@ export function Chat({ propertyId, onBack }: ChatProps) {
 
   const handleSendMessage = () => {
     if (newMessage.trim()) {
-      // Здесь была бы логика отправки сообщения
       console.log("Sending message:", newMessage);
       setNewMessage("");
     }
@@ -139,7 +139,7 @@ export function Chat({ propertyId, onBack }: ChatProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="max-h-[80dvh] bg-gray-50">
       {/* Mobile Layout */}
       <div className="lg:hidden">
         <div className="max-w-md mx-auto bg-white min-h-screen">
@@ -336,7 +336,11 @@ export function Chat({ propertyId, onBack }: ChatProps) {
       </div>
 
       {/* Desktop Layout */}
-      <div className="hidden lg:block h-screen">
+      <div className="hidden lg:block h-[94vh]">
+        <BuyerHeader
+          title={"Сообщения"}
+          description={"Общение с застройщиками и покупателями"}
+        />
         <div className="grid grid-cols-12 h-full">
           {/* Desktop Chat List */}
           <div className="col-span-4 bg-white border-r border-gray-200 flex flex-col">

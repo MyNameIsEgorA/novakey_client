@@ -7,6 +7,7 @@ import { DeveloperAuthPage } from "@/pages/auth/developer/page.tsx";
 import { BuyerLayout } from "@/pages/buyer/Layout.tsx";
 import { BuyerMainPage } from "@/pages/buyer/main/page.tsx";
 import { BuyerProfilePage } from "@/pages/buyer/profile/page.tsx";
+import { BuyerChatPage } from "@/pages/buyer/chat/page.tsx";
 
 const App: React.FC = () => {
   return (
@@ -21,6 +22,7 @@ const App: React.FC = () => {
         <Route path="/buyer" element={<BuyerLayout />}>
           <Route path={"home"} element={<BuyerMainPage />}></Route>
           <Route path={"profile"} element={<BuyerProfilePage />}></Route>
+          <Route path={"chats"} element={<BuyerChatPage />}></Route>
         </Route>
       </Routes>
     </Router>
