@@ -138,7 +138,7 @@ export function MyObjectsPage() {
     navigate(-1);
   };
   const onPropertySelect = (id: string) => {
-    navigate("/");
+    navigate(`/developer/object_info/${id}}`);
   };
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");

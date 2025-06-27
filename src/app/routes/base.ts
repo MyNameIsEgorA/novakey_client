@@ -8,7 +8,7 @@ export const AppRoutes = {
     list: "/buyer/list",
     chats: "/buyer/chats",
     profile: "/buyer/profile",
-    buyer: "/buyer/object_info/:id",
+    object_info: "/buyer/object_info/:id",
   },
   developer: {
     main: "/developer/main",
@@ -19,5 +19,6 @@ export const AppRoutes = {
     profile: "/developer/profile",
     addObject: "/developer/add_object",
     chats: "/developer/chats",
+    object_info: "/developer/object_info/:id",
   },
 };

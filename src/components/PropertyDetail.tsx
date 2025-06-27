@@ -1,21 +1,24 @@
 import { useState } from "react";
 import {
   ArrowLeft,
-  MapPin,
-  Calendar,
-  Maximize,
   Heart,
   Share2,
-  Phone,
-  MessageSquare,
-  Camera,
-  Users,
-  Edit,
-  BarChart3,
-  Star,
-  Eye,
-  Clock,
+  MapPin,
   Home,
+  Users,
+  Calendar,
+  Car,
+  Wifi,
+  Dumbbell,
+  Baby,
+  Eye,
+  Video,
+  MessageSquare,
+  Phone,
+  Star,
+  ChevronLeft,
+  ChevronRight,
+  Calculator,
 } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 
@@ -24,235 +27,258 @@ interface PropertyDetailProps {
   onBack: () => void;
   onStartChat: () => void;
   onStartARViewer: () => void;
-  userType?: "buyer" | "developer" | null;
+  onStartMortgageCalculator?: (price: number) => void;
+  userType: "buyer" | "developer" | null;
 }
+
+const propertyData = {
+  "1": {
+    title: 'ЖК "Северная звезда"',
+    price: "8,5 млн ₽",
+    pricePerSqm: "130,000 ₽/м²",
+    area: "65 м²",
+    rooms: "2",
+    floor: "12/16",
+    address: "ул. Северная, 15, Северный район",
+    images: [
+      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=600&fit=crop",
+    ],
+    amenities: [
+      "Парковка",
+      "Лифт",
+      "Консьерж",
+      "Фитнес-зал",
+      "Детская площадка",
+      "Закрытая территория",
+    ],
+    description:
+      "Современная 2-комнатная квартира в новом жилом комплексе с развитой инфраструктурой. Панорамные окна, качественная отделка, удобная планировка.",
+    developer: "СтройИнвест",
+    completionDate: "4 кв. 2024",
+    rating: 4.8,
+    reviews: 127,
+    status: "Облицовка",
+    hasAR: true,
+    hasVR: false,
+    numericPrice: 8500000,
+  },
+  "2": {
+    title: 'ЖК "Новый Горизонт"',
+    price: "5,2 млн ₽",
+    pricePerSqm: "123,000 ₽/м²",
+    area: "42 м²",
+    rooms: "1",
+    floor: "8/20",
+    address: "пр. Мира, 45, Центральный район",
+    images: [
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1556912173-46c336c7fd55?w=800&h=600&fit=crop",
+    ],
+    amenities: [
+      "Подземная парковка",
+      "Лифт",
+      "Видеонаблюдение",
+      "Детская площадка",
+    ],
+    description:
+      "Уютная 1-комнатная квартира в центре города с развитой инфраструктурой рядом.",
+    developer: "ГлавСтрой",
+    completionDate: "2 кв. 2024",
+    rating: 4.6,
+    reviews: 89,
+    status: "Строительство",
+    hasAR: false,
+    hasVR: true,
+    numericPrice: 5200000,
+  },
+};
+
+const amenityIcons: { [key: string]: any } = {
+  Парковка: Car,
+  "Подземная парковка": Car,
+  Лифт: Home,
+  Консьерж: Users,
+  "Фитнес-зал": Dumbbell,
+  Видеонаблюдение: Eye,
+  "Детская площадка": Baby,
+  "Закрытая территория": Home,
+};
 
 export function PropertyDetail({
   propertyId,
   onBack,
   onStartChat,
   onStartARViewer,
+  onStartMortgageCalculator,
   userType,
 }: PropertyDetailProps) {
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const [showFullscreen, setShowFullscreen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
 
-  // Sample property data
-  const property = {
-    id: propertyId,
-    name: 'ЖК "Северная звезда"',
-    price: "от 8,5 млн ₽",
-    pricePerSqm: 130769,
-    rooms: "2-комн.",
-    area: 65,
-    floor: 5,
-    maxFloor: 16,
-    status: "Облицовка",
-    statusColor: "orange",
-    district: "Северный",
-    developer: "СтройИнвест",
-    location: "г. Москва, Северный район, ул. Звездная, 15",
-    deliveryDate: "4 кв. 2024",
-    description:
-      "Современный жилой комплекс в развивающемся районе с отличной транспортной доступностью. Квартира с улучшенной планировкой, большими окнами и видом на парк.",
-    images: [
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1560448075-bb485b067938?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=600&fit=crop",
-    ],
-    amenities: ["Балкон", "Лифт", "Парковка", "Детская площадка", "Консьерж"],
-    nearTransport: true,
-    nearSchool: true,
-    nearShops: true,
-    rating: 4.8,
-    reviews: 24,
-    // Developer specific data
-    ...(userType === "developer" && {
-      totalApartments: 120,
-      soldApartments: 45,
-      viewsCount: 1240,
-      inquiriesCount: 28,
-      averageViewTime: "3:45",
-      lastUpdate: "2 дня назад",
-    }),
+  const property = propertyData[propertyId as keyof typeof propertyData];
+
+  if (!property) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl text-black mb-2">Объект не найден</h2>
+          <button onClick={onBack} className="text-blue-500">
+            Вернуться назад
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === property.images.length - 1 ? 0 : prev + 1,
+    );
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === 0 ? property.images.length - 1 : prev - 1,
+    );
+  };
+
+  const handleMortgageCalculator = () => {
+    if (onStartMortgageCalculator) {
+      onStartMortgageCalculator(property.numericPrice);
+    }
   };
 
   return (
-    <div className="h-fit bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       {/* Mobile Layout */}
       <div className="lg:hidden">
         <div className="max-w-md mx-auto bg-white min-h-screen">
           {/* Mobile Header */}
           <div className="relative">
-            <div className="absolute top-4 left-4 z-10">
+            <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-6">
               <button
                 onClick={onBack}
-                className="p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
+                className="w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white"
               >
-                <ArrowLeft className="w-6 h-6 text-gray-800" />
+                <ArrowLeft className="w-5 h-5" />
               </button>
-            </div>
-            <div className="absolute top-4 right-4 z-10">
-              <button
-                onClick={onBack}
-                className="p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
-              >
-                <Camera className="w-5 h-6 text-gray-800" />
-              </button>
-              <button
-                onClick={onBack}
-                className="p-2 ml-3 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
-              >
-                <Share2 className="w-6 h-6 text-gray-800" />
-              </button>
-            </div>
-
-            <div className="absolute top-4 right-4 z-10 flex space-x-2">
-              {userType === "buyer" && (
-                <>
-                  <button className="p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors">
-                    <Heart className="w-6 h-6 text-gray-800" />
-                  </button>
-                  <button className="p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors">
-                    <Share2 className="w-6 h-6 text-gray-800" />
-                  </button>
-                </>
-              )}
-              {userType === "developer" && (
-                <>
-                  <button className="p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors">
-                    <Edit className="w-6 h-6 text-gray-800" />
-                  </button>
-                  <button className="p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors">
-                    <BarChart3 className="w-6 h-6 text-gray-800" />
-                  </button>
-                </>
-              )}
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={() => setIsLiked(!isLiked)}
+                  className={`w-10 h-10 backdrop-blur-sm rounded-full flex items-center justify-center ${
+                    isLiked ? "bg-red-500 text-white" : "bg-black/50 text-white"
+                  }`}
+                >
+                  <Heart
+                    className={`w-5 h-5 ${isLiked ? "fill-current" : ""}`}
+                  />
+                </button>
+                <button className="w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white">
+                  <Share2 className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
-            {/* Image Gallery */}
+            {/* Image Carousel */}
             <div className="relative h-80 overflow-hidden">
-              <ImageWithFallback
-                src={property.images[activeImageIndex]}
-                alt={property.name}
+              <img
+                src={property.images[currentImageIndex]}
+                alt={property.title}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute bottom-4 left-4 right-4">
-                <div className="flex space-x-2 overflow-x-auto">
-                  {property.images.map((image, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setActiveImageIndex(index)}
-                      className={`flex-shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 ${
-                        activeImageIndex === index
-                          ? "border-white"
-                          : "border-white/50"
-                      }`}
-                    >
-                      <ImageWithFallback
-                        src={image}
-                        alt={`${property.name} ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                    </button>
-                  ))}
-                </div>
+
+              {/* Image Navigation */}
+              <button
+                onClick={prevImage}
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                onClick={nextImage}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+
+              {/* Image Indicators */}
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                {property.images.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentImageIndex(index)}
+                    className={`w-2 h-2 rounded-full ${
+                      index === currentImageIndex ? "bg-white" : "bg-white/50"
+                    }`}
+                  />
+                ))}
+              </div>
+
+              {/* Status Badge */}
+              <div className="absolute top-4 right-4">
+                <span
+                  className={`px-3 py-1 rounded-full text-white text-sm ${
+                    property.status === "Облицовка"
+                      ? "bg-orange-500"
+                      : property.status === "Строительство"
+                        ? "bg-blue-500"
+                        : "bg-green-500"
+                  }`}
+                >
+                  {property.status}
+                </span>
               </div>
             </div>
           </div>
 
           {/* Mobile Content */}
           <div className="p-6">
-            {/* Property Info */}
+            {/* Title and Price */}
             <div className="mb-6">
-              <div className="flex items-center justify-between mb-2">
-                <h1 className="text-xl text-black">{property.name}</h1>
-                <span
-                  className={`text-sm px-3 py-1 rounded-full ${
-                    property.statusColor === "orange"
-                      ? "bg-orange-100 text-orange-600"
-                      : property.statusColor === "blue"
-                        ? "bg-blue-100 text-blue-600"
-                        : "bg-green-100 text-green-600"
-                  }`}
-                >
-                  {property.status}
-                </span>
-              </div>
-
-              <div className="flex items-center text-gray-500 mb-3">
+              <h1 className="text-2xl text-black mb-2">{property.title}</h1>
+              <div className="flex items-center text-gray-500 text-sm mb-3">
                 <MapPin className="w-4 h-4 mr-1" />
-                <span className="text-[12px]">{property.location}</span>
+                {property.address}
               </div>
-
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-3xl text-blue-600">{property.price}</p>
+                  <p className="text-3xl text-blue-600 mb-1">
+                    {property.price}
+                  </p>
                   <p className="text-gray-500 text-sm">
-                    {property.pricePerSqm.toLocaleString()} ₽/м²
+                    {property.pricePerSqm}
                   </p>
                 </div>
-                {userType === "buyer" && (
-                  <div className="flex items-center">
-                    <Star className="w-4 h-4 text-yellow-500 mr-1" />
-                    <span className="text-gray-700">{property.rating}</span>
-                    <span className="text-gray-500 text-sm ml-1">
-                      ({property.reviews})
-                    </span>
-                  </div>
-                )}
+                <div className="flex items-center">
+                  <Star className="w-4 h-4 text-yellow-500 fill-current mr-1" />
+                  <span className="text-black">{property.rating}</span>
+                  <span className="text-gray-500 text-sm ml-1">
+                    ({property.reviews})
+                  </span>
+                </div>
               </div>
+            </div>
 
-              {/* Developer Statistics */}
-              {userType === "developer" && (
-                <div className="grid grid-cols-2 gap-4 mb-6 p-4 bg-gray-50 rounded-xl">
-                  <div className="text-center">
-                    <div className="text-xl text-emerald-600">
-                      {property.soldApartments}/{property.totalApartments}
-                    </div>
-                    <div className="text-xs text-gray-500">Продано</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-xl text-blue-600">
-                      {property.viewsCount}
-                    </div>
-                    <div className="text-xs text-gray-500">Просмотров</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-xl text-purple-600">
-                      {property.inquiriesCount}
-                    </div>
-                    <div className="text-xs text-gray-500">Заявок</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-xl text-orange-600">
-                      {property.averageViewTime}
-                    </div>
-                    <div className="text-xs text-gray-500">Ср. время</div>
-                  </div>
-                </div>
-              )}
-
-              {/* Key Details */}
-              <div className="grid grid-cols-3 gap-4 p-4 bg-gray-50 rounded-xl mb-6">
-                <div className="text-center">
-                  <Home className="w-5 h-5 text-gray-600 mx-auto mb-1" />
-                  <div className="text-black">{property.rooms}</div>
-                  <div className="text-xs text-gray-500">Планировка</div>
-                </div>
-                <div className="text-center">
-                  <Maximize className="w-5 h-5 text-gray-600 mx-auto mb-1" />
-                  <div className="text-black">{property.area} м²</div>
-                  <div className="text-xs text-gray-500">Площадь</div>
-                </div>
-                <div className="text-center">
-                  <Calendar className="w-5 h-5 text-gray-600 mx-auto mb-1" />
-                  <div className="text-black">
-                    {property.floor}/{property.maxFloor}
-                  </div>
-                  <div className="text-xs text-gray-500">Этаж</div>
-                </div>
+            {/* Property Details */}
+            <div className="grid grid-cols-3 gap-4 mb-6">
+              <div className="text-center p-4 bg-gray-50 rounded-xl">
+                <Home className="w-6 h-6 text-gray-600 mx-auto mb-2" />
+                <p className="text-gray-500 text-sm">Комнаты</p>
+                <p className="text-black">{property.rooms}</p>
+              </div>
+              <div className="text-center p-4 bg-gray-50 rounded-xl">
+                <MapPin className="w-6 h-6 text-gray-600 mx-auto mb-2" />
+                <p className="text-gray-500 text-sm">Площадь</p>
+                <p className="text-black">{property.area}</p>
+              </div>
+              <div className="text-center p-4 bg-gray-50 rounded-xl">
+                <Users className="w-6 h-6 text-gray-600 mx-auto mb-2" />
+                <p className="text-gray-500 text-sm">Этаж</p>
+                <p className="text-black">{property.floor}</p>
               </div>
             </div>
 
@@ -267,81 +293,87 @@ export function PropertyDetail({
             {/* Amenities */}
             <div className="mb-6">
               <h3 className="text-lg text-black mb-3">Удобства</h3>
-              <div className="flex flex-wrap gap-2">
-                {property.amenities.map((amenity, index) => (
-                  <span
-                    key={index}
-                    className="bg-gray-100 text-gray-700 px-3 py-2 rounded-lg text-sm"
-                  >
-                    {amenity}
-                  </span>
-                ))}
+              <div className="grid grid-cols-2 gap-3">
+                {property.amenities.map((amenity) => {
+                  const IconComponent = amenityIcons[amenity] || Home;
+                  return (
+                    <div
+                      key={amenity}
+                      className="flex items-center p-3 bg-gray-50 rounded-xl"
+                    >
+                      <IconComponent className="w-5 h-5 text-gray-600 mr-3" />
+                      <span className="text-gray-700 text-sm">{amenity}</span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
-            {/* Infrastructure */}
-            <div className="mb-6">
-              <h3 className="text-lg text-black mb-3">Инфраструктура</h3>
-              <div className="space-y-2">
-                <div className="flex items-center">
-                  <span
-                    className={`w-2 h-2 rounded-full mr-3 ${property.nearTransport ? "bg-green-500" : "bg-gray-300"}`}
-                  ></span>
-                  <span className="text-gray-700">Транспорт рядом</span>
-                </div>
-                <div className="flex items-center">
-                  <span
-                    className={`w-2 h-2 rounded-full mr-3 ${property.nearSchool ? "bg-green-500" : "bg-gray-300"}`}
-                  ></span>
-                  <span className="text-gray-700">Школа рядом</span>
-                </div>
-                <div className="flex items-center">
-                  <span
-                    className={`w-2 h-2 rounded-full mr-3 ${property.nearShops ? "bg-green-500" : "bg-gray-300"}`}
-                  ></span>
-                  <span className="text-gray-700">Магазины рядом</span>
-                </div>
-              </div>
+            {/* Developer Info */}
+            <div className="mb-6 p-4 bg-gray-50 rounded-xl">
+              <h3 className="text-black mb-2">Застройщик</h3>
+              <p className="text-gray-600 mb-1">{property.developer}</p>
+              <p className="text-gray-500 text-sm">
+                Срок сдачи: {property.completionDate}
+              </p>
             </div>
 
-            {/* Action Buttons */}
-            <div className="space-y-3 mb-20">
+            {/* Viewing Options */}
+            {(property.hasAR || property.hasVR) && (
+              <div className="mb-6">
+                <h3 className="text-lg text-black mb-3">
+                  Виртуальный просмотр
+                </h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {property.hasAR && (
+                    <button
+                      onClick={onStartARViewer}
+                      className="flex items-center justify-center p-4 bg-blue-50 rounded-xl border border-blue-200 hover:bg-blue-100 transition-colors"
+                    >
+                      <Eye className="w-5 h-5 text-blue-600 mr-2" />
+                      <span className="text-blue-600">AR Просмотр</span>
+                    </button>
+                  )}
+                  {property.hasVR && (
+                    <button className="flex items-center justify-center p-4 bg-purple-50 rounded-xl border border-purple-200 hover:bg-purple-100 transition-colors">
+                      <Video className="w-5 h-5 text-purple-600 mr-2" />
+                      <span className="text-purple-600">VR Тур</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Bottom Actions */}
+          <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md bg-white border-t border-gray-200 p-4">
+            <div className="flex space-x-3">
               {userType === "buyer" && (
                 <>
                   <button
-                    onClick={onStartARViewer}
-                    className="w-full bg-blue-600 text-white py-4 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center"
+                    onClick={handleMortgageCalculator}
+                    className="flex-1 bg-amber-500 text-white py-3 rounded-xl hover:bg-amber-600 transition-colors flex items-center justify-center"
                   >
-                    <Camera className="w-5 h-5 mr-2" />
-                    AR Просмотр
+                    <Calculator className="w-5 h-5 mr-2" />
+                    Ипотека
                   </button>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button
-                      onClick={onStartChat}
-                      className="bg-gray-100 text-gray-700 py-3 rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center"
-                    >
-                      <MessageSquare className="w-5 h-5 mr-2" />
-                      Написать
-                    </button>
-                    <button className="bg-gray-100 text-gray-700 py-3 rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center">
-                      <Phone className="w-5 h-5 mr-2" />
-                      Позвонить
-                    </button>
-                  </div>
+                  <button
+                    onClick={onStartChat}
+                    className="flex-1 bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center"
+                  >
+                    <MessageSquare className="w-5 h-5 mr-2" />
+                    Написать
+                  </button>
                 </>
               )}
-
               {userType === "developer" && (
-                <div className="grid grid-cols-2 gap-3">
-                  <button className="bg-blue-600 text-white py-4 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center">
-                    <Edit className="w-5 h-5 mr-2" />
-                    Редактировать
-                  </button>
-                  <button className="bg-emerald-600 text-white py-4 rounded-xl hover:bg-emerald-700 transition-colors flex items-center justify-center">
-                    <BarChart3 className="w-5 h-5 mr-2" />
-                    Статистика
-                  </button>
-                </div>
+                <button
+                  onClick={onStartChat}
+                  className="flex-1 bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center"
+                >
+                  <MessageSquare className="w-5 h-5 mr-2" />
+                  Управление
+                </button>
               )}
             </div>
           </div>
@@ -350,273 +382,246 @@ export function PropertyDetail({
 
       {/* Desktop Layout */}
       <div className="hidden lg:block">
-        <div className="grid grid-cols-12 gap-8 h-screen">
-          {/* Desktop Image Gallery */}
-          <div className="col-span-7 relative">
-            <div className="h-full flex flex-col p-4">
-              {/* Main Image */}
-              <div className="flex-1 relative overflow-hidden rounded-xl">
-                <ImageWithFallback
-                  src={property.images[activeImageIndex]}
-                  alt={property.name}
-                  className="w-full h-full object-cover"
+        <div className="max-w-7xl mx-auto p-8">
+          {/* Desktop Header */}
+          <div className="flex items-center justify-between mb-8">
+            <button
+              onClick={onBack}
+              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              Назад к поиску
+            </button>
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setIsLiked(!isLiked)}
+                className={`flex items-center px-4 py-2 rounded-lg transition-colors ${
+                  isLiked
+                    ? "bg-red-100 text-red-600"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+              >
+                <Heart
+                  className={`w-5 h-5 mr-2 ${isLiked ? "fill-current" : ""}`}
                 />
-                <div className="absolute top-6 left-6">
+                В избранное
+              </button>
+              <button className="flex items-center px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors">
+                <Share2 className="w-5 h-5 mr-2" />
+                Поделиться
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-12 gap-8">
+            {/* Desktop Image Gallery */}
+            <div className="col-span-8">
+              <div className="relative">
+                <div className="h-96 rounded-xl overflow-hidden mb-4">
+                  <img
+                    src={property.images[currentImageIndex]}
+                    alt={property.title}
+                    className="w-full h-full object-cover"
+                  />
+
+                  {/* Navigation Buttons */}
                   <button
-                    onClick={onBack}
-                    className="p-3 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors shadow-lg"
+                    onClick={prevImage}
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-colors"
                   >
-                    <ArrowLeft className="w-6 h-6 text-gray-800" />
+                    <ChevronLeft className="w-6 h-6" />
                   </button>
+                  <button
+                    onClick={nextImage}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-colors"
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </button>
+
+                  {/* Status Badge */}
+                  <div className="absolute top-4 right-4">
+                    <span
+                      className={`px-4 py-2 rounded-lg text-white ${
+                        property.status === "Облицовка"
+                          ? "bg-orange-500"
+                          : property.status === "Строительство"
+                            ? "bg-blue-500"
+                            : "bg-green-500"
+                      }`}
+                    >
+                      {property.status}
+                    </span>
+                  </div>
                 </div>
 
-                <div className="absolute top-6 right-6 flex space-x-3">
-                  {userType === "buyer" && (
-                    <>
-                      <button className="p-3 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors shadow-lg">
-                        <Heart className="w-6 h-6 text-gray-800" />
-                      </button>
-                      <button className="p-3 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors shadow-lg">
-                        <Share2 className="w-6 h-6 text-gray-800" />
-                      </button>
-                    </>
-                  )}
-                  {userType === "developer" && (
-                    <>
-                      <button className="p-3 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors shadow-lg">
-                        <Edit className="w-6 h-6 text-gray-800" />
-                      </button>
-                      <button className="p-3 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors shadow-lg">
-                        <BarChart3 className="w-6 h-6 text-gray-800" />
-                      </button>
-                    </>
-                  )}
+                {/* Thumbnail Gallery */}
+                <div className="grid grid-cols-4 gap-4">
+                  {property.images.map((image, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={`h-20 rounded-lg overflow-hidden border-2 transition-colors ${
+                        index === currentImageIndex
+                          ? "border-blue-500"
+                          : "border-gray-200 hover:border-gray-300"
+                      }`}
+                    >
+                      <img
+                        src={image}
+                        alt=""
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Desktop Info Panel */}
+            <div className="col-span-4">
+              <div className="bg-white rounded-xl p-6 shadow-sm border sticky top-8">
+                {/* Title and Rating */}
+                <div className="mb-6">
+                  <h1 className="text-2xl text-black mb-2">{property.title}</h1>
+                  <div className="flex items-center text-gray-500 mb-3">
+                    <MapPin className="w-5 h-5 mr-2" />
+                    {property.address}
+                  </div>
+                  <div className="flex items-center mb-4">
+                    <Star className="w-5 h-5 text-yellow-500 fill-current mr-1" />
+                    <span className="text-black mr-1">{property.rating}</span>
+                    <span className="text-gray-500 text-sm">
+                      ({property.reviews} отзывов)
+                    </span>
+                  </div>
                 </div>
 
-                <div className="absolute bottom-6 left-6 right-6">
-                  <div className="flex space-x-3 overflow-x-auto">
-                    {property.images.map((image, index) => (
+                {/* Price */}
+                <div className="mb-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
+                  <p className="text-3xl text-blue-600 mb-1">
+                    {property.price}
+                  </p>
+                  <p className="text-gray-600">{property.pricePerSqm}</p>
+                </div>
+
+                {/* Property Details */}
+                <div className="grid grid-cols-1 gap-4 mb-6">
+                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <span className="text-gray-600">Комнаты</span>
+                    <span className="text-black">{property.rooms}</span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <span className="text-gray-600">Площадь</span>
+                    <span className="text-black">{property.area}</span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <span className="text-gray-600">Этаж</span>
+                    <span className="text-black">{property.floor}</span>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                {userType === "buyer" && (
+                  <div className="space-y-3 mb-6">
+                    <button
+                      onClick={handleMortgageCalculator}
+                      className="w-full bg-amber-500 text-white py-3 rounded-xl hover:bg-amber-600 transition-colors flex items-center justify-center"
+                    >
+                      <Calculator className="w-5 h-5 mr-2" />
+                      Рассчитать ипотеку
+                    </button>
+                    <button
+                      onClick={onStartChat}
+                      className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center"
+                    >
+                      <MessageSquare className="w-5 h-5 mr-2" />
+                      Связаться с застройщиком
+                    </button>
+                  </div>
+                )}
+
+                {userType === "developer" && (
+                  <div className="space-y-3 mb-6">
+                    <button
+                      onClick={onStartChat}
+                      className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center"
+                    >
+                      <MessageSquare className="w-5 h-5 mr-2" />
+                      Управление объектом
+                    </button>
+                  </div>
+                )}
+
+                {/* Virtual Viewing */}
+                {(property.hasAR || property.hasVR) && (
+                  <div className="space-y-3">
+                    <h4 className="text-black">Виртуальный просмотр</h4>
+                    {property.hasAR && (
                       <button
-                        key={index}
-                        onClick={() => setActiveImageIndex(index)}
-                        className={`flex-shrink-0 w-20 h-16 rounded-lg overflow-hidden border-3 transition-all ${
-                          activeImageIndex === index
-                            ? "border-white shadow-lg"
-                            : "border-white/50"
-                        }`}
+                        onClick={onStartARViewer}
+                        className="w-full flex items-center justify-center p-3 bg-blue-50 rounded-xl border border-blue-200 text-blue-600 hover:bg-blue-100 transition-colors"
                       >
-                        <ImageWithFallback
-                          src={image}
-                          alt={`${property.name} ${index + 1}`}
-                          className="w-full h-full object-cover"
-                        />
+                        <Eye className="w-5 h-5 mr-2" />
+                        AR Просмотр
                       </button>
-                    ))}
+                    )}
+                    {property.hasVR && (
+                      <button className="w-full flex items-center justify-center p-3 bg-purple-50 rounded-xl border border-purple-200 text-purple-600 hover:bg-purple-100 transition-colors">
+                        <Video className="w-5 h-5 mr-2" />
+                        VR Тур
+                      </button>
+                    )}
+                  </div>
+                )}
+
+                {/* Developer Info */}
+                <div className="mt-6 pt-6 border-t border-gray-200">
+                  <h4 className="text-black mb-3">Застройщик</h4>
+                  <div className="flex items-center">
+                    <div className="w-12 h-12 bg-gray-200 rounded-lg mr-3 flex items-center justify-center">
+                      <Users className="w-6 h-6 text-gray-500" />
+                    </div>
+                    <div>
+                      <p className="text-black">{property.developer}</p>
+                      <p className="text-gray-500 text-sm">
+                        Срок сдачи: {property.completionDate}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Desktop Property Details */}
-          <div className="col-span-5 bg-white p-8 overflow-y-auto">
-            {/* Property Header */}
-            <div className="mb-8">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <h1 className="text-3xl text-black mb-2">{property.name}</h1>
-                  <div className="flex items-center text-gray-500 mb-4">
-                    <MapPin className="w-5 h-5 mr-2" />
-                    <span>{property.location}</span>
-                  </div>
-                </div>
-                <span
-                  className={`text-sm px-4 py-2 rounded-full ${
-                    property.statusColor === "orange"
-                      ? "bg-orange-100 text-orange-600"
-                      : property.statusColor === "blue"
-                        ? "bg-blue-100 text-blue-600"
-                        : "bg-green-100 text-green-600"
-                  }`}
-                >
-                  {property.status}
-                </span>
+          {/* Desktop Description and Amenities */}
+          <div className="mt-8 grid grid-cols-12 gap-8">
+            <div className="col-span-8">
+              {/* Description */}
+              <div className="bg-white rounded-xl p-6 shadow-sm border mb-6">
+                <h3 className="text-xl text-black mb-4">Описание</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  {property.description}
+                </p>
               </div>
 
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <p className="text-4xl text-blue-600 mb-1">
-                    {property.price}
-                  </p>
-                  <p className="text-gray-500">
-                    {property.pricePerSqm.toLocaleString()} ₽/м²
-                  </p>
-                </div>
-                {userType === "buyer" && (
-                  <div className="flex items-center">
-                    <Star className="w-5 h-5 text-yellow-500 mr-2" />
-                    <span className="text-xl text-gray-700">
-                      {property.rating}
-                    </span>
-                    <span className="text-gray-500 ml-2">
-                      ({property.reviews} отзывов)
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              {/* Developer Statistics */}
-              {userType === "developer" && (
-                <div className="grid grid-cols-2 gap-4 mb-8 p-6 bg-gray-50 rounded-xl">
-                  <div className="text-center">
-                    <div className="text-2xl text-emerald-600 mb-1">
-                      {property.soldApartments}/{property.totalApartments}
-                    </div>
-                    <div className="text-sm text-gray-500">Продано квартир</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl text-blue-600 mb-1">
-                      {property.viewsCount}
-                    </div>
-                    <div className="text-sm text-gray-500">Просмотров</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl text-purple-600 mb-1">
-                      {property.inquiriesCount}
-                    </div>
-                    <div className="text-sm text-gray-500">Заявок</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl text-orange-600 mb-1">
-                      {property.averageViewTime}
-                    </div>
-                    <div className="text-sm text-gray-500">Среднее время</div>
-                  </div>
-                </div>
-              )}
-
-              {/* Key Details */}
-              <div className="grid grid-cols-3 gap-6 p-6 bg-gray-50 rounded-xl mb-8">
-                <div className="text-center">
-                  <Home className="w-8 h-8 text-gray-600 mx-auto mb-2" />
-                  <div className="text-xl text-black mb-1">
-                    {property.rooms}
-                  </div>
-                  <div className="text-sm text-gray-500">Планировка</div>
-                </div>
-                <div className="text-center">
-                  <Maximize className="w-8 h-8 text-gray-600 mx-auto mb-2" />
-                  <div className="text-xl text-black mb-1">
-                    {property.area} м²
-                  </div>
-                  <div className="text-sm text-gray-500">Площадь</div>
-                </div>
-                <div className="text-center">
-                  <Calendar className="w-8 h-8 text-gray-600 mx-auto mb-2" />
-                  <div className="text-xl text-black mb-1">
-                    {property.floor}/{property.maxFloor}
-                  </div>
-                  <div className="text-sm text-gray-500">Этаж</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Description */}
-            <div className="mb-8">
-              <h3 className="text-xl text-black mb-4">Описание</h3>
-              <p className="text-gray-600 leading-relaxed text-base">
-                {property.description}
-              </p>
-            </div>
-
-            {/* Amenities */}
-            <div className="mb-8">
-              <h3 className="text-xl text-black mb-4">Удобства</h3>
-              <div className="flex flex-wrap gap-3">
-                {property.amenities.map((amenity, index) => (
-                  <span
-                    key={index}
-                    className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg"
-                  >
-                    {amenity}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Infrastructure */}
-            <div className="mb-8">
-              <h3 className="text-xl text-black mb-4">Инфраструктура</h3>
-              <div className="space-y-3">
-                <div className="flex items-center">
-                  <span
-                    className={`w-3 h-3 rounded-full mr-4 ${property.nearTransport ? "bg-green-500" : "bg-gray-300"}`}
-                  ></span>
-                  <span className="text-gray-700">Транспорт рядом</span>
-                </div>
-                <div className="flex items-center">
-                  <span
-                    className={`w-3 h-3 rounded-full mr-4 ${property.nearSchool ? "bg-green-500" : "bg-gray-300"}`}
-                  ></span>
-                  <span className="text-gray-700">Школа рядом</span>
-                </div>
-                <div className="flex items-center">
-                  <span
-                    className={`w-3 h-3 rounded-full mr-4 ${property.nearShops ? "bg-green-500" : "bg-gray-300"}`}
-                  ></span>
-                  <span className="text-gray-700">Магазины рядом</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="space-y-4">
-              {userType === "buyer" && (
-                <>
-                  <button
-                    onClick={onStartARViewer}
-                    className="w-full bg-blue-600 text-white py-4 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center text-lg"
-                  >
-                    <Camera className="w-6 h-6 mr-3" />
-                    Запустить AR Просмотр
-                  </button>
-                  <div className="grid grid-cols-2 gap-4">
-                    <button
-                      onClick={onStartChat}
-                      className="bg-gray-100 text-gray-700 py-4 rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center"
-                    >
-                      <MessageSquare className="w-5 h-5 mr-2" />
-                      Написать
-                    </button>
-                    <button className="bg-gray-100 text-gray-700 py-4 rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center">
-                      <Phone className="w-5 h-5 mr-2" />
-                      Позвонить
-                    </button>
-                  </div>
-                </>
-              )}
-
-              {userType === "developer" && (
+              {/* Amenities */}
+              <div className="bg-white rounded-xl p-6 shadow-sm border">
+                <h3 className="text-xl text-black mb-4">Удобства</h3>
                 <div className="grid grid-cols-2 gap-4">
-                  <button className="bg-blue-600 text-white py-4 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center">
-                    <Edit className="w-5 h-5 mr-2" />
-                    Редактировать
-                  </button>
-                  <button className="bg-emerald-600 text-white py-4 rounded-xl hover:bg-emerald-700 transition-colors flex items-center justify-center">
-                    <BarChart3 className="w-5 h-5 mr-2" />
-                    Детальная статистика
-                  </button>
+                  {property.amenities.map((amenity) => {
+                    const IconComponent = amenityIcons[amenity] || Home;
+                    return (
+                      <div
+                        key={amenity}
+                        className="flex items-center p-4 bg-gray-50 rounded-xl"
+                      >
+                        <IconComponent className="w-6 h-6 text-gray-600 mr-3" />
+                        <span className="text-gray-700">{amenity}</span>
+                      </div>
+                    );
+                  })}
                 </div>
-              )}
-
-              {userType === "developer" && (
-                <div className="pt-4 border-t border-gray-200">
-                  <div className="flex items-center text-sm text-gray-500">
-                    <Clock className="w-4 h-4 mr-2" />
-                    Последнее обновление: {property.lastUpdate}
-                  </div>
-                </div>
-              )}
+              </div>
             </div>
           </div>
         </div>
