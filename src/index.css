@@ -147,6 +147,10 @@ body {
   flex-grow: 1;
 }
 
+.leaflet-control-attribution {
+  display: none !important;
+}
+
 @media (max-width: 1023px) {
   .buyer-layout {
     flex-direction: column;

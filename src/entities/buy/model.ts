@@ -28,8 +28,8 @@ export const getAllAvailableObjects = async (): Promise<BuyEntity[]> => {
       total: 120,
       views: 1240,
       inquiries: 28,
-      x: 12,
-      y: 12,
+      x: 20,
+      y: 23,
     },
     {
       id: "2",
@@ -57,8 +57,8 @@ export const getAllAvailableObjects = async (): Promise<BuyEntity[]> => {
       total: 84,
       views: 890,
       inquiries: 15,
-      x: 12.01,
-      y: 12.02,
+      x: 45.28,
+      y: 37.9,
     },
     {
       id: "3",

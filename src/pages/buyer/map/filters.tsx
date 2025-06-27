@@ -42,10 +42,17 @@ export const MapFilters: FC<MapFiltersProps> = ({
   return (
     <div className={cn("p-3 bg-white rounded-l w-1/4", className)}>
       <div>
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <h2 className="text-xl text-black">Фильтры</h2>
           {JSON.stringify(filters) !== JSON.stringify(BaseFilters) && (
-            <div>Сбросить</div>
+            <div
+              className={"text-[12px] text-blue-600 cursor-pointer"}
+              onClick={() => {
+                setFilters(BaseFilters);
+              }}
+            >
+              Сбросить
+            </div>
           )}
         </div>
         <p className="text-sm text-gray-500">
