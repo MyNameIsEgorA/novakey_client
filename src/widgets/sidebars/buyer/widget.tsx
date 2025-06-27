@@ -43,7 +43,6 @@ export const BuyerSidebar = () => {
       icon: MapPin,
       label: "Карта",
       page: AppRoutes.buyer.map,
-      badge: 3,
     },
     {
       id: "list",
@@ -56,7 +55,6 @@ export const BuyerSidebar = () => {
       icon: MessageSquare,
       label: "Чаты",
       page: AppRoutes.buyer.chats,
-      badge: 5,
     },
     {
       id: "profile",
@@ -125,11 +123,6 @@ export const BuyerSidebar = () => {
                     />
                     <span>{item.label}</span>
                   </div>
-                  {item.badge && (
-                    <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded-full">
-                      {item.badge}
-                    </span>
-                  )}
                 </button>
               ))}
             </div>
@@ -152,11 +145,6 @@ export const BuyerSidebar = () => {
               >
                 <div className="relative">
                   <item.icon className="w-6 h-6" />
-                  {item.badge && (
-                    <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs font-medium px-1.5 py-0.5 rounded-full leading-none">
-                      {item.badge}
-                    </span>
-                  )}
                 </div>
                 <span className="text-xs mt-1">{item.label}</span>
               </button>
