@@ -84,7 +84,7 @@ export const BuyerMap = ({
       </div>
       <MapContainer
         center={mapCenter}
-        zoom={8}
+        zoom={10}
         scrollWheelZoom={false}
         className={"relative"}
         style={{ height: "100%", width: "100%" }}

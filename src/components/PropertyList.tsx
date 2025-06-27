@@ -417,8 +417,107 @@ export function PropertyList({
 
           {/* Mobile Filters Panel - Same as before but hidden for brevity */}
           {showFilters && (
-            <div className="bg-white border-b border-gray-200 max-h-96 overflow-y-auto">
-              {/* Filter content - keeping existing filter implementation */}
+            <div className="bg-white border-b border-gray-200 max-h-96 overflow-y-auto p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg">Фильтры</h3>
+                <button onClick={() => setShowFilters(false)}>
+                  <X className="w-5 h-5 text-gray-500" />
+                </button>
+              </div>
+
+              <div className="space-y-6">
+                {/* Quick Filters */}
+                <div>
+                  <label className="block text-sm font-medium mb-3">
+                    Рядом есть
+                  </label>
+                  <div className="space-y-2">
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={filters.nearTransport}
+                        onChange={(e) =>
+                          setFilters({
+                            ...filters,
+                            nearTransport: e.target.checked,
+                          })
+                        }
+                        className="rounded accent-blue-600"
+                      />
+                      <span className="text-sm">🚇 Транспорт</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={filters.nearSchool}
+                        onChange={(e) =>
+                          setFilters({
+                            ...filters,
+                            nearSchool: e.target.checked,
+                          })
+                        }
+                        className="rounded accent-blue-600"
+                      />
+                      <span className="text-sm">🏫 Школа</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={filters.nearShops}
+                        onChange={(e) =>
+                          setFilters({
+                            ...filters,
+                            nearShops: e.target.checked,
+                          })
+                        }
+                        className="rounded accent-blue-600"
+                      />
+                      <span className="text-sm">🛒 Магазины</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Price Range */}
+                <div>
+                  <h4 className="text-sm font-medium mb-3">Цена, млн ₽</h4>
+                  <input
+                    type="range"
+                    min="0"
+                    max="20"
+                    step="0.5"
+                    value={filters.priceRange[1]}
+                    onChange={(e) =>
+                      setFilters({
+                        ...filters,
+                        priceRange: [0, parseFloat(e.target.value)],
+                      })
+                    }
+                    className="w-full"
+                  />
+                  <div className="flex justify-between text-sm text-gray-500">
+                    <span>0</span>
+                    <span>до {filters.priceRange[1]}</span>
+                    <span>20</span>
+                  </div>
+                </div>
+
+                {/* Добавьте остальные фильтры */}
+
+                <div className="flex space-x-3">
+                  <button
+                    onClick={resetFilters}
+                    className="flex-1 py-2 border border-gray-300 rounded-lg"
+                  >
+                    Сбросить
+                  </button>
+                  <button
+                    onClick={() => setShowFilters(false)}
+                    className="flex-1 py-2 bg-blue-600 text-white rounded-lg"
+                  >
+                    Применить
+                  </button>
+                </div>
+              </div>
             </div>
           )}
 
