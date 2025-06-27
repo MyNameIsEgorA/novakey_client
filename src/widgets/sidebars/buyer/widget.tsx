@@ -1,63 +1,169 @@
 import { Home, MapPin, MessageSquare, Search, User } from "lucide-react";
 import { AppRoutes } from "@/app/routes/base.ts";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Import useEffect
+import { ImageWithFallback } from "@/components/figma/ImageWithFallback.tsx";
+import { NovaKeyLogo } from "@/shared/ui/logo.tsx";
 
-const navigationItems = [
-  {
-    id: "home",
-    icon: Home,
-    label: "Главная",
-    page: AppRoutes.buyer.home,
-  },
-  { id: "map", icon: MapPin, label: "Карта", page: AppRoutes.buyer.map },
-  {
-    id: "list",
-    icon: Search,
-    label: "Список",
-    page: AppRoutes.buyer.list,
-  },
-  {
-    id: "chat",
-    icon: MessageSquare,
-    label: "Чаты",
-    page: AppRoutes.buyer.chats,
-  },
-  {
-    id: "profile",
-    icon: User,
-    label: "Профиль",
-    page: AppRoutes.buyer.profile,
-  },
-];
+interface NavigationItem {
+  id: string;
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  page: string;
+  badge?: number;
+}
 
 export const BuyerSidebar = () => {
   const navigate = useNavigate();
+  const [currentScreen, setCurrentScreen] = useState<string>(
+    AppRoutes.buyer.home,
+  );
+  // State to track window width
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  const [currentScreen, setCurrentScreen] = useState<string>("");
-  const handleLabelClick = (route: string) => {
+  // Effect to update window width on resize
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const navigationItems: NavigationItem[] = [
+    {
+      id: "home",
+      icon: Home,
+      label: "Главная",
+      page: AppRoutes.buyer.home,
+    },
+    {
+      id: "map",
+      icon: MapPin,
+      label: "Карта",
+      page: AppRoutes.buyer.map,
+      badge: 3,
+    },
+    {
+      id: "list",
+      icon: Search,
+      label: "Поиск",
+      page: AppRoutes.buyer.list,
+    },
+    {
+      id: "chat",
+      icon: MessageSquare,
+      label: "Чаты",
+      page: AppRoutes.buyer.chats,
+      badge: 5,
+    },
+    {
+      id: "profile",
+      icon: User,
+      label: "Профиль",
+      page: AppRoutes.buyer.profile,
+    },
+  ];
+
+  const handleNavigation = (route: string) => {
     setCurrentScreen(route);
     navigate(route);
   };
 
+  const isMobile = windowWidth < 1050;
+
   return (
-    <nav className="flex-1 p-4 max-w-[300px]">
-      <div className="space-y-2">
-        {navigationItems.map((item) => (
-          <button
-            key={item.id}
-            onClick={() => handleLabelClick(item.page)}
-            className={`w-full flex items-center px-4 py-3 rounded-lg text-left transition-colors ${
-              currentScreen === item.page
-                ? "bg-blue-50 text-blue-600 border border-blue-200"
-                : "text-gray-700 hover:bg-gray-50"
-            }`}
-          >
-            <item.icon className="w-5 h-5 mr-3" />
-            {item.label}
-          </button>
-        ))}
-      </div>
-    </nav>
+    <>
+      {!isMobile && (
+        <div className="w-64 h-full flex flex-col bg-white border-r border-gray-200">
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex items-center">
+              <NovaKeyLogo className="text-xl" />
+              <span className="ml-2 text-s text-gray-500">Покупатель</span>
+            </div>
+          </div>
+
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex items-center">
+              <div className="relative">
+                <ImageWithFallback
+                  src="https://images.unsplash.com/photo-1494790108755-2616b612b8db?w=100&h=100&fit=crop&crop=face"
+                  alt="Profile"
+                  className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
+                />
+                <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-gray-900">
+                  Анна Смирнова
+                </h3>
+                <p className="text-xs text-gray-500">Покупатель</p>
+              </div>
+            </div>
+          </div>
+
+          <nav className="flex-1 overflow-y-auto p-4">
+            <div className="space-y-1">
+              {navigationItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleNavigation(item.page)}
+                  className={`w-full flex items-center justify-between px-4 py-3 rounded-lg text-left transition-colors group ${
+                    currentScreen === item.page
+                      ? "bg-blue-50 text-blue-600 border border-blue-200"
+                      : "text-gray-700 hover:bg-gray-50"
+                  }`}
+                >
+                  <div className="flex items-center">
+                    <item.icon
+                      className={`w-5 h-5 mr-3 ${
+                        currentScreen === item.page
+                          ? "text-blue-600"
+                          : "text-gray-500 group-hover:text-gray-700"
+                      }`}
+                    />
+                    <span>{item.label}</span>
+                  </div>
+                  {item.badge && (
+                    <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded-full">
+                      {item.badge}
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+          </nav>
+        </div>
+      )}
+
+      {isMobile && (
+        <div className="fixed w-[392px] bottom-0 bg-white border-t border-gray-200 shadow-lg z-50">
+          <nav className="flex justify-around py-2">
+            {navigationItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => handleNavigation(item.page)}
+                className={`flex flex-col items-center justify-center p-2 rounded-lg transition-colors ${
+                  currentScreen === item.page
+                    ? "text-blue-600"
+                    : "text-gray-700 hover:text-blue-600"
+                }`}
+              >
+                <div className="relative">
+                  <item.icon className="w-6 h-6" />
+                  {item.badge && (
+                    <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs font-medium px-1.5 py-0.5 rounded-full leading-none">
+                      {item.badge}
+                    </span>
+                  )}
+                </div>
+                <span className="text-xs mt-1">{item.label}</span>
+              </button>
+            ))}
+          </nav>
+        </div>
+      )}
+    </>
   );
 };

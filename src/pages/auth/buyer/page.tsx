@@ -267,7 +267,6 @@ export function BuyerAuthPage() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-6">
-                  {/* Smart Search Card */}
                   <div
                     className="relative rounded-3xl p-6 text-white overflow-hidden min-h-[280px]"
                     style={{

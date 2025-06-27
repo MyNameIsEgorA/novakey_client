@@ -47,17 +47,6 @@ type Screen =
   | "crm"
   | "calendar";
 
-// Minimalist NovaKey Logo Component
-function NovaKeyLogo({ className = "text-xl" }: { className?: string }) {
-  return (
-    <div className={`${className} tracking-tight`}>
-      <span className="text-black">novakey</span>
-      <span className="text-black/50">®</span>
-    </div>
-  );
-}
-
-// Footer Component
 function FooterInfo() {
   return (
     <div className="fixed bottom-4 left-4 z-50 hidden lg:block">
