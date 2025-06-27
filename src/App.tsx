@@ -13,6 +13,8 @@ import { BuyerObjectInfoPage } from "@/pages/buyer/objectInfo/page.tsx";
 import { BuyerMapPage } from "@/pages/buyer/map/page.tsx";
 import { DeveloperLayout } from "@/pages/developer/Layout.tsx";
 import { DeveloperMainPage } from "@/pages/developer/main/page.tsx";
+import { DeveloperProfilePage } from "@/pages/developer/profile/page.tsx";
+import { AddObjectPage } from "@/pages/developer/addObject/page.tsx";
 
 const App: React.FC = () => {
   return (
@@ -37,6 +39,8 @@ const App: React.FC = () => {
         </Route>
         <Route path={"/developer"} element={<DeveloperLayout />}>
           <Route path={"main"} element={<DeveloperMainPage />} />
+          <Route path={"profile"} element={<DeveloperProfilePage />} />
+          <Route path={"add_object"} element={<AddObjectPage />} />
         </Route>
       </Routes>
     </Router>

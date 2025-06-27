@@ -54,34 +54,22 @@ export const DeveloperMainPage = () => {
             <div className="mb-6">
               <h2 className="text-lg mb-4">Быстрые действия</h2>
               <div className="grid grid-cols-2 gap-4">
-                <button
-                  onClick={() => setCurrentScreen("add-property")}
-                  className="bg-blue-50 p-4 rounded-xl text-left hover:bg-blue-100 transition-colors"
-                >
+                <button className="bg-blue-50 p-4 rounded-xl text-left hover:bg-blue-100 transition-colors">
                   <Plus className="w-6 h-6 text-blue-600 mb-2" />
                   <h3 className="text-black mb-1">Добавить объект</h3>
                   <p className="text-gray-500 text-sm">Новый ЖК</p>
                 </button>
-                <button
-                  onClick={() => setCurrentScreen("list")}
-                  className="bg-emerald-50 p-4 rounded-xl text-left hover:bg-emerald-100 transition-colors"
-                >
+                <button className="bg-emerald-50 p-4 rounded-xl text-left hover:bg-emerald-100 transition-colors">
                   <List className="w-6 h-6 text-emerald-600 mb-2" />
                   <h3 className="text-black mb-1">Мои объекты</h3>
                   <p className="text-gray-500 text-sm">Списком</p>
                 </button>
-                <button
-                  onClick={() => setCurrentScreen("crm")}
-                  className="bg-stone-50 p-4 rounded-xl text-left hover:bg-stone-100 transition-colors"
-                >
+                <button className="bg-stone-50 p-4 rounded-xl text-left hover:bg-stone-100 transition-colors">
                   <Users className="w-6 h-6 text-stone-600 mb-2" />
                   <h3 className="text-black mb-1">CRM</h3>
                   <p className="text-gray-500 text-sm">Клиенты</p>
                 </button>
-                <button
-                  onClick={() => setCurrentScreen("calendar")}
-                  className="bg-green-50 p-4 rounded-xl text-left hover:bg-green-100 transition-colors"
-                >
+                <button className="bg-green-50 p-4 rounded-xl text-left hover:bg-green-100 transition-colors">
                   <Calendar className="w-6 h-6 text-green-600 mb-2" />
                   <h3 className="text-black mb-1">Календарь</h3>
                   <p className="text-gray-500 text-sm">Показы</p>

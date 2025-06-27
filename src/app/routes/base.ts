@@ -12,5 +12,12 @@ export const AppRoutes = {
   },
   developer: {
     main: "/developer/main",
+    map: "/developer/map",
+    myObjects: "/developer/my_objects",
+    crm: "/developer/crm",
+    calendar: "/developer/calendar",
+    profile: "/developer/profile",
+    addObject: "/developer/add_object",
+    chat: "/developer/chat",
   },
 };
