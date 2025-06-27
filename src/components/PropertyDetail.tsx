@@ -353,9 +353,9 @@ export function PropertyDetail({
         <div className="grid grid-cols-12 gap-8 h-screen">
           {/* Desktop Image Gallery */}
           <div className="col-span-7 relative">
-            <div className="h-full flex flex-col">
+            <div className="h-full flex flex-col p-4">
               {/* Main Image */}
-              <div className="flex-1 relative overflow-hidden rounded-lg">
+              <div className="flex-1 relative overflow-hidden rounded-xl">
                 <ImageWithFallback
                   src={property.images[activeImageIndex]}
                   alt={property.name}

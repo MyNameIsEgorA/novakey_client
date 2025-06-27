@@ -138,7 +138,7 @@ export const BuyerSidebar = () => {
       )}
 
       {isMobile && (
-        <div className="fixed w-[392px] bottom-0 bg-white border-t border-gray-200 shadow-lg z-50">
+        <div className="fixed w-[392px] bottom-0 bg-white border-t border-gray-200 shadow-lg z-[3000000000]">
           <nav className="flex justify-around py-2">
             {navigationItems.map((item) => (
               <button

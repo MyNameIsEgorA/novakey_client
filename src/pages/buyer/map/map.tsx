@@ -54,34 +54,62 @@ const CustomMarkerIcon = ({
 interface BuyerMapProps {
   entitiesToShow: BuyEntity[];
   setSelectedPropertyData: Dispatch<SetStateAction<BuyEntity | null>>;
+  isMobile?: boolean;
 }
 
 export const BuyerMap = ({
   entitiesToShow,
   setSelectedPropertyData,
+  isMobile = false,
 }: BuyerMapProps) => {
   const [selectedEntity, setSelectedEntity] = useState<BuyEntity | null>(null);
   const mapCenter = [45.2, 39.0];
 
   return (
-    <div className={"w-1/2 relative h-full"}>
-      <div className="absolute top-6 z-[30000] right-6 bg-white rounded-xl p-4 shadow-lg">
-        <h4 className="text-black mb-3">Статус объектов</h4>
-        <div className="space-y-3">
-          <div className="flex items-center">
-            <div className="w-4 h-4 bg-green-500 rounded-full mr-3"></div>
-            <span className="text-gray-700">Готов к заселению</span>
-          </div>
-          <div className="flex items-center">
-            <div className="w-4 h-4 bg-orange-500 rounded-full mr-3"></div>
-            <span className="text-gray-700">Отделочные работы</span>
-          </div>
-          <div className="flex items-center">
-            <div className="w-4 h-4 bg-blue-500 rounded-full mr-3"></div>
-            <span className="text-gray-700">На стадии строительства</span>
+    <div className={`${isMobile ? "w-full h-full" : "w-1/2 h-full"} relative`}>
+      {!isMobile && (
+        <div className="absolute top-6 z-[30000] z-[0] right-6 bg-white rounded-xl p-4 shadow-lg">
+          <h4 className="text-black mb-3">Статус объектов</h4>
+          <div className="space-y-3">
+            <div className="flex items-center">
+              <div className="w-4 h-4 bg-green-500 rounded-full mr-3"></div>
+              <span className="text-gray-700">Готов к заселению</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-4 h-4 bg-orange-500 rounded-full mr-3"></div>
+              <span className="text-gray-700">Отделочные работы</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-4 h-4 bg-blue-500 rounded-full mr-3"></div>
+              <span className="text-gray-700">На стадии строительства</span>
+            </div>
           </div>
         </div>
-      </div>
+      )}
+      {isMobile && (
+        <div className="absolute top-6 z-[30000] z-[0] right-6 bg-white rounded-xl p-2 shadow-lg">
+          <div className="space-y-3">
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+              <span className="text-gray-700 text-[12px]">
+                Готов к заселению
+              </span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-orange-500 rounded-full mr-2"></div>
+              <span className="text-gray-700 text-[12px]">
+                Отделочные работы
+              </span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
+              <span className="text-gray-700 text-[12px]">
+                На стадии строительства
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
       <MapContainer
         center={mapCenter}
         zoom={10}
