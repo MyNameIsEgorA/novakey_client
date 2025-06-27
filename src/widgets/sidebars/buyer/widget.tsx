@@ -71,7 +71,7 @@ export const BuyerSidebar = () => {
     navigate(route);
   };
 
-  const isMobile = windowWidth < 1050;
+  const isMobile = windowWidth < 1024;
 
   return (
     <>

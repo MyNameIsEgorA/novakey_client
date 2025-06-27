@@ -1,8 +1,17 @@
 import { Bell, Search } from "lucide-react";
 import { useIsMobile } from "@/shared/hooks/isMobile.ts";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback.tsx";
+import type { FC } from "react";
 
-export const BuyerHeader = () => {
+export interface BuyerHeaderProps {
+  title?: string;
+  description?: string;
+}
+
+export const BuyerHeader: FC<BuyerHeaderProps> = ({
+  title = "Главная",
+  description = "Найдите идеальную недвижимость",
+}) => {
   const isMobile = useIsMobile();
 
   return (
@@ -11,8 +20,8 @@ export const BuyerHeader = () => {
         <header className="bg-white border-b border-gray-200 px-8 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl text-black">Главная</h1>
-              <p className="text-gray-500">Найдите идеальную недвижимость</p>
+              <h1 className="text-2xl text-black">{title}</h1>
+              <p className="text-gray-500">{description}</p>
             </div>
 
             <div className="flex items-center space-x-4">
