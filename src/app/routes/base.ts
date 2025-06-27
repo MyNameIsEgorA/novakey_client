@@ -18,6 +18,6 @@ export const AppRoutes = {
     calendar: "/developer/calendar",
     profile: "/developer/profile",
     addObject: "/developer/add_object",
-    chat: "/developer/chat",
+    chats: "/developer/chats",
   },
 };

@@ -135,7 +135,6 @@ const priorityConfig = {
 export function DeveloperCRM({ onBack, onStartChat }: DeveloperCRMProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
-  const [selectedCustomer, setSelectedCustomer] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"table" | "cards">("table");
   const [showAddClientModal, setShowAddClientModal] = useState(false);
   const [customersList, setCustomersList] = useState(customers);

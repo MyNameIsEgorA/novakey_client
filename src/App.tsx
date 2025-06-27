@@ -17,6 +17,8 @@ import { DeveloperProfilePage } from "@/pages/developer/profile/page.tsx";
 import { AddObjectPage } from "@/pages/developer/addObject/page.tsx";
 import { MyObjectsPage } from "@/pages/developer/myObjects/page.tsx";
 import { CrmPage } from "@/pages/developer/CRM/page.tsx";
+import { CalendarPage } from "@/pages/developer/calendar/page.tsx";
+import { DeveloperMapPage } from "@/pages/developer/map/page.tsx";
 
 const App: React.FC = () => {
   return (
@@ -43,8 +45,11 @@ const App: React.FC = () => {
           <Route path={"main"} element={<DeveloperMainPage />} />
           <Route path={"profile"} element={<DeveloperProfilePage />} />
           <Route path={"add_object"} element={<AddObjectPage />} />
+          <Route path={"chats"} element={<BuyerChatPage />}></Route>
           <Route path={"my_objects"} element={<MyObjectsPage />} />
           <Route path={"crm"} element={<CrmPage />} />
+          <Route path={"map"} element={<DeveloperMapPage />} />
+          <Route path={"calendar"} element={<CalendarPage />} />
         </Route>
       </Routes>
     </Router>

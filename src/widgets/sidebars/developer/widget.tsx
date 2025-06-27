@@ -1,4 +1,12 @@
-import { Home, MapPin, MessageSquare, Search, User } from "lucide-react";
+import {
+  Calendar,
+  Home,
+  MapPin,
+  MessageSquare,
+  PlusCircle,
+  Search,
+  User,
+} from "lucide-react";
 import { AppRoutes } from "@/app/routes/base.ts";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -42,7 +50,7 @@ export const DeveloperSidebar = () => {
     },
     {
       id: "my_objects",
-      icon: Search,
+      icon: Search, // Search icon still seems appropriate for "my objects" if it implies searching through them.
       label: "Мои объекты",
       page: AppRoutes.developer.myObjects,
     },
@@ -54,7 +62,7 @@ export const DeveloperSidebar = () => {
     },
     {
       id: "calendar",
-      icon: User,
+      icon: Calendar, // Changed from User to Calendar
       label: "Календарь",
       page: AppRoutes.developer.calendar,
     },
@@ -66,7 +74,7 @@ export const DeveloperSidebar = () => {
     },
     {
       id: "add_object",
-      icon: User,
+      icon: PlusCircle, // Changed from User to PlusCircle for "add object"
       label: "Добавить объект",
       page: AppRoutes.developer.addObject,
     },

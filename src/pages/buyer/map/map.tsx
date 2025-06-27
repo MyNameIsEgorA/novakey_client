@@ -2,7 +2,6 @@ import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import type { BuyEntity } from "@/entities/buy/type.ts";
-import { calculateCenter } from "@/pages/buyer/map/helpers.ts";
 import { useState, useEffect, type Dispatch, type SetStateAction } from "react";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
