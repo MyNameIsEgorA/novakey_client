@@ -16,6 +16,7 @@ import { DeveloperMainPage } from "@/pages/developer/main/page.tsx";
 import { DeveloperProfilePage } from "@/pages/developer/profile/page.tsx";
 import { AddObjectPage } from "@/pages/developer/addObject/page.tsx";
 import { MyObjectsPage } from "@/pages/developer/myObjects/page.tsx";
+import { CrmPage } from "@/pages/developer/CRM/page.tsx";
 
 const App: React.FC = () => {
   return (
@@ -43,6 +44,7 @@ const App: React.FC = () => {
           <Route path={"profile"} element={<DeveloperProfilePage />} />
           <Route path={"add_object"} element={<AddObjectPage />} />
           <Route path={"my_objects"} element={<MyObjectsPage />} />
+          <Route path={"crm"} element={<CrmPage />} />
         </Route>
       </Routes>
     </Router>
