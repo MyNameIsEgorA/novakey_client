@@ -10,6 +10,7 @@ import { BuyerProfilePage } from "@/pages/buyer/profile/page.tsx";
 import { BuyerChatPage } from "@/pages/buyer/chat/page.tsx";
 import { BuyerSearchPage } from "@/pages/buyer/search/page.tsx";
 import { BuyerObjectInfoPage } from "@/pages/buyer/objectInfo/page.tsx";
+import { BuyerMapPage } from "@/pages/buyer/map/page.tsx";
 
 const App: React.FC = () => {
   return (
@@ -26,6 +27,7 @@ const App: React.FC = () => {
           <Route path={"profile"} element={<BuyerProfilePage />}></Route>
           <Route path={"chats"} element={<BuyerChatPage />}></Route>
           <Route path={"list"} element={<BuyerSearchPage />}></Route>
+          <Route path={"map"} element={<BuyerMapPage />}></Route>
           <Route
             path={"object_info/:id"}
             element={<BuyerObjectInfoPage />}

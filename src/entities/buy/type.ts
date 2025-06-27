@@ -1,0 +1,28 @@
+export type BuyEntity = {
+  id: string;
+  name: string;
+  price: string;
+  priceNum: number;
+  pricePerSqm: number;
+  rooms: string;
+  area: number;
+  floor: number;
+  maxFloor: number;
+  status: string;
+  statusColor: string;
+  district: string;
+  developer: string;
+  location: string;
+  image: string;
+  amenities: string[];
+  nearTransport: boolean;
+  nearSchool: boolean;
+  nearShops: boolean;
+  deliveryDate: string;
+  sold: number;
+  total: number;
+  views: number;
+  inquiries: number;
+  x: number;
+  y: number;
+};
