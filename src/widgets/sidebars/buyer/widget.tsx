@@ -8,25 +8,26 @@ const navigationItems = [
     id: "home",
     icon: Home,
     label: "Главная",
-    page: AppRoutes.user.home,
+    page: AppRoutes.buyer.home,
   },
-  { id: "map", icon: MapPin, label: "Карта", page: AppRoutes.user.map },
+  { id: "map", icon: MapPin, label: "Карта", page: AppRoutes.buyer.map },
   {
     id: "list",
     icon: Search,
-    page: AppRoutes.user.list,
+    label: "Список",
+    page: AppRoutes.buyer.list,
   },
   {
     id: "chat",
     icon: MessageSquare,
     label: "Чаты",
-    page: AppRoutes.user.chats,
+    page: AppRoutes.buyer.chats,
   },
   {
     id: "profile",
     icon: User,
     label: "Профиль",
-    page: AppRoutes.user.profile,
+    page: AppRoutes.buyer.profile,
   },
 ];
 
@@ -40,7 +41,7 @@ export const BuyerSidebar = () => {
   };
 
   return (
-    <nav className="flex-1 p-4">
+    <nav className="flex-1 p-4 max-w-[300px]">
       <div className="space-y-2">
         {navigationItems.map((item) => (
           <button
