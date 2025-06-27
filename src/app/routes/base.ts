@@ -3,10 +3,10 @@ export const AppRoutes = {
   authBuyer: "/auth/buyer",
   authDeveloper: "/auth/developer",
   buyer: {
-    home: "/home",
-    map: "/map",
-    list: "/list",
-    chats: "/chats",
-    profile: "/profile",
+    home: "/buyer/home",
+    map: "/buyer/map",
+    list: "/buyer/list",
+    chats: "/buyer/chats",
+    profile: "/buyer/profile",
   },
 };
