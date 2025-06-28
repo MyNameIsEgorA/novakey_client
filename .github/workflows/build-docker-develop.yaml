@@ -1,0 +1,29 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches: [main, dev]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: Get repo name
+        id: get_repo_name
+        run: |
+          repo_name=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
+          echo "Repo name is $repo_name"
+          echo "::set-output name=repo::$repo_name"
+
+      - name: build images
+        run: |
+          docker build -t ${{ secrets.DOCKER_HUB_USER }}/${{ steps.get_repo_name.outputs.repo }}:${{ github.ref_name }} .
+
+      - name: push
+        run: |
+          docker login -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_TOKEN }}
+          docker push ${{ secrets.DOCKER_HUB_USER }}/${{ steps.get_repo_name.outputs.repo }}:${{ github.ref_name }}
