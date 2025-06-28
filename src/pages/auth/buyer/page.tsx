@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "@/app/routes/base.ts";
+import { AuthService } from "@/entities/user/api.ts";
 
 function NovaKeyLogo({ className = "text-2xl" }: { className?: string }) {
   return (
@@ -47,12 +48,32 @@ export function BuyerAuthPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
-    // Simulate API call
-    setTimeout(() => {
-      onSuccess();
+    if (!isLogin) {
+      const result = await AuthService.register({
+        name: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+        password_confirmation: formData.confirmPassword,
+      });
       setIsLoading(false);
-    }, 2000);
+      if (!result) {
+        return;
+      }
+      console.log("Register result", result);
+      onSuccess();
+    }
+    if (isLogin) {
+      const result = await AuthService.login({
+        email: formData.email,
+        password: formData.password,
+      });
+      setIsLoading(false);
+      if (!result) {
+        return;
+      }
+      console.log("Register result", result);
+      onSuccess();
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {

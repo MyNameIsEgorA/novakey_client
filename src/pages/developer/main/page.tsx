@@ -2,9 +2,13 @@ import { Building2, List, Plus, Users, Calendar, Search } from "lucide-react";
 import { DeveloperHeader } from "@/pages/developer/main/header.tsx";
 import { useIsMobile } from "@/shared/hooks/isMobile.ts";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback.tsx";
+import { observer } from "mobx-react-lite";
+import { allObjectsStorage } from "@/entities/buy/modelsStorage.ts";
 
-export const DeveloperMainPage = () => {
+export const DeveloperMainPage = observer(() => {
   const isMobile = useIsMobile();
+
+  const { allObjects } = allObjectsStorage;
 
   return (
     <>
@@ -314,4 +318,4 @@ export const DeveloperMainPage = () => {
       )}
     </>
   );
-};
+});

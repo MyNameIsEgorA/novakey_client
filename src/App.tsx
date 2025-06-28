@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
 import { AuthUserSelectionPage } from "@/pages/auth/selection/page.tsx";
 import { AppRoutes } from "@/app/routes/base.ts";
 import { BuyerAuthPage } from "@/pages/auth/buyer/page.tsx";
@@ -32,6 +37,10 @@ const App: React.FC = () => {
         <Route
           path={AppRoutes.authUserSelection}
           element={<AuthUserSelectionPage />}
+        />
+        <Route
+          index
+          element={<Navigate to={AppRoutes.authUserSelection} replace />}
         />
         <Route path={AppRoutes.authBuyer} element={<BuyerAuthPage />} />
         <Route path={AppRoutes.authDeveloper} element={<DeveloperAuthPage />} />
