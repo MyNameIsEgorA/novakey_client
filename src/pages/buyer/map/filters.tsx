@@ -40,7 +40,9 @@ export const MapFilters: FC<MapFiltersProps> = ({
   setFilters,
 }) => {
   return (
-    <div className={cn("p-3 bg-white rounded-l w-1/4", className)}>
+    <div
+      className={cn("p-3 bg-white rounded-l w-1/4 overflow-auto", className)}
+    >
       <div>
         <div className="flex justify-between items-center">
           <h2 className="text-xl text-black">Фильтры</h2>

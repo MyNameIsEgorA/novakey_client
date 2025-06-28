@@ -170,21 +170,21 @@ export const BuyerMainContent = () => {
                     onClick={() => navigate(AppRoutes.buyer.map)}
                   >
                     <span className="text-black">Центр</span>
-                    <span className="text-gray-500 text-sm">120+ объектов</span>
+                    <span className="text-gray-500 text-sm">10+ объектов</span>
                   </div>
                   <div
                     className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
                     onClick={() => navigate(AppRoutes.buyer.map)}
                   >
                     <span className="text-black">Северный</span>
-                    <span className="text-gray-500 text-sm">85+ объектов</span>
+                    <span className="text-gray-500 text-sm">7+ объектов</span>
                   </div>
                   <div
                     className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
                     onClick={() => navigate(AppRoutes.buyer.map)}
                   >
                     <span className="text-black">Южный</span>
-                    <span className="text-gray-500 text-sm">62+ объектов</span>
+                    <span className="text-gray-500 text-sm">4+ объектов</span>
                   </div>
                 </div>
               </div>
@@ -385,7 +385,7 @@ export const BuyerMainContent = () => {
                 <div className="absolute inset-0 bg-black/40 flex items-end p-3">
                   <div className="text-white">
                     <h4 className="text-sm">Центр</h4>
-                    <p className="text-xs opacity-90">120+ объектов</p>
+                    <p className="text-xs opacity-90">10+ объектов</p>
                   </div>
                 </div>
               </div>
@@ -401,7 +401,7 @@ export const BuyerMainContent = () => {
                 <div className="absolute inset-0 bg-black/40 flex items-end p-3">
                   <div className="text-white">
                     <h4 className="text-sm">Северный</h4>
-                    <p className="text-xs opacity-90">85+ объектов</p>
+                    <p className="text-xs opacity-90">7+ объектов</p>
                   </div>
                 </div>
               </div>
