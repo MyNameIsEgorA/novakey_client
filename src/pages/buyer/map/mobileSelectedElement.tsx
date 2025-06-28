@@ -1,9 +1,9 @@
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback.tsx";
-import type { BuyEntity } from "@/entities/buy/type.ts";
 import type { FC } from "react";
+import type { ObjectFullData } from "@/entities/buy/objectFullData.ts";
 
 interface MobileSelectedElementProps {
-  selectedPropertyData: BuyEntity | null;
+  selectedPropertyData: ObjectFullData | null;
   onPropertySelect: (id: string) => void;
 }
 
@@ -20,7 +20,7 @@ export const MobileSelectedElement: FC<MobileSelectedElementProps> = ({
         <div className="flex">
           <div className="w-20 h-20 rounded-xl flex-shrink-0 overflow-hidden mr-4">
             <ImageWithFallback
-              src={selectedPropertyData.image}
+              src={selectedPropertyData.photos[0]}
               alt={selectedPropertyData.name}
               className="w-full h-full object-cover"
             />
@@ -28,9 +28,16 @@ export const MobileSelectedElement: FC<MobileSelectedElementProps> = ({
           <div className="flex-1">
             <h3 className="text-black mb-1">{selectedPropertyData.name}</h3>
             <p className="text-gray-500 text-sm mb-1">
-              {selectedPropertyData.rooms}, {selectedPropertyData.area} м²
+              {selectedPropertyData.apartment_types[0]},{" "}
+              {Math.floor(
+                selectedPropertyData.min_price /
+                  selectedPropertyData.price_per_sqm,
+              )}{" "}
+              м²
             </p>
-            <p className="text-blue-600 mb-2">{selectedPropertyData.price}</p>
+            <p className="text-blue-600 mb-2">
+              {selectedPropertyData.min_price}
+            </p>
           </div>
         </div>
       </div>
@@ -45,14 +52,14 @@ export const MobileSelectedElement: FC<MobileSelectedElementProps> = ({
                   : "bg-green-100 text-green-600"
             }`}
           >
-            {selectedPropertyData.status}
+            {selectedPropertyData.construction_status}
           </span>
           <span className="text-xs text-gray-500">
             {selectedPropertyData.district}
           </span>
         </div>
         <button
-          onClick={() => onPropertySelect(selectedPropertyData.id)}
+          onClick={() => onPropertySelect(String(selectedPropertyData.id))}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors"
         >
           Подробнее

@@ -12,6 +12,7 @@ import { MobileSelectedElement } from "@/pages/buyer/map/mobileSelectedElement.t
 import { useNavigate } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import { allObjectsStorage } from "@/entities/buy/modelsStorage.ts";
+import type { ObjectFullData } from "@/entities/buy/objectFullData.ts";
 
 export const BuyerMapPage = observer(() => {
   const isMobile = useIsMobile();
@@ -20,7 +21,7 @@ export const BuyerMapPage = observer(() => {
   const [entitiesToShow, setEntitiesToShow] = useState<BuyEntity[]>([]);
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const [selectedPropertyData, setSelectedPropertyData] =
-    useState<BuyEntity | null>(null);
+    useState<ObjectFullData | null>(null);
   const navigate = useNavigate();
 
   const [filters, setFilters] = useState<Filters>({

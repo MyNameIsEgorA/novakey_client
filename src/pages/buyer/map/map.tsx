@@ -216,7 +216,7 @@ const CustomMarkerIcon = ({
 
 interface BuyerMapProps {
   entitiesToShow: ObjectFullData[];
-  setSelectedPropertyData: Dispatch<SetStateAction<BuyEntity | null>>;
+  setSelectedPropertyData: Dispatch<SetStateAction<ObjectFullData | null>>;
   isMobile?: boolean;
 }
 
@@ -225,7 +225,9 @@ export const BuyerMap = ({
   setSelectedPropertyData,
   isMobile = false,
 }: BuyerMapProps) => {
-  const [selectedEntity, setSelectedEntity] = useState<BuyEntity | null>(null);
+  const [selectedEntity, setSelectedEntity] = useState<ObjectFullData | null>(
+    null,
+  );
   const mapCenter = [45.035, 38.975]; // Центр Краснодара
 
   return (
@@ -314,13 +316,13 @@ export const BuyerMap = ({
             ]}
             icon={CustomMarkerIcon({
               isSelected: +(selectedEntity?.id || 0) === entity.id,
-              statusColor: ["#f0f0f0"],
+              statusColor: "#f0f0f0",
               price: entity.min_price,
             })}
             eventHandlers={{
               click: () => {
-                // setSelectedEntity(entity);
-                // setSelectedPropertyData(entity);
+                setSelectedEntity(entity);
+                setSelectedPropertyData(entity);
               },
             }}
           />

@@ -2,9 +2,10 @@ import { ImageWithFallback } from "@/components/figma/ImageWithFallback.tsx";
 import { MapPin } from "lucide-react";
 import type { BuyEntity } from "@/entities/buy/type.ts";
 import type { FC } from "react";
+import type { ObjectFullData } from "@/entities/buy/objectFullData.ts";
 
 interface SelectedElementProps {
-  selectedPropertyData: BuyEntity;
+  selectedPropertyData: ObjectFullData;
   onPropertySelect: (id: string) => void;
 }
 
@@ -22,7 +23,7 @@ export const SelectedElement: FC<SelectedElementProps> = ({
 
               <div className="w-full h-48 rounded-xl overflow-hidden mb-6">
                 <ImageWithFallback
-                  src={selectedPropertyData.image}
+                  src={selectedPropertyData.photos[0]}
                   alt={selectedPropertyData.name}
                   className="w-full h-full object-cover"
                 />
@@ -30,10 +31,15 @@ export const SelectedElement: FC<SelectedElementProps> = ({
 
               <h4 className="text-black mb-2">{selectedPropertyData.name}</h4>
               <p className="text-gray-500 text-sm mb-1">
-                {selectedPropertyData.rooms}, {selectedPropertyData.area} м²
+                {selectedPropertyData.apartment_types[0]},{" "}
+                {Math.floor(
+                  selectedPropertyData.min_price /
+                    selectedPropertyData.price_per_sqm,
+                )}{" "}
+                м²
               </p>
               <p className="text-blue-600 text-xl mb-4">
-                {selectedPropertyData.price}
+                {selectedPropertyData.min_price} Р
               </p>
 
               <div className="space-y-3 mb-6">
@@ -48,7 +54,7 @@ export const SelectedElement: FC<SelectedElementProps> = ({
                           : "bg-green-100 text-green-600"
                     }`}
                   >
-                    {selectedPropertyData.status}
+                    {selectedPropertyData.construction_status}
                   </span>
                 </div>
                 <div className="flex items-center justify-between py-2 border-b border-gray-100">
@@ -66,7 +72,8 @@ export const SelectedElement: FC<SelectedElementProps> = ({
                 <div className="flex items-center justify-between py-2 border-b border-gray-100">
                   <span className="text-gray-600">Этаж</span>
                   <span className="text-black">
-                    {selectedPropertyData.floor}/{selectedPropertyData.maxFloor}
+                    {selectedPropertyData.floors_count}/
+                    {selectedPropertyData.floors_count}
                   </span>
                 </div>
               </div>
@@ -87,7 +94,9 @@ export const SelectedElement: FC<SelectedElementProps> = ({
 
               <div className="space-y-3">
                 <button
-                  onClick={() => onPropertySelect(selectedPropertyData.id)}
+                  onClick={() =>
+                    onPropertySelect(String(selectedPropertyData.id))
+                  }
                   className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   Подробнее
