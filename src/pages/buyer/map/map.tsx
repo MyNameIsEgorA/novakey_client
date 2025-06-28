@@ -3,6 +3,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import type { BuyEntity } from "@/entities/buy/type.ts";
 import { useState, type Dispatch, type SetStateAction } from "react";
+import type { ObjectFullData } from "@/entities/buy/objectFullData.ts";
 
 // Fix for default marker icons
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -214,7 +215,7 @@ const CustomMarkerIcon = ({
 };
 
 interface BuyerMapProps {
-  entitiesToShow: BuyEntity[];
+  entitiesToShow: ObjectFullData[];
   setSelectedPropertyData: Dispatch<SetStateAction<BuyEntity | null>>;
   isMobile?: boolean;
 }
@@ -307,16 +308,19 @@ export const BuyerMap = ({
         {entitiesToShow.map((entity) => (
           <Marker
             key={entity.id}
-            position={[entity.x, entity.y]}
+            position={[
+              Number.parseFloat(entity.latitude),
+              Number.parseFloat(entity.longitude),
+            ]}
             icon={CustomMarkerIcon({
-              isSelected: selectedEntity?.id === entity.id,
-              statusColor: entity.statusColor,
-              price: entity.price,
+              isSelected: +(selectedEntity?.id || 0) === entity.id,
+              statusColor: ["#f0f0f0"],
+              price: entity.min_price,
             })}
             eventHandlers={{
               click: () => {
-                setSelectedEntity(entity);
-                setSelectedPropertyData(entity);
+                // setSelectedEntity(entity);
+                // setSelectedPropertyData(entity);
               },
             }}
           />

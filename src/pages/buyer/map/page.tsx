@@ -10,9 +10,12 @@ import { useIsMobile } from "@/shared/hooks/isMobile.ts";
 import { ArrowLeft, List, SlidersHorizontal } from "lucide-react";
 import { MobileSelectedElement } from "@/pages/buyer/map/mobileSelectedElement.tsx";
 import { useNavigate } from "react-router-dom";
+import { observer } from "mobx-react-lite";
+import { allObjectsStorage } from "@/entities/buy/modelsStorage.ts";
 
-export const BuyerMapPage = () => {
+export const BuyerMapPage = observer(() => {
   const isMobile = useIsMobile();
+  const { allObjects } = allObjectsStorage;
   const [allEntities, setAllEntities] = useState<BuyEntity[]>([]);
   const [entitiesToShow, setEntitiesToShow] = useState<BuyEntity[]>([]);
   const [showFilters, setShowFilters] = useState<boolean>(false);
@@ -152,7 +155,7 @@ export const BuyerMapPage = () => {
             />
 
             <BuyerMap
-              entitiesToShow={entitiesToShow}
+              entitiesToShow={allObjects}
               setSelectedPropertyData={setSelectedPropertyData}
             />
             {selectedPropertyData && (
@@ -212,7 +215,7 @@ export const BuyerMapPage = () => {
           )}
           <BuyerMap
             isMobile={true}
-            entitiesToShow={entitiesToShow}
+            entitiesToShow={allObjects}
             setSelectedPropertyData={setSelectedPropertyData}
           />
           <MobileSelectedElement
@@ -225,4 +228,4 @@ export const BuyerMapPage = () => {
       )}
     </div>
   );
-};
+});
