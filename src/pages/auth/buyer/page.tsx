@@ -39,7 +39,7 @@ export function BuyerAuthPage() {
     navigate(AppRoutes.authUserSelection);
   };
   const onSuccess = () => {
-    navigate("/buyer/main");
+    navigate(AppRoutes.buyer.home);
   };
 
   const [isLoading, setIsLoading] = useState(false);

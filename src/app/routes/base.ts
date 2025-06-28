@@ -12,6 +12,7 @@ export const AppRoutes = {
     vr: "/buyer/vr",
     calculator: "/buyer/calculator",
     favorites: "/buyer/favorites",
+    tinder: "/buyer/tinder",
   },
   developer: {
     main: "/developer/main",

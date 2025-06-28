@@ -129,7 +129,7 @@ export const BuyerSidebar = () => {
         </div>
       )}
 
-      {isMobile && (
+      {isMobile && window.location.pathname !== "/buyer/tinder" && (
         <div className="fixed w-[392px] bottom-0 bg-white border-t border-gray-200 shadow-lg z-[3000000000]">
           <nav className="flex justify-around py-2">
             {navigationItems.map((item) => (

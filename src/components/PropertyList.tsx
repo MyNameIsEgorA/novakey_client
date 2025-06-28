@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   Filter,
@@ -15,8 +15,12 @@ import {
   Edit,
   Trash2,
   Eye,
+  Grid3X3,
+  Zap,
 } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { useNavigate } from "react-router-dom";
+import { AppRoutes } from "@/app/routes/base.ts";
 
 interface PropertyListProps {
   onPropertySelect: (propertyId: string) => void;
@@ -188,7 +192,7 @@ export function PropertyList({
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("price");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
+  const [viewMode, setViewMode] = useState<"list" | "swiper">("list");
   const [filters, setFilters] = useState({
     priceRange: [0, 20],
     areaRange: [20, 150],
@@ -202,6 +206,14 @@ export function PropertyList({
     nearSchool: false,
     nearShops: false,
   });
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (viewMode === "swiper") {
+      navigate(AppRoutes.buyer.tinder);
+    }
+  }, [viewMode]);
 
   const properties =
     userType === "developer" ? developerProperties : buyerProperties;
@@ -368,6 +380,34 @@ export function PropertyList({
             </div>
 
             {/* Search */}
+
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="flex items-center space-x-2 bg-gray-100 rounded-xl p-1 flex-1">
+                <button
+                  onClick={() => setViewMode("list")}
+                  className={`flex-1 flex items-center justify-center py-2 px-3 rounded-lg text-sm transition-colors ${
+                    viewMode === "list"
+                      ? "bg-white text-blue-600 shadow-sm"
+                      : "text-gray-600"
+                  }`}
+                >
+                  <Grid3X3 className="w-4 h-4 mr-2" />
+                  Список
+                </button>
+                <button
+                  onClick={() => setViewMode("swiper")}
+                  className={`flex-1 flex items-center justify-center py-2 px-3 rounded-lg text-sm transition-colors ${
+                    viewMode === "swiper"
+                      ? "bg-white text-pink-600 shadow-sm"
+                      : "text-gray-600"
+                  }`}
+                >
+                  <Zap className="w-4 h-4 mr-2" />
+                  Подбор
+                </button>
+              </div>
+            </div>
+
             <div className="relative mb-4">
               <input
                 type="text"
@@ -788,26 +828,30 @@ export function PropertyList({
                 </div>
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-2 bg-gray-100 rounded-lg p-1">
-                    <button
-                      onClick={() => setViewMode("list")}
-                      className={`p-2 rounded-md transition-colors ${
-                        viewMode === "list"
-                          ? "bg-white text-blue-600 shadow-sm"
-                          : "text-gray-600 hover:text-gray-900"
-                      }`}
-                    >
-                      <ListIcon className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => setViewMode("grid")}
-                      className={`p-2 rounded-md transition-colors ${
-                        viewMode === "grid"
-                          ? "bg-white text-blue-600 shadow-sm"
-                          : "text-gray-600 hover:text-gray-900"
-                      }`}
-                    >
-                      <Grid className="w-4 h-4" />
-                    </button>
+                    <div className="flex items-center space-x-2 bg-gray-100 rounded-xl p-1">
+                      <button
+                        onClick={() => setViewMode("list")}
+                        className={`flex items-center px-4 py-2 rounded-lg text-sm transition-colors ${
+                          viewMode === "list"
+                            ? "bg-white text-blue-600 shadow-sm"
+                            : "text-gray-600 hover:text-gray-900"
+                        }`}
+                      >
+                        <Grid3X3 className="w-4 h-4 mr-2" />
+                        Список
+                      </button>
+                      <button
+                        onClick={() => setViewMode("swiper")}
+                        className={`flex items-center px-4 py-2 rounded-lg text-sm transition-colors ${
+                          viewMode === "swiper"
+                            ? "bg-white text-pink-600 shadow-sm"
+                            : "text-gray-600 hover:text-gray-900"
+                        }`}
+                      >
+                        <Heart className="w-4 h-4 mr-2" />
+                        Умный подбор
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1053,119 +1097,7 @@ export function PropertyList({
                 </div>
               ) : (
                 /* Grid View */
-                <div className="grid grid-cols-2 xl:grid-cols-3 gap-6">
-                  {sortedProperties.map((property) => (
-                    <div
-                      key={property.id}
-                      onClick={() => onPropertySelect(property.id)}
-                      className="bg-white rounded-xl p-6 shadow-sm border cursor-pointer hover:shadow-md transition-shadow"
-                    >
-                      <div className="w-full h-48 rounded-lg overflow-hidden mb-4 relative">
-                        <ImageWithFallback
-                          src={property.image}
-                          alt={property.name}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute top-3 right-3 flex space-x-1">
-                          {userType === "developer" ? (
-                            <>
-                              <button className="p-2 bg-white/80 rounded-full text-gray-600 hover:text-blue-500 transition-colors">
-                                <Edit className="w-4 h-4" />
-                              </button>
-                              <button className="p-2 bg-white/80 rounded-full text-gray-600 hover:text-gray-800 transition-colors">
-                                <Eye className="w-4 h-4" />
-                              </button>
-                            </>
-                          ) : (
-                            <>
-                              <button className="p-2 bg-white/80 rounded-full text-gray-600 hover:text-red-500 transition-colors">
-                                <Heart className="w-4 h-4" />
-                              </button>
-                              <button className="p-2 bg-white/80 rounded-full text-gray-600 hover:text-gray-800 transition-colors">
-                                <Share2 className="w-4 h-4" />
-                              </button>
-                            </>
-                          )}
-                        </div>
-                        <div className="absolute top-3 left-3">
-                          <span
-                            className={`text-xs px-2 py-1 rounded-full ${
-                              property.statusColor === "orange"
-                                ? "bg-orange-100 text-orange-600"
-                                : property.statusColor === "blue"
-                                  ? "bg-blue-100 text-blue-600"
-                                  : "bg-green-100 text-green-600"
-                            }`}
-                          >
-                            {property.status}
-                          </span>
-                        </div>
-                      </div>
-
-                      <h3 className="text-black mb-2">{property.name}</h3>
-                      <p className="text-gray-500 text-sm mb-3">
-                        {property.location}
-                      </p>
-
-                      <div className="space-y-2 mb-4">
-                        <div className="flex items-center text-gray-600 text-sm">
-                          <Home className="w-4 h-4 mr-2" />
-                          {property.rooms}
-                          {userType === "buyer" && `, ${property.area} м²`}
-                        </div>
-                        <div className="flex items-center text-gray-600 text-sm">
-                          <Calendar className="w-4 h-4 mr-2" />
-                          {property.deliveryDate}
-                        </div>
-                        {userType === "developer" && (
-                          <div className="flex items-center text-gray-600 text-sm">
-                            <Eye className="w-4 h-4 mr-2" />
-                            {(property as any).views} просмотров
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="mb-4">
-                        <p className="text-xl text-blue-600">
-                          {property.price}
-                        </p>
-                        <p className="text-gray-500 text-sm">
-                          {property.pricePerSqm.toLocaleString()} ₽/м²
-                        </p>
-                        {userType === "developer" && (
-                          <p className="text-gray-600 text-sm mt-1">
-                            Продано: {(property as any).sold}/
-                            {(property as any).total}
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="flex flex-wrap gap-1 mb-3">
-                        {property.amenities
-                          .slice(0, 2)
-                          .map((amenity, index) => (
-                            <span
-                              key={index}
-                              className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full"
-                            >
-                              {amenity}
-                            </span>
-                          ))}
-                        {property.amenities.length > 2 && (
-                          <span className="text-gray-500 text-xs">
-                            +{property.amenities.length - 2}
-                          </span>
-                        )}
-                      </div>
-
-                      {userType === "buyer" && (
-                        <p className="text-gray-600 text-sm">
-                          {property.developer}
-                        </p>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                <div></div>
               )}
 
               {sortedProperties.length === 0 && (

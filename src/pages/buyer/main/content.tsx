@@ -271,7 +271,7 @@ export const BuyerMainContent = () => {
                 </div>
               </div>
               <button
-                onClick={() => navigate("/buyer/list?type=tinder")}
+                onClick={() => navigate(AppRoutes.buyer.tinder)}
                 className="w-full bg-gradient-to-r from-slate-600 to-stone-600 text-white py-2 rounded-lg hover:from-slate-700 hover:to-stone-700 transition-all flex items-center justify-center"
               >
                 <Heart className="w-4 h-4 mr-2" />
