@@ -1,7 +1,6 @@
 import { MapFilters } from "@/pages/buyer/map/filters.tsx";
 import { BuyerHeader } from "@/pages/buyer/main/header.tsx";
 import { useEffect, useState } from "react";
-import type { BuyEntity } from "@/entities/buy/type.ts";
 import { getAllAvailableObjects } from "@/entities/buy/model.ts";
 import type { Filters } from "@/shared/type/filters.ts";
 import { BuyerMap } from "@/pages/buyer/map/map.tsx";
@@ -17,15 +16,15 @@ import type { ObjectFullData } from "@/entities/buy/objectFullData.ts";
 export const BuyerMapPage = observer(() => {
   const isMobile = useIsMobile();
   const { allObjects } = allObjectsStorage;
-  const [allEntities, setAllEntities] = useState<BuyEntity[]>([]);
-  const [entitiesToShow, setEntitiesToShow] = useState<BuyEntity[]>([]);
+
+  const [entitiesToShow, setEntitiesToShow] = useState<ObjectFullData[]>([]);
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const [selectedPropertyData, setSelectedPropertyData] =
     useState<ObjectFullData | null>(null);
   const navigate = useNavigate();
 
   const [filters, setFilters] = useState<Filters>({
-    priceRange: [0, 20],
+    priceRange: [0, Math.max(...allObjects.map((object) => +object.max_price))],
     areaRange: [20, 150],
     rooms: "any",
     status: "any",
@@ -53,56 +52,84 @@ export const BuyerMapPage = observer(() => {
   ].reduce((a, b) => a + b, 0);
 
   useEffect(() => {
-    let filtered = allEntities;
+    let filtered = allObjects;
+    console.log(`Initial objects: ${filtered.length}`);
 
     filtered = filtered.filter(
       (entity) =>
-        entity.priceNum >= filters.priceRange[0] &&
-        entity.priceNum <= filters.priceRange[1],
+        parseFloat(entity.min_price) <= filters.priceRange[1] &&
+        parseFloat(entity.max_price) >= filters.priceRange[0],
     );
+    console.log(`After price filter: ${filtered.length}`);
 
     filtered = filtered.filter(
       (entity) =>
-        entity.area >= filters.areaRange[0] &&
-        entity.area <= filters.areaRange[1],
+        Math.round(entity.min_price / entity.price_per_sqm) >=
+          filters.areaRange[0] &&
+        Math.round(entity.min_price / entity.price_per_sqm) <=
+          filters.areaRange[1],
     );
+    console.log(`After area filter: ${filtered.length}`);
 
     if (filters.rooms !== "any") {
       filtered = filtered.filter((entity) => {
         if (filters.rooms === "4") {
-          return entity.rooms && parseInt(entity.rooms) >= 4;
+          return entity.apartment_types.some(
+            (type) =>
+              type.includes("4-комнатная") ||
+              type.includes("5-комнатная") ||
+              type.includes("6-комнатная"),
+          );
+        } else if (filters.rooms === "Студия") {
+          return entity.apartment_types.includes("Студия");
         }
-        return entity.rooms === filters.rooms;
+        return entity.apartment_types.includes(`${filters.rooms}-комнатная`);
       });
     }
+    console.log(`After rooms filter: ${filtered.length}`);
 
     if (filters.status !== "any") {
-      filtered = filtered.filter((entity) => entity.status === filters.status);
+      filtered = filtered.filter(
+        (entity) => entity.construction_status === filters.status,
+      );
     }
+    console.log(`After status filter: ${filtered.length}`);
 
     if (filters.district !== "any") {
       filtered = filtered.filter(
         (entity) => entity.district === filters.district,
       );
     }
+    console.log(`After district filter: ${filtered.length}`);
 
     if (filters.developer !== "any") {
       filtered = filtered.filter(
         (entity) => entity.developer === filters.developer,
       );
     }
+    console.log(`After developer filter: ${filtered.length}`);
+
+    filtered = filtered.filter(
+      (entity) =>
+        entity.floors_count >= filters.floorRange[0] &&
+        entity.floors_count <= filters.floorRange[1],
+    );
+    console.log(`After floor range filter: ${filtered.length}`);
 
     if (filters.nearTransport) {
-      filtered = filtered.filter((entity) => entity.nearTransport);
+      filtered = filtered.filter((entity) => entity.transport_nearby);
     }
+    console.log(`After near transport filter: ${filtered.length}`);
 
     if (filters.nearSchool) {
-      filtered = filtered.filter((entity) => entity.nearSchool);
+      filtered = filtered.filter((entity) => entity.school_nearby);
     }
+    console.log(`After near school filter: ${filtered.length}`);
 
     if (filters.nearShops) {
-      filtered = filtered.filter((entity) => entity.nearShops);
+      filtered = filtered.filter((entity) => entity.shops_nearby);
     }
+    console.log(`After near shops filter: ${filtered.length}`);
 
     if (filters.amenities.length > 0) {
       filtered = filtered.filter((entity) =>
@@ -111,30 +138,10 @@ export const BuyerMapPage = observer(() => {
         ),
       );
     }
+    console.log(`After amenities filter: ${filtered.length}`);
 
     setEntitiesToShow(filtered);
-  }, [filters, allEntities]);
-
-  useEffect(() => {
-    const getEntities = async () => {
-      const entities = await getAllAvailableObjects();
-      const transformedEntities = entities.map((entity) => ({
-        ...entity,
-        statusColor:
-          entity.status === "Готов к заселению"
-            ? "green"
-            : entity.status === "Строительство"
-              ? "orange"
-              : "blue",
-        price: `${entity.priceNum}М ₽`,
-      }));
-
-      setAllEntities(transformedEntities as BuyEntity[]);
-      setEntitiesToShow(transformedEntities as BuyEntity[]);
-    };
-
-    getEntities();
-  }, []);
+  }, [filters, allObjects]);
 
   return (
     <div className={"bg-[#f9f9f9] h-full"}>
@@ -148,7 +155,7 @@ export const BuyerMapPage = observer(() => {
           <div className={"p-6 flex w-full h-[94vh]"}>
             <MapFilters
               entitiesToShow={entitiesToShow}
-              allEntities={allEntities}
+              allEntities={allObjects}
               setEntitiesToShow={setEntitiesToShow}
               className={"w-1/4"}
               filters={filters}
@@ -156,7 +163,7 @@ export const BuyerMapPage = observer(() => {
             />
 
             <BuyerMap
-              entitiesToShow={allObjects}
+              entitiesToShow={entitiesToShow}
               setSelectedPropertyData={setSelectedPropertyData}
             />
             {selectedPropertyData && (
@@ -172,7 +179,7 @@ export const BuyerMapPage = observer(() => {
       )}
       {isMobile && (
         <>
-          <div className="px-6  py-4 pb-0 bg-white border-b border-gray-200 flex items-center justify-between">
+          <div className="px-6 py-4 pb-0 bg-white border-b border-gray-200 flex items-center justify-between">
             <div className="flex items-center">
               <button
                 onClick={() => {}}
@@ -183,7 +190,7 @@ export const BuyerMapPage = observer(() => {
               <div>
                 <h1 className="text-lg">Карта объектов</h1>
                 <p className="text-sm text-gray-500">
-                  {entitiesToShow.length} из {allEntities.length} объектов
+                  {entitiesToShow.length} из {allObjects.length} объектов
                 </p>
               </div>
             </div>
@@ -207,7 +214,7 @@ export const BuyerMapPage = observer(() => {
           {showFilters && (
             <MapFilters
               entitiesToShow={entitiesToShow}
-              allEntities={allEntities}
+              allEntities={allObjects}
               setEntitiesToShow={setEntitiesToShow}
               className={"w-full"}
               filters={filters}
@@ -216,7 +223,7 @@ export const BuyerMapPage = observer(() => {
           )}
           <BuyerMap
             isMobile={true}
-            entitiesToShow={allObjects}
+            entitiesToShow={entitiesToShow}
             setSelectedPropertyData={setSelectedPropertyData}
           />
           <MobileSelectedElement

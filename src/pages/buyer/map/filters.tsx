@@ -1,35 +1,45 @@
-import type { BuyEntity } from "@/entities/buy/type.ts";
+import type { ObjectFullData } from "@/entities/buy/objectFullData.ts";
 import type { Dispatch, FC, SetStateAction } from "react";
 import { cn } from "@/lib/utils.ts";
 import { BaseFilters, type Filters } from "@/shared/type/filters.ts";
 
 interface MapFiltersProps {
-  allEntities: BuyEntity[];
-  entitiesToShow: BuyEntity[];
-  setEntitiesToShow: Dispatch<SetStateAction<BuyEntity[]>>;
+  allEntities: ObjectFullData[];
+  entitiesToShow: ObjectFullData[];
+  setEntitiesToShow: Dispatch<SetStateAction<ObjectFullData[]>>;
   className: string;
   filters: Filters;
   setFilters: Dispatch<SetStateAction<Filters>>;
 }
 
 const availableAmenities = [
-  "Балкон",
-  "Лифт",
-  "Парковка",
-  "Консьерж",
-  "Фитнес",
+  "Подземная парковка",
+  "Фитнес-центр",
   "Детская площадка",
-  "Терраса",
+  "Консьерж",
+  // Добавьте больше удобств по мере необходимости из ObjectFullData.amenities
 ];
-const availableDistricts = ["any", "Центр", "Северный", "Южный", "Восточный"];
+const availableDistricts = [
+  "any",
+  "Центральный",
+  "Северный",
+  "Южный",
+  "Восточный",
+];
 const availableDevelopers = [
   "any",
-  "СтройИнвест",
+  'ООО "СтройИнвест"',
   "Новострой",
   "Премиум Строй",
   "ЭкоСтрой",
   "Элит Девелопмент",
   "Массив Строй",
+];
+const availableConstructionStatuses = [
+  "any",
+  "Строительство",
+  "Готов к заселению",
+  // Добавьте другие статусы, если они есть в ваших данных, например, "Облицовка"
 ];
 
 export const MapFilters: FC<MapFiltersProps> = ({
@@ -115,8 +125,8 @@ export const MapFilters: FC<MapFiltersProps> = ({
           <input
             type="range"
             min="0"
-            max="20"
-            step="0.5"
+            max="20000000"
+            step="500000"
             value={filters.priceRange[1]}
             onChange={(e) =>
               setFilters((prev) => ({
@@ -128,15 +138,13 @@ export const MapFilters: FC<MapFiltersProps> = ({
           />
           <div className="flex justify-between text-sm text-gray-500">
             <span>0 млн</span>
-            <span className="text-blue-600">
-              до {filters.priceRange[1]} млн
-            </span>
+            <span className="text-blue-600">до {filters.priceRange[1]} Р</span>
             <span>20 млн</span>
           </div>
         </div>
       </div>
 
-      {/* Area Range */}
+      {/* Area Range - Assuming ObjectFullData now has min_area and max_area or similar */}
       <div>
         <label className="text-black mb-3 block mt-5">Площадь, м²</label>
         <div className="space-y-3">
@@ -178,6 +186,48 @@ export const MapFilters: FC<MapFiltersProps> = ({
         </div>
       </div>
 
+      {/* Floor Range - New UI for floor filtering */}
+      <div>
+        <label className="text-black mb-3 block mt-5">Этаж</label>
+        <div className="space-y-3">
+          <div className="space-y-2">
+            <input
+              type="range"
+              min="1"
+              max="30"
+              value={filters.floorRange[0]}
+              onChange={(e) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  floorRange: [parseInt(e.target.value), prev.floorRange[1]],
+                }))
+              }
+              className="w-full accent-blue-600"
+            />
+            <input
+              type="range"
+              min="1"
+              max="30"
+              value={filters.floorRange[1]}
+              onChange={(e) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  floorRange: [prev.floorRange[0], parseInt(e.target.value)],
+                }))
+              }
+              className="w-full accent-blue-600"
+            />
+          </div>
+          <div className="flex justify-between text-sm text-gray-500">
+            <span>{filters.floorRange[0]} этаж</span>
+            <span className="text-blue-600">
+              {filters.floorRange[0]} - {filters.floorRange[1]} этаж
+            </span>
+            <span>{filters.floorRange[1]} этаж</span>
+          </div>
+        </div>
+      </div>
+
       <div className="space-y-4 mt-6">
         <div>
           <label className="text-black mb-2 block">Комнаты</label>
@@ -189,6 +239,7 @@ export const MapFilters: FC<MapFiltersProps> = ({
             className="w-full bg-gray-100 rounded-lg px-4 py-3 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500"
           >
             <option value="any">Любая</option>
+            <option value="Студия">Студия</option>
             <option value="1">1-комн.</option>
             <option value="2">2-комн.</option>
             <option value="3">3-комн.</option>
@@ -205,10 +256,11 @@ export const MapFilters: FC<MapFiltersProps> = ({
             }
             className="w-full bg-gray-100 rounded-lg px-4 py-3 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500"
           >
-            <option value="any">Любой</option>
-            <option value="ready">Готов</option>
-            <option value="finishing">Облицовка</option>
-            <option value="construction">Строительство</option>
+            {availableConstructionStatuses.map((status) => (
+              <option key={status} value={status}>
+                {status === "any" ? "Любой" : status}
+              </option>
+            ))}
           </select>
         </div>
 
