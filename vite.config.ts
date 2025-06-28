@@ -26,6 +26,7 @@ export default defineConfig({
     host: true,
   },
   preview: {
+    allowedHosts: true,
     host: true,
   },
   publicDir: "public",

@@ -38,6 +38,19 @@ const App: React.FC = () => {
           <Route path={"list"} element={<BuyerSearchPage />}></Route>
           <Route path={"map"} element={<BuyerMapPage />}></Route>
           <Route
+            path={"vr"}
+            element={
+              <iframe
+                src="https://portfolio3.3dpanorama.spb.ru/2024/11/univer-city/"
+                width="100%"
+                height="600"
+                frameBorder="0"
+                allowFullScreen
+                allow="vr"
+              ></iframe>
+            }
+          ></Route>
+          <Route
             path={"object_info/:id"}
             element={<BuyerObjectInfoPage />}
           ></Route>

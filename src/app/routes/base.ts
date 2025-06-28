@@ -9,6 +9,7 @@ export const AppRoutes = {
     chats: "/buyer/chats",
     profile: "/buyer/profile",
     object_info: "/buyer/object_info/:id",
+    vr: "/buyer/vr",
   },
   developer: {
     main: "/developer/main",
