@@ -25,5 +25,6 @@ export const AppRoutes = {
     addObject: "/developer/add_object",
     chats: "/developer/chats",
     object_info: "/developer/object_info/:id",
+    notifications: "/developer/notifications",
   },
 };

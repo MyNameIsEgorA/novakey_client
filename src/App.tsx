@@ -23,6 +23,7 @@ import { DeveloperObjectInfo } from "@/pages/developer/objectInfo/page.tsx";
 import { CalculatorPage } from "@/pages/buyer/calculator/page.tsx";
 import { TinderPage } from "@/pages/buyer/tinder/page.tsx";
 import { BuyerNotificationsPage } from "@/pages/buyer/notifications/page.tsx";
+import { DeveloperNotificationsPage } from "@/pages/developer/notifications/page.tsx";
 
 const App: React.FC = () => {
   return (
@@ -70,6 +71,10 @@ const App: React.FC = () => {
           <Route path={"add_object"} element={<AddObjectPage />} />
           <Route path={"chats"} element={<BuyerChatPage />}></Route>
           <Route path={"my_objects"} element={<MyObjectsPage />} />
+          <Route
+            path={"notifications"}
+            element={<DeveloperNotificationsPage />}
+          />
           <Route path={"crm"} element={<CrmPage />} />
           <Route path={"map"} element={<DeveloperMapPage />} />
           <Route path={"calendar"} element={<CalendarPage />} />
