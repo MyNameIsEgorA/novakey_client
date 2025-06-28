@@ -21,11 +21,11 @@ import {
   Calculator,
 } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { useNavigate } from "react-router-dom";
 
 interface PropertyDetailProps {
   propertyId: string;
   onBack: () => void;
-  onStartChat: () => void;
   onStartARViewer: () => void;
   onStartMortgageCalculator?: (price: number) => void;
   userType: "buyer" | "developer" | null;
@@ -111,13 +111,18 @@ const amenityIcons: { [key: string]: any } = {
 export function PropertyDetail({
   propertyId,
   onBack,
-  onStartChat,
   onStartARViewer,
-  onStartMortgageCalculator,
   userType,
 }: PropertyDetailProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
+  const navigate = useNavigate();
+  const goToChat = () => {
+    navigate("/buyer/chats");
+  };
+  const goToCalculator = () => {
+    navigate(`/buyer/calculator?price=${propertyData["1"].numericPrice}`);
+  };
 
   const property = propertyData[propertyId as keyof typeof propertyData];
 
@@ -147,9 +152,7 @@ export function PropertyDetail({
   };
 
   const handleMortgageCalculator = () => {
-    if (onStartMortgageCalculator) {
-      onStartMortgageCalculator(property.numericPrice);
-    }
+    goToCalculator();
   };
 
   return (
@@ -320,18 +323,18 @@ export function PropertyDetail({
 
             {/* Viewing Options */}
             {(property.hasAR || property.hasVR) && (
-              <div className="mb-6">
+              <div className="mb-2">
                 <h3 className="text-lg text-black mb-3">
                   Виртуальный просмотр
                 </h3>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid gap-3">
                   {property.hasAR && (
                     <button
                       onClick={onStartARViewer}
-                      className="flex items-center justify-center p-4 bg-blue-50 rounded-xl border border-blue-200 hover:bg-blue-100 transition-colors"
+                      className="flex items-center justify-center p-4 bg-blue-50 w-full rounded-xl border border-blue-200 hover:bg-blue-100 transition-colors"
                     >
                       <Eye className="w-5 h-5 text-blue-600 mr-2" />
-                      <span className="text-blue-600">AR Просмотр</span>
+                      <span className="text-blue-600 w-full">AR Просмотр</span>
                     </button>
                   )}
                   {property.hasVR && (
@@ -346,7 +349,7 @@ export function PropertyDetail({
           </div>
 
           {/* Mobile Bottom Actions */}
-          <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md bg-white border-t border-gray-200 p-4">
+          <div className="mb-[100px] bg-white border-t border-gray-200 p-4">
             <div className="flex space-x-3">
               {userType === "buyer" && (
                 <>
@@ -358,7 +361,7 @@ export function PropertyDetail({
                     Ипотека
                   </button>
                   <button
-                    onClick={onStartChat}
+                    onClick={goToChat}
                     className="flex-1 bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center"
                   >
                     <MessageSquare className="w-5 h-5 mr-2" />
@@ -368,7 +371,7 @@ export function PropertyDetail({
               )}
               {userType === "developer" && (
                 <button
-                  onClick={onStartChat}
+                  onClick={goToChat}
                   className="flex-1 bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center"
                 >
                   <MessageSquare className="w-5 h-5 mr-2" />
@@ -475,6 +478,36 @@ export function PropertyDetail({
                   ))}
                 </div>
               </div>
+              <div className="mt-8 grid ">
+                <div className="col-span-8">
+                  {/* Description */}
+                  <div className="bg-white rounded-xl p-6 shadow-sm border mb-6">
+                    <h3 className="text-xl text-black mb-4">Описание</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      {property.description}
+                    </p>
+                  </div>
+
+                  {/* Amenities */}
+                  <div className="bg-white rounded-xl p-6 shadow-sm border">
+                    <h3 className="text-xl text-black mb-4">Удобства</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      {property.amenities.map((amenity) => {
+                        const IconComponent = amenityIcons[amenity] || Home;
+                        return (
+                          <div
+                            key={amenity}
+                            className="flex items-center p-4 bg-gray-50 rounded-xl"
+                          >
+                            <IconComponent className="w-6 h-6 text-gray-600 mr-3" />
+                            <span className="text-gray-700">{amenity}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Desktop Info Panel */}
@@ -531,7 +564,7 @@ export function PropertyDetail({
                       Рассчитать ипотеку
                     </button>
                     <button
-                      onClick={onStartChat}
+                      onClick={goToChat}
                       className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center"
                     >
                       <MessageSquare className="w-5 h-5 mr-2" />
@@ -543,7 +576,7 @@ export function PropertyDetail({
                 {userType === "developer" && (
                   <div className="space-y-3 mb-6">
                     <button
-                      onClick={onStartChat}
+                      onClick={goToChat}
                       className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center"
                     >
                       <MessageSquare className="w-5 h-5 mr-2" />
@@ -594,36 +627,6 @@ export function PropertyDetail({
           </div>
 
           {/* Desktop Description and Amenities */}
-          <div className="mt-8 grid grid-cols-12 gap-8">
-            <div className="col-span-8">
-              {/* Description */}
-              <div className="bg-white rounded-xl p-6 shadow-sm border mb-6">
-                <h3 className="text-xl text-black mb-4">Описание</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {property.description}
-                </p>
-              </div>
-
-              {/* Amenities */}
-              <div className="bg-white rounded-xl p-6 shadow-sm border">
-                <h3 className="text-xl text-black mb-4">Удобства</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  {property.amenities.map((amenity) => {
-                    const IconComponent = amenityIcons[amenity] || Home;
-                    return (
-                      <div
-                        key={amenity}
-                        className="flex items-center p-4 bg-gray-50 rounded-xl"
-                      >
-                        <IconComponent className="w-6 h-6 text-gray-600 mr-3" />
-                        <span className="text-gray-700">{amenity}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>

@@ -10,6 +10,7 @@ export const AppRoutes = {
     profile: "/buyer/profile",
     object_info: "/buyer/object_info/:id",
     vr: "/buyer/vr",
+    calculator: "/buyer/calculator",
   },
   developer: {
     main: "/developer/main",
