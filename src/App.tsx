@@ -29,6 +29,7 @@ import { CalculatorPage } from "@/pages/buyer/calculator/page.tsx";
 import { TinderPage } from "@/pages/buyer/tinder/page.tsx";
 import { BuyerNotificationsPage } from "@/pages/buyer/notifications/page.tsx";
 import { DeveloperNotificationsPage } from "@/pages/developer/notifications/page.tsx";
+import { ArPage } from "@/pages/buyer/ar/page.tsx";
 
 const App: React.FC = () => {
   return (
@@ -56,19 +57,7 @@ const App: React.FC = () => {
             path={"notifications"}
             element={<BuyerNotificationsPage />}
           ></Route>
-          <Route
-            path={"vr"}
-            element={
-              <iframe
-                src="https://portfolio3.3dpanorama.spb.ru/2024/11/univer-city/"
-                width="100%"
-                height="600"
-                frameBorder="0"
-                allowFullScreen
-                allow="vr"
-              ></iframe>
-            }
-          ></Route>
+          <Route path={"ar"} element={<ArPage />}></Route>
           <Route
             path={"object_info/:id"}
             element={<BuyerObjectInfoPage />}

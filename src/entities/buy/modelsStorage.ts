@@ -55,11 +55,14 @@ class AllObjectsStorage {
   private readonly BaseUrl: string = "https://api.nova-key.online/api";
   constructor() {
     makeAutoObservable(this);
+    this.initData();
   }
 
   private initData = async () => {
     try {
-      const response = await axios.post(this.BaseUrl);
+      const response = await axios.get(this.BaseUrl + "/residential-complexes");
+      console.log("INIT", response.data);
+      this.allObjects = response.data.data;
     } catch (e) {
       console.log(e);
       return;

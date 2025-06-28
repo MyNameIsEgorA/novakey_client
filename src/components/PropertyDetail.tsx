@@ -78,6 +78,10 @@ export const PropertyDetail = observer(
       );
     };
 
+    const goToAr = () => {
+      navigate(`/buyer/ar?url=${property.ar_model_url}`);
+    };
+
     const prevImage = () => {
       setCurrentImageIndex((prev) =>
         prev === 0 ? property.photos.length - 1 : prev - 1,
@@ -265,7 +269,7 @@ export const PropertyDetail = observer(
                   <div className="grid gap-3">
                     {property.ar_model_url && (
                       <button
-                        onClick={onStartARViewer}
+                        onClick={goToAr}
                         className="flex items-center justify-center p-4 bg-blue-50 w-full rounded-xl border border-blue-200 hover:bg-blue-100 transition-colors"
                       >
                         <Eye className="w-5 h-5 text-blue-600 mr-2" />
@@ -538,7 +542,7 @@ export const PropertyDetail = observer(
                       <h4 className="text-black">Виртуальный просмотр</h4>
                       {property.ar_model_url && (
                         <button
-                          onClick={onStartARViewer}
+                          onClick={goToAr}
                           className="w-full flex items-center justify-center p-3 bg-blue-50 rounded-xl border border-blue-200 text-blue-600 hover:bg-blue-100 transition-colors"
                         >
                           <Eye className="w-5 h-5 mr-2" />

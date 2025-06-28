@@ -10,10 +10,14 @@ import { ImageWithFallback } from "@/components/figma/ImageWithFallback.tsx";
 import { useIsMobile } from "@/shared/hooks/isMobile.ts";
 import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "@/app/routes/base.ts";
+import { observer } from "mobx-react-lite";
+import { allObjectsStorage } from "@/entities/buy/modelsStorage.ts";
 
-export const BuyerMainContent = () => {
+export const BuyerMainContent = observer(() => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
+
+  const { allObjects } = allObjectsStorage;
 
   return (
     <>
@@ -67,50 +71,65 @@ export const BuyerMainContent = () => {
                 </button>
               </div>
 
-              <div className="grid grid-cols-2 gap-6">
-                <div className="bg-white rounded-xl p-6 shadow-sm border cursor-pointer hover:shadow-md transition-shadow">
-                  <div
-                    className="w-full h-48 rounded-lg overflow-hidden mb-4"
-                    onClick={() => navigate("/buyer/object_info/1")}
-                  >
-                    <ImageWithFallback
-                      src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&h=300&fit=crop"
-                      alt="Apartment"
-                      className="w-full h-full object-cover"
-                    />
+              <div className="gap-6">
+                {allObjects.length !== 0 && (
+                  <div className="grid grid-cols-1 w-full md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {allObjects.slice(0, 2).map((entity) => (
+                      <div
+                        onClick={() =>
+                          navigate(`/buyer/object_info/${entity.id}`)
+                        }
+                        key={entity.id}
+                        className="bg-white w-full rounded-xl p-6 shadow-sm border cursor-pointer hover:shadow-md transition-shadow"
+                      >
+                        <div
+                          className="w-full h-48 rounded-lg overflow-hidden mb-4"
+                          onClick={() =>
+                            navigate(`/buyer/object_info/${entity.id}`)
+                          }
+                        >
+                          <ImageWithFallback
+                            src={
+                              entity.photos[0] ||
+                              "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&h=300&fit=crop"
+                            }
+                            alt={entity.name || "Apartment"}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <h4 className="text-black mb-2">
+                          {entity.name || "Название объекта"}
+                        </h4>
+                        <p className="text-gray-500 text-sm mb-2">
+                          {entity.apartment_types[0]}
+                        </p>
+                        <p className="text-blue-600 text-lg mb-3">
+                          {entity.min_price
+                            ? `от ${entity.min_price.toLocaleString("ru-RU")} ₽`
+                            : "Цена по запросу"}
+                        </p>
+                        <div className="flex items-center justify-between">
+                          {entity.construction_status && ( // Предполагаем, что у вас есть поле status_tag, например "Облицовка" или "Строительство"
+                            <span
+                              className={`text-xs px-3 py-1 rounded-full ${
+                                entity.construction_status === "Облицовка"
+                                  ? "bg-orange-100 text-orange-600"
+                                  : "bg-blue-100 text-blue-600"
+                              }`}
+                            >
+                              {entity.construction_status}
+                            </span>
+                          )}
+                          {entity.ar_model_url && (
+                            <span className="text-gray-400 text-sm">
+                              AR просмотр
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <h4 className="text-black mb-2">ЖК "Северная звезда"</h4>
-                  <p className="text-gray-500 text-sm mb-2">2-комн., 65 м²</p>
-                  <p className="text-blue-600 text-lg mb-3">от 8,5 млн ₽</p>
-                  <div className="flex items-center justify-between">
-                    <span className="bg-orange-100 text-orange-600 text-xs px-3 py-1 rounded-full">
-                      Облицовка
-                    </span>
-                    <span className="text-gray-400 text-sm">AR просмотр</span>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-xl p-6 shadow-sm border cursor-pointer hover:shadow-md transition-shadow">
-                  <div
-                    className="w-full h-48 rounded-lg overflow-hidden mb-4"
-                    onClick={() => navigate("/buyer/object_info/1")}
-                  >
-                    <ImageWithFallback
-                      src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&h=300&fit=crop"
-                      alt="Apartment"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <h4 className="text-black mb-2">ЖК "Новый Горизонт"</h4>
-                  <p className="text-gray-500 text-sm mb-2">1-комн., 42 м²</p>
-                  <p className="text-blue-600 text-lg mb-3">от 5,2 млн ₽</p>
-                  <div className="flex items-center justify-between">
-                    <span className="bg-blue-100 text-blue-600 text-xs px-3 py-1 rounded-full">
-                      Строительство
-                    </span>
-                    <span className="text-gray-400 text-sm">VR просмотр</span>
-                  </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
@@ -317,55 +336,37 @@ export const BuyerMainContent = () => {
             </div>
 
             <div className="space-y-4">
-              <div className="bg-white rounded-xl p-4 shadow-sm border cursor-pointer hover:shadow-md transition-shadow">
-                <div
-                  className="flex"
-                  onClick={() => navigate("/buyer/object_info/1")}
-                >
-                  <div className="w-20 h-20 rounded-lg overflow-hidden mr-4">
-                    <ImageWithFallback
-                      src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=160&h=160&fit=crop"
-                      alt="Apartment"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-black mb-1">ЖК "Северная звезда"</h4>
-                    <p className="text-gray-500 text-sm mb-1">2-комн., 65 м²</p>
-                    <p className="text-blue-600">от 8,5 млн ₽</p>
-                    <div className="flex items-center mt-2">
-                      <span className="bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded-full">
-                        Облицовка
-                      </span>
+              {allObjects.slice(0, 2).map((entity) => (
+                <div className="bg-white rounded-xl p-4 shadow-sm border cursor-pointer hover:shadow-md transition-shadow">
+                  <div
+                    className="flex"
+                    onClick={() => navigate(`/buyer/object_info/${entity.id}`)}
+                  >
+                    <div className="w-20 h-20 rounded-lg overflow-hidden mr-4">
+                      <ImageWithFallback
+                        src={entity.photos[0]}
+                        alt="Apartment"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-black mb-1">{entity.name}</h4>
+                      <p className="text-gray-500 text-sm mb-1">
+                        {Math.floor(
+                          (entity.min_price || 0) / (entity.price_per_sqm || 1),
+                        )}{" "}
+                        м²
+                      </p>
+                      <p className="text-blue-600">от {entity.min_price} ₽</p>
+                      <div className="flex items-center mt-2">
+                        <span className="bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded-full">
+                          {entity.construction_status}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <div className="bg-white rounded-xl p-4 shadow-sm border cursor-pointer hover:shadow-md transition-shadow">
-                <div
-                  className="flex"
-                  onClick={() => navigate("/buyer/object_info/1")}
-                >
-                  <div className="w-20 h-20 rounded-lg overflow-hidden mr-4">
-                    <ImageWithFallback
-                      src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=160&h=160&fit=crop"
-                      alt="Apartment"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-black mb-1">ЖК "Новый Горизонт"</h4>
-                    <p className="text-gray-500 text-sm mb-1">1-комн., 42 м²</p>
-                    <p className="text-blue-600">от 5,2 млн ₽</p>
-                    <div className="flex items-center mt-2">
-                      <span className="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full">
-                        Строительство
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
@@ -411,4 +412,4 @@ export const BuyerMainContent = () => {
       )}
     </>
   );
-};
+});
