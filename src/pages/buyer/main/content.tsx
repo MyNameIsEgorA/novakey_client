@@ -1,4 +1,11 @@
-import { Home, MapPin, MessageSquare } from "lucide-react";
+import {
+  Calculator,
+  Heart,
+  Home,
+  MapPin,
+  MessageSquare,
+  Zap,
+} from "lucide-react";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback.tsx";
 import { useIsMobile } from "@/shared/hooks/isMobile.ts";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +18,7 @@ export const BuyerMainContent = () => {
   return (
     <>
       {!isMobile && (
-        <div className="grid grid-cols-12 gap-8 px-7 pt-3">
+        <div className="grid grid-cols-12 max-w-7xl mx-auto gap-8 px-7 pt-3">
           <div className="col-span-8">
             <div className="mb-8">
               <h2 className="text-xl mb-6">Поиск недвижимости</h2>
@@ -110,6 +117,50 @@ export const BuyerMainContent = () => {
 
           <div className="col-span-4">
             <div className="space-y-6">
+              <div className="bg-gradient-to-br from-amber-50 to-orange-100 rounded-xl p-6 border border-amber-200">
+                <div className="flex items-center mb-4">
+                  <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center mr-3">
+                    <Calculator className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-black">Калькулятор ипотеки</h3>
+                    <p className="text-gray-600 text-sm">Быстрый расчет</p>
+                  </div>
+                </div>
+                <p className="text-gray-700 text-sm mb-4">
+                  Рассчитайте ежемесячный платеж и переплату по ипотечному
+                  кредиту от ведущих банков
+                </p>
+                <button
+                  onClick={() => navigate(AppRoutes.buyer.calculator)}
+                  className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2 rounded-lg hover:from-amber-600 hover:to-orange-600 transition-all"
+                >
+                  Рассчитать
+                </button>
+              </div>
+
+              {/* AI Feature Highlight */}
+              <div className="bg-gradient-to-br from-slate-50 to-stone-100 rounded-xl p-6 border border-slate-200">
+                <div className="flex items-center mb-4">
+                  <div className="w-10 h-10 bg-gradient-to-r from-slate-600 to-stone-600 rounded-full flex items-center justify-center mr-3">
+                    <Zap className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-black">AI Подбор</h3>
+                    <p className="text-gray-600 text-sm">Swipe для обучения</p>
+                  </div>
+                </div>
+                <p className="text-gray-700 text-sm mb-4">
+                  Свайпайте квартиры как в Tinder — наш AI изучит ваши
+                  предпочтения и покажет лучшие варианты
+                </p>
+                <button
+                  onClick={() => navigate(`/buyer/list?type=tinder`)}
+                  className="w-full bg-gradient-to-r from-slate-600 to-stone-600 text-white py-2 rounded-lg hover:from-slate-700 hover:to-stone-700 transition-all"
+                >
+                  Попробовать
+                </button>
+              </div>
               {/* Popular Areas */}
               <div className="bg-white rounded-xl p-6 shadow-sm border">
                 <h3 className="text-black mb-4">Популярные районы</h3>
@@ -203,6 +254,52 @@ export const BuyerMainContent = () => {
                 <Home className="w-6 h-6 text-green-600 mb-2" />
                 <h3 className="text-black mb-1">Списком</h3>
                 <p className="text-gray-500 text-sm">Все объявления</p>
+              </button>
+            </div>
+          </div>
+          <div className="mb-6">
+            <div className="bg-gradient-to-r from-slate-50 to-stone-50 p-4 rounded-xl border border-slate-200">
+              <div className="flex items-center mb-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-slate-600 to-stone-600 rounded-full flex items-center justify-center mr-3">
+                  <Zap className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-black">Умный подбор квартир</h3>
+                  <p className="text-gray-600 text-sm">
+                    AI-рекомендации на основе ваших предпочтений
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => navigate("/buyer/list?type=tinder")}
+                className="w-full bg-gradient-to-r from-slate-600 to-stone-600 text-white py-2 rounded-lg hover:from-slate-700 hover:to-stone-700 transition-all flex items-center justify-center"
+              >
+                <Heart className="w-4 h-4 mr-2" />
+                Попробовать свайпы
+              </button>
+            </div>
+          </div>
+
+          {/* Mortgage Calculator Feature */}
+          <div className="mb-6">
+            <div className="bg-gradient-to-r from-amber-50 to-orange-50 p-4 rounded-xl border border-amber-200">
+              <div className="flex items-center mb-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center mr-3">
+                  <Calculator className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-black">Калькулятор ипотеки</h3>
+                  <p className="text-gray-600 text-sm">
+                    Рассчитайте ежемесячный платеж
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => navigate(AppRoutes.buyer.calculator)}
+                className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2 rounded-lg hover:from-amber-600 hover:to-orange-600 transition-all flex items-center justify-center"
+              >
+                <Calculator className="w-4 h-4 mr-2" />
+                Рассчитать ипотеку
               </button>
             </div>
           </div>

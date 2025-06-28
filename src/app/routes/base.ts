@@ -11,6 +11,7 @@ export const AppRoutes = {
     object_info: "/buyer/object_info/:id",
     vr: "/buyer/vr",
     calculator: "/buyer/calculator",
+    favorites: "/buyer/favorites",
   },
   developer: {
     main: "/developer/main",
