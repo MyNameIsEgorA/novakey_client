@@ -26,6 +26,7 @@ import {
   Globe,
 } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { SelectPositionMap } from "@/pages/developer/addObject/map.tsx";
 
 interface AddPropertyProps {
   onBack: () => void;
@@ -398,13 +399,20 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
               </div>
             </div>
 
-            <div className="bg-gray-50 rounded-xl p-6">
+            <div className="bg-gray-50 rounded-xl p-6 mt-20">
               <h4 className="text-gray-700 mb-3 flex items-center">
                 <MapPin className="w-5 h-5 mr-2" />
                 Расположение на карте
               </h4>
-              <div className="bg-gray-200 rounded-lg h-48 flex items-center justify-center">
-                <p className="text-gray-500">Интерактивная карта</p>
+              <div className="bg-gray-200 rounded-lg h-48 flex items-center justify-cente mt-20r">
+                <SelectPositionMap
+                  setData={(x: number, y: number) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      coordinates: { ...prev.coordinates, lat: x, lng: y },
+                    }));
+                  }}
+                />
               </div>
             </div>
           </div>
