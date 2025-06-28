@@ -13,7 +13,7 @@ export const BuyerSearchPage = () => {
         description={"Список всех доступных объектов"}
       />
       <PropertyList
-        onPropertySelect={() => navigate("/buyer/object_info/1")}
+        onPropertySelect={(id) => navigate(`/buyer/object_info/${id}`)}
         onBack={() => {
           navigate(-1);
         }}

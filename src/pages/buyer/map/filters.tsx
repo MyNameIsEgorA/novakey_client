@@ -144,7 +144,6 @@ export const MapFilters: FC<MapFiltersProps> = ({
         </div>
       </div>
 
-      {/* Area Range - Assuming ObjectFullData now has min_area and max_area or similar */}
       <div>
         <label className="text-black mb-3 block mt-5">Площадь, м²</label>
         <div className="space-y-3">
