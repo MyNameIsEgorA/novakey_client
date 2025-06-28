@@ -13,6 +13,7 @@ export const AppRoutes = {
     calculator: "/buyer/calculator",
     favorites: "/buyer/favorites",
     tinder: "/buyer/tinder",
+    notifications: "/buyer/notifications",
   },
   developer: {
     main: "/developer/main",

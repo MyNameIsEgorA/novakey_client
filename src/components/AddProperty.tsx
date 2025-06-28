@@ -1,5 +1,30 @@
 import { useState } from "react";
-import { ArrowLeft, Building2, MapPin, Camera, Upload, Plus, X, Check, ChevronRight, ChevronLeft, Save, Eye, Home, Maximize, Calendar, DollarSign, Info, Image as ImageIcon, Shield, ExternalLink, CheckCircle, AlertCircle, Clock, Globe } from "lucide-react";
+import {
+  ArrowLeft,
+  Building2,
+  MapPin,
+  Camera,
+  Upload,
+  Plus,
+  X,
+  Check,
+  ChevronRight,
+  ChevronLeft,
+  Save,
+  Eye,
+  Home,
+  Maximize,
+  Calendar,
+  DollarSign,
+  Info,
+  Image as ImageIcon,
+  Shield,
+  ExternalLink,
+  CheckCircle,
+  AlertCircle,
+  Clock,
+  Globe,
+} from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 
 interface AddPropertyProps {
@@ -8,156 +33,166 @@ interface AddPropertyProps {
 }
 
 const steps = [
-  { id: 'basic', title: 'Основная информация', icon: Building2 },
-  { id: 'location', title: 'Расположение', icon: MapPin },
-  { id: 'details', title: 'Детали', icon: Home },
-  { id: 'pricing', title: 'Цены', icon: DollarSign },
-  { id: 'media', title: 'Медиа', icon: Camera },
-  { id: 'verification', title: 'Проверка ЕГРН', icon: Shield },
-  { id: 'platforms', title: 'Публикация', icon: Globe },
-  { id: 'preview', title: 'Предварительный просмотр', icon: Eye }
+  { id: "basic", title: "Основная информация", icon: Building2 },
+  { id: "location", title: "Расположение", icon: MapPin },
+  { id: "details", title: "Детали", icon: Home },
+  { id: "pricing", title: "Цены", icon: DollarSign },
+  { id: "media", title: "Медиа", icon: Camera },
+  { id: "verification", title: "Проверка ЕГРН", icon: Shield },
+  { id: "platforms", title: "Публикация", icon: Globe },
+  { id: "preview", title: "Предварительный просмотр", icon: Eye },
 ];
 
 const platforms = [
   {
-    id: 'cian',
-    name: 'Циан',
-    description: 'Крупнейший портал недвижимости',
-    logo: '🏠',
-    cost: 'от 2,000 ₽/мес',
-    audience: '15М пользователей'
+    id: "cian",
+    name: "Циан",
+    description: "Крупнейший портал недвижимости",
+    logo: "🏠",
+    cost: "от 2,000 ₽/мес",
+    audience: "15М пользователей",
   },
   {
-    id: 'avito',
-    name: 'Авито',
-    description: 'Популярная доска объявлений',
-    logo: '📱',
-    cost: 'от 1,500 ₽/мес',
-    audience: '50М пользователей'
+    id: "avito",
+    name: "Авито",
+    description: "Популярная доска объявлений",
+    logo: "📱",
+    cost: "от 1,500 ₽/мес",
+    audience: "50М пользователей",
   },
   {
-    id: 'domclick',
-    name: 'ДомКлик',
-    description: 'Сервис Сбербанка',
-    logo: '🏦',
-    cost: 'от 3,000 ₽/мес',
-    audience: '8М пользователей'
+    id: "domclick",
+    name: "ДомКлик",
+    description: "Сервис Сбербанка",
+    logo: "🏦",
+    cost: "от 3,000 ₽/мес",
+    audience: "8М пользователей",
   },
   {
-    id: 'yandex',
-    name: 'Яндекс.Недвижимость',
-    description: 'Поиск от Яндекса',
-    logo: '🔍',
-    cost: 'от 2,500 ₽/мес',
-    audience: '12М пользователей'
-  }
+    id: "yandex",
+    name: "Яндекс.Недвижимость",
+    description: "Поиск от Яндекса",
+    logo: "🔍",
+    cost: "от 2,500 ₽/мес",
+    audience: "12М пользователей",
+  },
 ];
 
 export function AddProperty({ onBack, onSave }: AddPropertyProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
     // Basic Info
-    name: '',
-    description: '',
-    developer: 'СтройИнвест',
-    constructionStatus: 'planning',
-    
+    name: "",
+    description: "",
+    developer: "СтройИнвест",
+    constructionStatus: "planning",
+
     // Location
-    address: '',
-    district: '',
+    address: "",
+    district: "",
     coordinates: { lat: 55.7558, lng: 37.6176 },
     nearTransport: false,
     nearSchool: false,
     nearShops: false,
-    
+
     // Details
-    totalFloors: '',
-    totalApartments: '',
+    totalFloors: "",
+    totalApartments: "",
     apartmentTypes: [],
     amenities: [],
-    deliveryDate: '',
-    
+    deliveryDate: "",
+
     // Pricing
-    pricePerSqm: '',
-    priceRange: { min: '', max: '' },
+    pricePerSqm: "",
+    priceRange: { min: "", max: "" },
     paymentPlans: [],
-    
+
     // Media
     images: [],
-    virtualTourUrl: '',
-    arModelUrl: '',
+    virtualTourUrl: "",
+    arModelUrl: "",
     floorPlans: [],
-    
+
     // EGRN Verification
-    egrnStatus: 'pending',
-    cadastralNumber: '',
+    egrnStatus: "pending",
+    cadastralNumber: "",
     ownershipDocuments: [],
-    
+
     // Platform Publishing
     selectedPlatforms: [],
-    publicationSettings: {}
+    publicationSettings: {},
   });
 
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [dragOver, setDragOver] = useState(false);
   const [egrnVerification, setEgrnVerification] = useState({
-    status: 'idle', // idle, checking, success, error
+    status: "idle", // idle, checking, success, error
     progress: 0,
-    documents: []
+    documents: [],
   });
 
   const apartmentTypeOptions = [
-    { id: 'studio', label: 'Студия', rooms: '0', area: '25-35' },
-    { id: '1room', label: '1-комнатная', rooms: '1', area: '35-45' },
-    { id: '2room', label: '2-комнатная', rooms: '2', area: '55-75' },
-    { id: '3room', label: '3-комнатная', rooms: '3', area: '75-95' },
-    { id: '4room', label: '4-комнатная', rooms: '4', area: '95-120' }
+    { id: "studio", label: "Студия", rooms: "0", area: "25-35" },
+    { id: "1room", label: "1-комнатная", rooms: "1", area: "35-45" },
+    { id: "2room", label: "2-комнатная", rooms: "2", area: "55-75" },
+    { id: "3room", label: "3-комнатная", rooms: "3", area: "75-95" },
+    { id: "4room", label: "4-комнатная", rooms: "4", area: "95-120" },
   ];
 
   const amenityOptions = [
-    'Парковка', 'Лифт', 'Консьерж', 'Фитнес-зал', 'Детская площадка',
-    'Подземная парковка', 'Закрытая территория', 'Видеонаблюдение',
-    'Терраса', 'Балкон', 'Французский балкон', 'Кладовая'
+    "Парковка",
+    "Лифт",
+    "Консьерж",
+    "Фитнес-зал",
+    "Детская площадка",
+    "Подземная парковка",
+    "Закрытая территория",
+    "Видеонаблюдение",
+    "Терраса",
+    "Балкон",
+    "Французский балкон",
+    "Кладовая",
   ];
 
   const statusOptions = [
-    { value: 'planning', label: 'Проектирование' },
-    { value: 'foundation', label: 'Фундамент' },
-    { value: 'construction', label: 'Строительство' },
-    { value: 'finishing', label: 'Отделка' },
-    { value: 'completed', label: 'Завершен' }
+    { value: "planning", label: "Проектирование" },
+    { value: "foundation", label: "Фундамент" },
+    { value: "construction", label: "Строительство" },
+    { value: "finishing", label: "Отделка" },
+    { value: "completed", label: "Завершен" },
   ];
 
   const handleInputChange = (section: string, field: string, value: any) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [section]: typeof prev[section] === 'object' 
-        ? { ...prev[section], [field]: value }
-        : value
+      [section]:
+        typeof prev[section] === "object"
+          ? { ...prev[section], [field]: value }
+          : value,
     }));
   };
 
   const handleDirectChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleArrayToggle = (field: string, item: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [field]: prev[field].includes(item)
-        ? prev[field].filter(i => i !== item)
-        : [...prev[field], item]
+        ? prev[field].filter((i) => i !== item)
+        : [...prev[field], item],
     }));
   };
 
   const handleImageUpload = (files: FileList | null) => {
     if (!files) return;
-    
-    Array.from(files).forEach(file => {
+
+    Array.from(files).forEach((file) => {
       const reader = new FileReader();
       reader.onload = (e) => {
         if (e.target?.result) {
-          setUploadedImages(prev => [...prev, e.target!.result as string]);
+          setUploadedImages((prev) => [...prev, e.target!.result as string]);
         }
       };
       reader.readAsDataURL(file);
@@ -165,26 +200,38 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
   };
 
   const removeImage = (index: number) => {
-    setUploadedImages(prev => prev.filter((_, i) => i !== index));
+    setUploadedImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   const startEgrnVerification = () => {
-    setEgrnVerification({ status: 'checking', progress: 0, documents: [] });
-    
+    setEgrnVerification({ status: "checking", progress: 0, documents: [] });
+
     // Simulate EGRN verification process
     const interval = setInterval(() => {
-      setEgrnVerification(prev => {
+      setEgrnVerification((prev) => {
         const newProgress = prev.progress + 10;
         if (newProgress >= 100) {
           clearInterval(interval);
           return {
-            status: 'success',
+            status: "success",
             progress: 100,
             documents: [
-              { name: 'Выписка ЕГРН', status: 'verified', date: new Date().toLocaleDateString() },
-              { name: 'Кадастровый план', status: 'verified', date: new Date().toLocaleDateString() },
-              { name: 'Документы собственности', status: 'verified', date: new Date().toLocaleDateString() }
-            ]
+              {
+                name: "Выписка ЕГРН",
+                status: "verified",
+                date: new Date().toLocaleDateString(),
+              },
+              {
+                name: "Кадастровый план",
+                status: "verified",
+                date: new Date().toLocaleDateString(),
+              },
+              {
+                name: "Документы собственности",
+                status: "verified",
+                date: new Date().toLocaleDateString(),
+              },
+            ],
           };
         }
         return { ...prev, progress: newProgress };
@@ -209,16 +256,16 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
       ...formData,
       images: uploadedImages,
       egrnVerification,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
     onSave(finalData);
   };
 
   const renderStepContent = () => {
     const step = steps[currentStep];
-    
+
     switch (step.id) {
-      case 'basic':
+      case "basic":
         return (
           <div className="space-y-6">
             <div>
@@ -226,7 +273,7 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) => handleDirectChange('name', e.target.value)}
+                onChange={(e) => handleDirectChange("name", e.target.value)}
                 placeholder='ЖК "Название"'
                 className="w-full bg-gray-100 rounded-xl px-4 py-3 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
                 required
@@ -237,7 +284,9 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
               <label className="block text-gray-700 mb-2">Описание</label>
               <textarea
                 value={formData.description}
-                onChange={(e) => handleDirectChange('description', e.target.value)}
+                onChange={(e) =>
+                  handleDirectChange("description", e.target.value)
+                }
                 placeholder="Краткое описание жилого комплекса..."
                 rows={4}
                 className="w-full bg-gray-100 rounded-xl px-4 py-3 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all resize-none"
@@ -249,27 +298,35 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
               <input
                 type="text"
                 value={formData.developer}
-                onChange={(e) => handleDirectChange('developer', e.target.value)}
+                onChange={(e) =>
+                  handleDirectChange("developer", e.target.value)
+                }
                 className="w-full bg-gray-100 rounded-xl px-4 py-3 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-gray-700 mb-2">Статус строительства</label>
+              <label className="block text-gray-700 mb-2">
+                Статус строительства
+              </label>
               <select
                 value={formData.constructionStatus}
-                onChange={(e) => handleDirectChange('constructionStatus', e.target.value)}
+                onChange={(e) =>
+                  handleDirectChange("constructionStatus", e.target.value)
+                }
                 className="w-full bg-gray-100 rounded-xl px-4 py-3 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
               >
-                {statusOptions.map(option => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
+                {statusOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
                 ))}
               </select>
             </div>
           </div>
         );
 
-      case 'location':
+      case "location":
         return (
           <div className="space-y-6">
             <div>
@@ -277,7 +334,7 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
               <input
                 type="text"
                 value={formData.address}
-                onChange={(e) => handleDirectChange('address', e.target.value)}
+                onChange={(e) => handleDirectChange("address", e.target.value)}
                 placeholder="ул. Примерная, д. 123"
                 className="w-full bg-gray-100 rounded-xl px-4 py-3 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
                 required
@@ -288,7 +345,7 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
               <label className="block text-gray-700 mb-2">Район</label>
               <select
                 value={formData.district}
-                onChange={(e) => handleDirectChange('district', e.target.value)}
+                onChange={(e) => handleDirectChange("district", e.target.value)}
                 className="w-full bg-gray-100 rounded-xl px-4 py-3 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
               >
                 <option value="">Выберите район</option>
@@ -301,13 +358,17 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
             </div>
 
             <div>
-              <label className="block text-gray-700 mb-3">Инфраструктура рядом</label>
+              <label className="block text-gray-700 mb-3">
+                Инфраструктура рядом
+              </label>
               <div className="space-y-3">
                 <label className="flex items-center cursor-pointer">
                   <input
                     type="checkbox"
                     checked={formData.nearTransport}
-                    onChange={(e) => handleDirectChange('nearTransport', e.target.checked)}
+                    onChange={(e) =>
+                      handleDirectChange("nearTransport", e.target.checked)
+                    }
                     className="mr-3 rounded accent-blue-600"
                   />
                   <span className="text-gray-700">🚇 Транспорт рядом</span>
@@ -316,7 +377,9 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
                   <input
                     type="checkbox"
                     checked={formData.nearSchool}
-                    onChange={(e) => handleDirectChange('nearSchool', e.target.checked)}
+                    onChange={(e) =>
+                      handleDirectChange("nearSchool", e.target.checked)
+                    }
                     className="mr-3 rounded accent-blue-600"
                   />
                   <span className="text-gray-700">🏫 Школа рядом</span>
@@ -325,7 +388,9 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
                   <input
                     type="checkbox"
                     checked={formData.nearShops}
-                    onChange={(e) => handleDirectChange('nearShops', e.target.checked)}
+                    onChange={(e) =>
+                      handleDirectChange("nearShops", e.target.checked)
+                    }
                     className="mr-3 rounded accent-blue-600"
                   />
                   <span className="text-gray-700">🛒 Магазины рядом</span>
@@ -345,27 +410,35 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
           </div>
         );
 
-      case 'details':
+      case "details":
         return (
           <div className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div>
-                <label className="block text-gray-700 mb-2">Количество этажей</label>
+                <label className="block text-gray-700 mb-2">
+                  Количество этажей
+                </label>
                 <input
                   type="number"
                   value={formData.totalFloors}
-                  onChange={(e) => handleDirectChange('totalFloors', e.target.value)}
+                  onChange={(e) =>
+                    handleDirectChange("totalFloors", e.target.value)
+                  }
                   placeholder="16"
                   className="w-full bg-gray-100 rounded-xl px-4 py-3 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-gray-700 mb-2">Общее количество квартир</label>
+                <label className="block text-gray-700 mb-2">
+                  Общее количество квартир
+                </label>
                 <input
                   type="number"
                   value={formData.totalApartments}
-                  onChange={(e) => handleDirectChange('totalApartments', e.target.value)}
+                  onChange={(e) =>
+                    handleDirectChange("totalApartments", e.target.value)
+                  }
                   placeholder="120"
                   className="w-full bg-gray-100 rounded-xl px-4 py-3 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
                 />
@@ -375,17 +448,24 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
             <div>
               <label className="block text-gray-700 mb-3">Типы квартир</label>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                {apartmentTypeOptions.map(type => (
-                  <label key={type.id} className="flex items-center p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors">
+                {apartmentTypeOptions.map((type) => (
+                  <label
+                    key={type.id}
+                    className="flex items-center p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors"
+                  >
                     <input
                       type="checkbox"
                       checked={formData.apartmentTypes.includes(type.id)}
-                      onChange={() => handleArrayToggle('apartmentTypes', type.id)}
+                      onChange={() =>
+                        handleArrayToggle("apartmentTypes", type.id)
+                      }
                       className="mr-3 rounded accent-blue-600"
                     />
                     <div className="flex-1">
                       <span className="text-gray-700">{type.label}</span>
-                      <div className="text-gray-500 text-sm">{type.area} м²</div>
+                      <div className="text-gray-500 text-sm">
+                        {type.area} м²
+                      </div>
                     </div>
                   </label>
                 ))}
@@ -395,12 +475,15 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
             <div>
               <label className="block text-gray-700 mb-3">Удобства</label>
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-                {amenityOptions.map(amenity => (
-                  <label key={amenity} className="flex items-center p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
+                {amenityOptions.map((amenity) => (
+                  <label
+                    key={amenity}
+                    className="flex items-center p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors"
+                  >
                     <input
                       type="checkbox"
                       checked={formData.amenities.includes(amenity)}
-                      onChange={() => handleArrayToggle('amenities', amenity)}
+                      onChange={() => handleArrayToggle("amenities", amenity)}
                       className="mr-2 rounded accent-blue-600"
                     />
                     <span className="text-gray-700 text-sm">{amenity}</span>
@@ -414,7 +497,9 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
               <input
                 type="text"
                 value={formData.deliveryDate}
-                onChange={(e) => handleDirectChange('deliveryDate', e.target.value)}
+                onChange={(e) =>
+                  handleDirectChange("deliveryDate", e.target.value)
+                }
                 placeholder="4 кв. 2024"
                 className="w-full bg-gray-100 rounded-xl px-4 py-3 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
               />
@@ -422,7 +507,7 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
           </div>
         );
 
-      case 'pricing':
+      case "pricing":
         return (
           <div className="space-y-6">
             <div>
@@ -430,7 +515,9 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
               <input
                 type="number"
                 value={formData.pricePerSqm}
-                onChange={(e) => handleDirectChange('pricePerSqm', e.target.value)}
+                onChange={(e) =>
+                  handleDirectChange("pricePerSqm", e.target.value)
+                }
                 placeholder="130000"
                 className="w-full bg-gray-100 rounded-xl px-4 py-3 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
               />
@@ -438,11 +525,15 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div>
-                <label className="block text-gray-700 mb-2">Минимальная цена (млн ₽)</label>
+                <label className="block text-gray-700 mb-2">
+                  Минимальная цена (млн ₽)
+                </label>
                 <input
                   type="number"
                   value={formData.priceRange.min}
-                  onChange={(e) => handleInputChange('priceRange', 'min', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("priceRange", "min", e.target.value)
+                  }
                   placeholder="5.2"
                   step="0.1"
                   className="w-full bg-gray-100 rounded-xl px-4 py-3 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
@@ -450,11 +541,15 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
               </div>
 
               <div>
-                <label className="block text-gray-700 mb-2">Максимальная цена (млн ₽)</label>
+                <label className="block text-gray-700 mb-2">
+                  Максимальная цена (млн ₽)
+                </label>
                 <input
                   type="number"
                   value={formData.priceRange.max}
-                  onChange={(e) => handleInputChange('priceRange', 'max', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("priceRange", "max", e.target.value)
+                  }
                   placeholder="12.5"
                   step="0.1"
                   className="w-full bg-gray-100 rounded-xl px-4 py-3 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
@@ -469,34 +564,59 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
               </h4>
               <div className="space-y-3">
                 <label className="flex items-center cursor-pointer">
-                  <input type="checkbox" className="mr-3 rounded accent-blue-600" />
+                  <input
+                    type="checkbox"
+                    className="mr-3 rounded accent-blue-600"
+                  />
                   <span className="text-blue-700">Ипотека (от 4.5%)</span>
                 </label>
                 <label className="flex items-center cursor-pointer">
-                  <input type="checkbox" className="mr-3 rounded accent-blue-600" />
-                  <span className="text-blue-700">Рассрочка от застройщика</span>
+                  <input
+                    type="checkbox"
+                    className="mr-3 rounded accent-blue-600"
+                  />
+                  <span className="text-blue-700">
+                    Рассрочка от застройщика
+                  </span>
                 </label>
                 <label className="flex items-center cursor-pointer">
-                  <input type="checkbox" className="mr-3 rounded accent-blue-600" />
+                  <input
+                    type="checkbox"
+                    className="mr-3 rounded accent-blue-600"
+                  />
                   <span className="text-blue-700">Материнский капитал</span>
                 </label>
                 <label className="flex items-center cursor-pointer">
-                  <input type="checkbox" className="mr-3 rounded accent-blue-600" />
+                  <input
+                    type="checkbox"
+                    className="mr-3 rounded accent-blue-600"
+                  />
                   <span className="text-blue-700">Trade-in</span>
+                </label>
+                <label className="flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="mr-3 rounded accent-blue-600"
+                  />
+                  <span className="text-blue-700">Военная ипотека</span>
                 </label>
               </div>
             </div>
           </div>
         );
 
-      case 'media':
+      case "media":
         return (
           <div className="space-y-6">
             <div>
-              <label className="block text-gray-700 mb-3">Фотографии объекта</label>
+              <label className="block text-gray-700 mb-3">
+                Фотографии объекта
+              </label>
               <div
                 className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${
-                  dragOver ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-gray-50'
+                  dragOver
+                    ? "border-blue-500 bg-blue-50"
+                    : "border-gray-300 bg-gray-50"
                 }`}
                 onDragOver={(e) => {
                   e.preventDefault();
@@ -510,7 +630,9 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
                 }}
               >
                 <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h4 className="text-gray-700 mb-2">Перетащите изображения сюда</h4>
+                <h4 className="text-gray-700 mb-2">
+                  Перетащите изображения сюда
+                </h4>
                 <p className="text-gray-500 text-sm mb-4">или</p>
                 <label className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer inline-flex items-center">
                   <Upload className="w-5 h-5 mr-2" />
@@ -548,22 +670,30 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div>
-                <label className="block text-gray-700 mb-2">Ссылка на VR-тур</label>
+                <label className="block text-gray-700 mb-2">
+                  Ссылка на VR-тур
+                </label>
                 <input
                   type="url"
                   value={formData.virtualTourUrl}
-                  onChange={(e) => handleDirectChange('virtualTourUrl', e.target.value)}
+                  onChange={(e) =>
+                    handleDirectChange("virtualTourUrl", e.target.value)
+                  }
                   placeholder="https://..."
                   className="w-full bg-gray-100 rounded-xl px-4 py-3 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-gray-700 mb-2">Ссылка на AR-модель</label>
+                <label className="block text-gray-700 mb-2">
+                  Ссылка на AR-модель
+                </label>
                 <input
                   type="url"
                   value={formData.arModelUrl}
-                  onChange={(e) => handleDirectChange('arModelUrl', e.target.value)}
+                  onChange={(e) =>
+                    handleDirectChange("arModelUrl", e.target.value)
+                  }
                   placeholder="https://..."
                   className="w-full bg-gray-100 rounded-xl px-4 py-3 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
                 />
@@ -574,7 +704,9 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
               <label className="block text-gray-700 mb-3">Планировки</label>
               <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center bg-gray-50">
                 <Home className="w-8 h-8 text-gray-400 mx-auto mb-3" />
-                <p className="text-gray-500 text-sm mb-3">Загрузите планировки квартир</p>
+                <p className="text-gray-500 text-sm mb-3">
+                  Загрузите планировки квартир
+                </p>
                 <label className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors cursor-pointer inline-flex items-center">
                   <Upload className="w-4 h-4 mr-2" />
                   Выбрать планировки
@@ -590,7 +722,7 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
           </div>
         );
 
-      case 'verification':
+      case "verification":
         return (
           <div className="space-y-6">
             <div className="bg-amber-50 rounded-xl p-6 border border-amber-200">
@@ -599,26 +731,35 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
                 Проверка ЕГРН
               </h3>
               <p className="text-amber-700 text-sm mb-4">
-                Для публикации объекта на внешних платформах необходимо пройти проверку ЕГРН (Единого государственного реестра недвижимости)
+                Для публикации объекта на внешних платформах необходимо пройти
+                проверку ЕГРН (Единого государственного реестра недвижимости)
               </p>
             </div>
 
             <div>
-              <label className="block text-gray-700 mb-2">Кадастровый номер *</label>
+              <label className="block text-gray-700 mb-2">
+                Кадастровый номер *
+              </label>
               <input
                 type="text"
                 value={formData.cadastralNumber}
-                onChange={(e) => handleDirectChange('cadastralNumber', e.target.value)}
+                onChange={(e) =>
+                  handleDirectChange("cadastralNumber", e.target.value)
+                }
                 placeholder="77:01:0001001:1001"
                 className="w-full bg-gray-100 rounded-xl px-4 py-3 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-amber-500 transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-gray-700 mb-3">Документы собственности</label>
+              <label className="block text-gray-700 mb-3">
+                Документы собственности
+              </label>
               <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center bg-gray-50">
                 <Shield className="w-8 h-8 text-gray-400 mx-auto mb-3" />
-                <p className="text-gray-500 text-sm mb-3">Загрузите документы, подтверждающие право собственности</p>
+                <p className="text-gray-500 text-sm mb-3">
+                  Загрузите документы, подтверждающие право собственности
+                </p>
                 <label className="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition-colors cursor-pointer inline-flex items-center">
                   <Upload className="w-4 h-4 mr-2" />
                   Выбрать документы
@@ -629,15 +770,18 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
                     className="hidden"
                   />
                 </label>
-                <p className="text-gray-400 text-xs mt-2">PDF, JPG, PNG до 10MB каждый</p>
+                <p className="text-gray-400 text-xs mt-2">
+                  PDF, JPG, PNG до 10MB каждый
+                </p>
               </div>
             </div>
 
-            {egrnVerification.status === 'idle' && (
+            {egrnVerification.status === "idle" && (
               <div className="bg-white rounded-xl p-6 border border-gray-200">
                 <h4 className="text-black mb-3">Начать проверку ЕГРН</h4>
                 <p className="text-gray-600 text-sm mb-4">
-                  Процесс проверки займет несколько минут. Мы автоматически сверим данные с государственным реестром.
+                  Процесс проверки займет несколько минут. Мы автоматически
+                  сверим данные с государственным реестром.
                 </p>
                 <button
                   onClick={startEgrnVerification}
@@ -650,25 +794,26 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
               </div>
             )}
 
-            {egrnVerification.status === 'checking' && (
+            {egrnVerification.status === "checking" && (
               <div className="bg-white rounded-xl p-6 border border-gray-200">
                 <h4 className="text-black mb-3 flex items-center">
                   <Clock className="w-5 h-5 mr-2 animate-spin" />
                   Проверка ЕГРН в процессе...
                 </h4>
                 <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-                  <div 
+                  <div
                     className="bg-amber-600 h-2 rounded-full transition-all duration-300"
                     style={{ width: `${egrnVerification.progress}%` }}
                   ></div>
                 </div>
                 <p className="text-gray-600 text-sm">
-                  Пожалуйста, подождите. Идет сверка с государственным реестром... {egrnVerification.progress}%
+                  Пожалуйста, подождите. Идет сверка с государственным
+                  реестром... {egrnVerification.progress}%
                 </p>
               </div>
             )}
 
-            {egrnVerification.status === 'success' && (
+            {egrnVerification.status === "success" && (
               <div className="bg-green-50 rounded-xl p-6 border border-green-200">
                 <h4 className="text-green-900 mb-3 flex items-center">
                   <CheckCircle className="w-5 h-5 mr-2" />
@@ -676,32 +821,47 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
                 </h4>
                 <div className="space-y-3">
                   {egrnVerification.documents.map((doc, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-white rounded-lg border border-green-200">
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-3 bg-white rounded-lg border border-green-200"
+                    >
                       <div className="flex items-center">
                         <CheckCircle className="w-4 h-4 text-green-600 mr-2" />
-                        <span className="text-green-800 text-sm">{doc.name}</span>
+                        <span className="text-green-800 text-sm">
+                          {doc.name}
+                        </span>
                       </div>
-                      <span className="text-green-600 text-xs">Проверено {doc.date}</span>
+                      <span className="text-green-600 text-xs">
+                        Проверено {doc.date}
+                      </span>
                     </div>
                   ))}
                 </div>
                 <p className="text-green-700 text-sm mt-4">
-                  Все документы прошли проверку. Объект готов к публикации на внешних платформах.
+                  Все документы прошли проверку. Объект готов к публикации на
+                  внешних платформах.
                 </p>
               </div>
             )}
 
-            {egrnVerification.status === 'error' && (
+            {egrnVerification.status === "error" && (
               <div className="bg-red-50 rounded-xl p-6 border border-red-200">
                 <h4 className="text-red-900 mb-3 flex items-center">
                   <AlertCircle className="w-5 h-5 mr-2" />
                   Ошибка проверки ЕГРН
                 </h4>
                 <p className="text-red-700 text-sm mb-4">
-                  Не удалось подтвердить данные в государственном реестре. Проверьте корректность кадастрового номера и документов.
+                  Не удалось подтвердить данные в государственном реестре.
+                  Проверьте корректность кадастрового номера и документов.
                 </p>
                 <button
-                  onClick={() => setEgrnVerification({ status: 'idle', progress: 0, documents: [] })}
+                  onClick={() =>
+                    setEgrnVerification({
+                      status: "idle",
+                      progress: 0,
+                      documents: [],
+                    })
+                  }
                   className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
                 >
                   Попробовать снова
@@ -711,7 +871,7 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
           </div>
         );
 
-      case 'platforms':
+      case "platforms":
         return (
           <div className="space-y-6">
             <div className="bg-blue-50 rounded-xl p-6 border border-blue-200">
@@ -720,38 +880,49 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
                 Публикация на платформах
               </h3>
               <p className="text-blue-700 text-sm">
-                Выберите платформы для размещения вашего объекта. Это поможет привлечь больше покупателей.
+                Выберите платформы для размещения вашего объекта. Это поможет
+                привлечь больше покупателей.
               </p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {platforms.map(platform => (
+              {platforms.map((platform) => (
                 <label
                   key={platform.id}
                   className={`p-6 rounded-xl border-2 cursor-pointer transition-all ${
                     formData.selectedPlatforms.includes(platform.id)
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-200 bg-white hover:border-gray-300'
+                      ? "border-blue-500 bg-blue-50"
+                      : "border-gray-200 bg-white hover:border-gray-300"
                   }`}
                 >
                   <input
                     type="checkbox"
                     checked={formData.selectedPlatforms.includes(platform.id)}
-                    onChange={() => handleArrayToggle('selectedPlatforms', platform.id)}
+                    onChange={() =>
+                      handleArrayToggle("selectedPlatforms", platform.id)
+                    }
                     className="sr-only"
                   />
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center">
                       <span className="text-2xl mr-3">{platform.logo}</span>
                       <div>
-                        <h4 className={`${
-                          formData.selectedPlatforms.includes(platform.id) ? 'text-blue-900' : 'text-black'
-                        }`}>
+                        <h4
+                          className={`${
+                            formData.selectedPlatforms.includes(platform.id)
+                              ? "text-blue-900"
+                              : "text-black"
+                          }`}
+                        >
                           {platform.name}
                         </h4>
-                        <p className={`text-sm ${
-                          formData.selectedPlatforms.includes(platform.id) ? 'text-blue-700' : 'text-gray-600'
-                        }`}>
+                        <p
+                          className={`text-sm ${
+                            formData.selectedPlatforms.includes(platform.id)
+                              ? "text-blue-700"
+                              : "text-gray-600"
+                          }`}
+                        >
                           {platform.description}
                         </p>
                       </div>
@@ -761,14 +932,22 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
                     )}
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className={`${
-                      formData.selectedPlatforms.includes(platform.id) ? 'text-blue-700' : 'text-gray-500'
-                    }`}>
+                    <span
+                      className={`${
+                        formData.selectedPlatforms.includes(platform.id)
+                          ? "text-blue-700"
+                          : "text-gray-500"
+                      }`}
+                    >
                       {platform.cost}
                     </span>
-                    <span className={`${
-                      formData.selectedPlatforms.includes(platform.id) ? 'text-blue-700' : 'text-gray-500'
-                    }`}>
+                    <span
+                      className={`${
+                        formData.selectedPlatforms.includes(platform.id)
+                          ? "text-blue-700"
+                          : "text-gray-500"
+                      }`}
+                    >
                       {platform.audience}
                     </span>
                   </div>
@@ -784,52 +963,76 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
                 </h4>
                 <div className="space-y-3">
                   <label className="flex items-center cursor-pointer">
-                    <input type="checkbox" className="mr-3 rounded accent-green-600" defaultChecked />
-                    <span className="text-green-700">Автоматическое обновление цен</span>
+                    <input
+                      type="checkbox"
+                      className="mr-3 rounded accent-green-600"
+                      defaultChecked
+                    />
+                    <span className="text-green-700">
+                      Автоматическое обновление цен
+                    </span>
                   </label>
                   <label className="flex items-center cursor-pointer">
-                    <input type="checkbox" className="mr-3 rounded accent-green-600" defaultChecked />
-                    <span className="text-green-700">Синхронизация наличия квартир</span>
+                    <input
+                      type="checkbox"
+                      className="mr-3 rounded accent-green-600"
+                      defaultChecked
+                    />
+                    <span className="text-green-700">
+                      Синхронизация наличия квартир
+                    </span>
                   </label>
                   <label className="flex items-center cursor-pointer">
-                    <input type="checkbox" className="mr-3 rounded accent-green-600" />
-                    <span className="text-green-700">Продвижение объявлений (доп. плата)</span>
+                    <input
+                      type="checkbox"
+                      className="mr-3 rounded accent-green-600"
+                    />
+                    <span className="text-green-700">
+                      Продвижение объявлений (доп. плата)
+                    </span>
                   </label>
                 </div>
                 <div className="mt-4 pt-4 border-t border-green-200">
                   <p className="text-green-700 text-sm">
-                    <strong>Ожидаемая стоимость:</strong> {' '}
+                    <strong>Ожидаемая стоимость:</strong>{" "}
                     {formData.selectedPlatforms.length * 2500} ₽/мес
                   </p>
                 </div>
               </div>
             )}
 
-            {egrnVerification.status !== 'success' && (
+            {egrnVerification.status !== "success" && (
               <div className="bg-amber-50 rounded-xl p-6 border border-amber-200">
                 <h4 className="text-amber-900 mb-2 flex items-center">
                   <AlertCircle className="w-5 h-5 mr-2" />
                   Требуется проверка ЕГРН
                 </h4>
                 <p className="text-amber-700 text-sm">
-                  Для публикации на внешних платформах необходимо завершить проверку ЕГРН на предыдущем шаге.
+                  Для публикации на внешних платформах необходимо завершить
+                  проверку ЕГРН на предыдущем шаге.
                 </p>
               </div>
             )}
           </div>
         );
 
-      case 'preview':
+      case "preview":
         return (
           <div className="space-y-6">
             <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <h3 className="text-xl text-black mb-4">Предварительный просмотр</h3>
-              
+              <h3 className="text-xl text-black mb-4">
+                Предварительный просмотр
+              </h3>
+
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="text-black mb-2">{formData.name || 'Название ЖК'}</h4>
-                  <p className="text-gray-600 text-sm mb-4">{formData.description || 'Описание будет здесь...'}</p>
-                  
+                  <h4 className="text-black mb-2">
+                    {formData.name || "Название ЖК"}
+                  </h4>
+                  <p className="text-gray-600 text-sm mb-4">
+                    {formData.description || "Описание будет здесь..."}
+                  </p>
+
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-500">Застройщик:</span>
@@ -837,15 +1040,21 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">Адрес:</span>
-                      <span className="text-black">{formData.address || 'Не указан'}</span>
+                      <span className="text-black">
+                        {formData.address || "Не указан"}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">Этажность:</span>
-                      <span className="text-black">{formData.totalFloors || 'Не указана'}</span>
+                      <span className="text-black">
+                        {formData.totalFloors || "Не указана"}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">Срок сдачи:</span>
-                      <span className="text-black">{formData.deliveryDate || 'Не указан'}</span>
+                      <span className="text-black">
+                        {formData.deliveryDate || "Не указан"}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -860,7 +1069,7 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
                       />
                     </div>
                   )}
-                  
+
                   <div className="space-y-2">
                     {formData.pricePerSqm && (
                       <div className="text-blue-600">
@@ -869,7 +1078,8 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
                     )}
                     {formData.priceRange.min && formData.priceRange.max && (
                       <div className="text-gray-600 text-sm">
-                        от {formData.priceRange.min} до {formData.priceRange.max} млн ₽
+                        от {formData.priceRange.min} до{" "}
+                        {formData.priceRange.max} млн ₽
                       </div>
                     )}
                   </div>
@@ -880,8 +1090,11 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
                 <div className="mt-6">
                   <h5 className="text-black mb-3">Удобства</h5>
                   <div className="flex flex-wrap gap-2">
-                    {formData.amenities.map(amenity => (
-                      <span key={amenity} className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
+                    {formData.amenities.map((amenity) => (
+                      <span
+                        key={amenity}
+                        className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm"
+                      >
                         {amenity}
                       </span>
                     ))}
@@ -890,11 +1103,13 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
               )}
 
               {/* EGRN Status */}
-              {egrnVerification.status === 'success' && (
+              {egrnVerification.status === "success" && (
                 <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
                   <div className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-600 mr-2" />
-                    <span className="text-green-800 text-sm">Проверка ЕГРН пройдена</span>
+                    <span className="text-green-800 text-sm">
+                      Проверка ЕГРН пройдена
+                    </span>
                   </div>
                 </div>
               )}
@@ -904,10 +1119,15 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
                 <div className="mt-6">
                   <h5 className="text-black mb-3">Публикация на платформах</h5>
                   <div className="flex flex-wrap gap-2">
-                    {formData.selectedPlatforms.map(platformId => {
-                      const platform = platforms.find(p => p.id === platformId);
+                    {formData.selectedPlatforms.map((platformId) => {
+                      const platform = platforms.find(
+                        (p) => p.id === platformId,
+                      );
                       return platform ? (
-                        <span key={platformId} className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm flex items-center">
+                        <span
+                          key={platformId}
+                          className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm flex items-center"
+                        >
                           <span className="mr-2">{platform.logo}</span>
                           {platform.name}
                         </span>
@@ -924,13 +1144,16 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
                 <h4 className="text-green-900">Готово к публикации</h4>
               </div>
               <p className="text-green-700 text-sm">
-                Объект готов к добавлению в каталог. Проверьте все данные перед сохранением.
+                Объект готов к добавлению в каталог. Проверьте все данные перед
+                сохранением.
               </p>
-              {formData.selectedPlatforms.length > 0 && egrnVerification.status === 'success' && (
-                <p className="text-green-700 text-sm mt-2">
-                  После сохранения объект будет автоматически опубликован на выбранных платформах.
-                </p>
-              )}
+              {formData.selectedPlatforms.length > 0 &&
+                egrnVerification.status === "success" && (
+                  <p className="text-green-700 text-sm mt-2">
+                    После сохранения объект будет автоматически опубликован на
+                    выбранных платформах.
+                  </p>
+                )}
             </div>
           </div>
         );
@@ -947,37 +1170,41 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
         <div className="max-w-md mx-auto bg-white min-h-screen">
           {/* Mobile Header */}
           <div className="px-6 pt-12 pb-8">
-            <button 
+            <button
               onClick={onBack}
               className="mb-6 p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <ArrowLeft className="w-6 h-6 text-gray-600" />
             </button>
-            
+
             <div className="text-center mb-8">
               <h1 className="text-2xl text-black mb-2">Добавить объект</h1>
-              <p className="text-gray-600">Шаг {currentStep + 1} из {steps.length}</p>
+              <p className="text-gray-600">
+                Шаг {currentStep + 1} из {steps.length}
+              </p>
             </div>
 
             {/* Progress */}
             <div className="mb-4">
               <div className="flex justify-between text-xs text-gray-500 mb-2">
                 <span>{steps[currentStep].title}</span>
-                <span>{Math.round(((currentStep + 1) / steps.length) * 100)}%</span>
+                <span>
+                  {Math.round(((currentStep + 1) / steps.length) * 100)}%
+                </span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
+                <div
                   className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+                  style={{
+                    width: `${((currentStep + 1) / steps.length) * 100}%`,
+                  }}
                 ></div>
               </div>
             </div>
           </div>
 
           {/* Mobile Content */}
-          <div className="px-6 py-6 pb-20">
-            {renderStepContent()}
-          </div>
+          <div className="px-6 py-6 pb-20">{renderStepContent()}</div>
 
           {/* Mobile Navigation */}
           <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md bg-white border-t border-gray-200 p-4">
@@ -990,7 +1217,7 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
                 <ChevronLeft className="w-5 h-5 mr-1" />
                 Назад
               </button>
-              
+
               {currentStep === steps.length - 1 ? (
                 <button
                   onClick={handleSubmit}
@@ -1020,28 +1247,34 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
           <div className="col-span-3 bg-white border-r border-gray-200 overflow-y-auto">
             <div className="p-6">
               <h2 className="text-xl text-black mb-6">Добавление объекта</h2>
-              
+
               <div className="space-y-3">
                 {steps.map((step, index) => {
                   const StepIcon = step.icon;
                   const isActive = index === currentStep;
                   const isCompleted = index < currentStep;
-                  
+
                   return (
                     <button
                       key={step.id}
                       onClick={() => setCurrentStep(index)}
                       className={`w-full flex items-center p-4 rounded-xl text-left transition-all ${
-                        isActive ? 'bg-blue-50 border-2 border-blue-200' :
-                        isCompleted ? 'bg-green-50 border border-green-200' :
-                        'bg-gray-50 border border-gray-200 hover:bg-gray-100'
+                        isActive
+                          ? "bg-blue-50 border-2 border-blue-200"
+                          : isCompleted
+                            ? "bg-green-50 border border-green-200"
+                            : "bg-gray-50 border border-gray-200 hover:bg-gray-100"
                       }`}
                     >
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center mr-3 ${
-                        isActive ? 'bg-blue-600 text-white' :
-                        isCompleted ? 'bg-green-600 text-white' :
-                        'bg-gray-300 text-gray-600'
-                      }`}>
+                      <div
+                        className={`w-10 h-10 rounded-full flex items-center justify-center mr-3 ${
+                          isActive
+                            ? "bg-blue-600 text-white"
+                            : isCompleted
+                              ? "bg-green-600 text-white"
+                              : "bg-gray-300 text-gray-600"
+                        }`}
+                      >
                         {isCompleted ? (
                           <Check className="w-5 h-5" />
                         ) : (
@@ -1049,11 +1282,15 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
                         )}
                       </div>
                       <div className="flex-1">
-                        <div className={`${
-                          isActive ? 'text-blue-700' :
-                          isCompleted ? 'text-green-700' :
-                          'text-gray-700'
-                        }`}>
+                        <div
+                          className={`${
+                            isActive
+                              ? "text-blue-700"
+                              : isCompleted
+                                ? "text-green-700"
+                                : "text-gray-700"
+                          }`}
+                        >
                           {step.title}
                         </div>
                         <div className="text-gray-500 text-sm">
@@ -1068,9 +1305,11 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
               <div className="mt-8 p-4 bg-blue-50 rounded-xl">
                 <h3 className="text-blue-900 mb-2">Прогресс</h3>
                 <div className="w-full bg-blue-200 rounded-full h-2 mb-2">
-                  <div 
+                  <div
                     className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+                    style={{
+                      width: `${((currentStep + 1) / steps.length) * 100}%`,
+                    }}
                   ></div>
                 </div>
                 <div className="text-blue-700 text-sm">
@@ -1086,8 +1325,12 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
             <div className="bg-white border-b border-gray-200 p-8">
               <div className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-2xl text-black">{steps[currentStep].title}</h1>
-                  <p className="text-gray-500">Шаг {currentStep + 1} из {steps.length}</p>
+                  <h1 className="text-2xl text-black">
+                    {steps[currentStep].title}
+                  </h1>
+                  <p className="text-gray-500">
+                    Шаг {currentStep + 1} из {steps.length}
+                  </p>
                 </div>
                 <button
                   onClick={onBack}
@@ -1101,9 +1344,7 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
 
             {/* Desktop Content */}
             <div className="flex-1 p-8 overflow-y-auto">
-              <div className="max-w-4xl mx-auto">
-                {renderStepContent()}
-              </div>
+              <div className="max-w-4xl mx-auto">{renderStepContent()}</div>
             </div>
 
             {/* Desktop Navigation */}
@@ -1117,7 +1358,7 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
                   <ChevronLeft className="w-5 h-5 mr-2" />
                   Назад
                 </button>
-                
+
                 {currentStep === steps.length - 1 ? (
                   <button
                     onClick={handleSubmit}
