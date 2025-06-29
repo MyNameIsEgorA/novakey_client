@@ -23,7 +23,7 @@ export const DeveloperMainPage = observer(() => {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <p className="text-gray-500 text-sm mb-1">Добро пожаловать,</p>
-                <h1 className="text-black">{user.name || ""}</h1>
+                <h1 className="text-black">{user?.name || ""}</h1>
 
                 <p className="text-sm text-emerald-600">
                   ООО "СтройИнвест" • Рейтинг 4.8 ⭐
