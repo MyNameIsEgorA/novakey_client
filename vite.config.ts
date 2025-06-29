@@ -26,7 +26,7 @@ export default defineConfig({
     host: true,
   },
   preview: {
-    allowedHosts: ["nova-key.online"],
+    allowedHosts: true,
     host: true,
   },
   publicDir: "public",

@@ -161,7 +161,7 @@ export const DeveloperCRM = observer(
       getData();
     }, []);
 
-    const filteredCustomers = customersList.filter((customer) => {
+    const filteredCustomers = crmData.filter((customer) => {
       const matchesSearch =
         customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         customer.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -282,11 +282,10 @@ export const DeveloperCRM = observer(
             <div className="px-6 py-4 pb-20">
               <div className="space-y-4">
                 {filteredCustomers.map((customer) => {
-                  const StatusIcon = statusConfig[customer.status].icon;
                   return (
                     <div
                       key={customer.id}
-                      className={`bg-white rounded-xl p-4 shadow-sm border-l-4 ${priorityConfig[customer.priority].color} hover:shadow-md transition-shadow`}
+                      className={`bg-white rounded-xl p-4 shadow-sm border-l-4 hover:shadow-md transition-shadow`}
                     >
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center">
@@ -305,10 +304,8 @@ export const DeveloperCRM = observer(
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <span
-                            className={`text-xs px-2 py-1 rounded-full ${statusConfig[customer.status].color}`}
-                          >
-                            {statusConfig[customer.status].label}
+                          <span className={`text-xs px-2 py-1 rounded-full `}>
+                            {customer.status}
                           </span>
                           <button className="p-1 text-gray-400 hover:text-gray-600">
                             <MoreHorizontal className="w-4 h-4" />
@@ -582,12 +579,11 @@ export const DeveloperCRM = observer(
                         </thead>
                         <tbody className="divide-y divide-gray-200">
                           {filteredCustomers.map((customer) => {
-                            const StatusIcon =
-                              statusConfig[customer.status].icon;
+                            const StatusIcon = Calendar;
                             return (
                               <tr
                                 key={customer.id}
-                                className={`hover:bg-gray-50 transition-colors border-l-4 ${priorityConfig[customer.priority].color}`}
+                                className={`hover:bg-gray-50 transition-colors border-l-4`}
                               >
                                 <td className="px-6 py-4">
                                   <div className="flex items-center">
@@ -618,10 +614,10 @@ export const DeveloperCRM = observer(
                                 </td>
                                 <td className="px-6 py-4">
                                   <span
-                                    className={`inline-flex items-center px-3 py-1 rounded-full text-sm ${statusConfig[customer.status].color}`}
+                                    className={`inline-flex items-center px-3 py-1 rounded-full text-sm`}
                                   >
                                     <StatusIcon className="w-4 h-4 mr-1" />
-                                    {statusConfig[customer.status].label}
+                                    {customer.status}
                                   </span>
                                 </td>
                                 <td className="px-6 py-4 text-black">
