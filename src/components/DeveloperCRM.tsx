@@ -429,16 +429,6 @@ export const DeveloperCRM = observer(
                       >
                         <Users className="w-4 h-4" />
                       </button>
-                      <button
-                        onClick={() => setViewMode("cards")}
-                        className={`p-2 rounded-md transition-colors ${
-                          viewMode === "cards"
-                            ? "bg-white text-purple-600 shadow-sm"
-                            : "text-gray-600 hover:text-gray-900"
-                        }`}
-                      >
-                        <Eye className="w-4 h-4" />
-                      </button>
                     </div>
                     <button
                       onClick={() => setShowAddClientModal(true)}

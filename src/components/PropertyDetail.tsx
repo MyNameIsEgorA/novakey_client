@@ -89,18 +89,24 @@ export const PropertyDetail = observer(
     };
 
     const goToAr = () => {
-      if (!user) {
-        navigate(`/buyer/ar?url=${property.ar_model_url}`);
-        return;
+      try {
+        if (!user) {
+          navigate(`/buyer/ar?url=${property.ar_model_url}`);
+          return;
+        }
+        const propertyName = property?.name;
+        CrmService.createCrmClient({
+          name: user.name || "Неизвестный пользователь",
+          phone: "Номер неизвестен",
+          email: user.email || "No email",
+          priority: "high",
+          source: `AR-просмотр ${propertyName}`,
+        });
+      } catch (e) {
+        return navigate(
+          "/buyer/ar?url=https://portfolio3.3dpanorama.spb.ru/2025/02/nowicola/",
+        );
       }
-      const propertyName = property?.name;
-      CrmService.createCrmClient({
-        name: user.name || "Неизвестный пользователь",
-        phone: "Номер неизвестен",
-        email: user.email || "No email",
-        priority: "high",
-        source: `AR-просмотр ${propertyName}`,
-      });
     };
 
     const prevImage = () => {
