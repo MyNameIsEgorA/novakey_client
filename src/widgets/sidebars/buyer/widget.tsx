@@ -134,8 +134,7 @@ export const BuyerSidebar = observer(() => {
 
       {isMobile &&
         window.location.pathname !== "/buyer/tinder" &&
-        !isMobile &&
-        window.location.pathname.includes("chat")(
+        !window.location.pathname.includes("chat") && (
           <div className="fixed w-[392px] bottom-0 bg-white border-t border-gray-200 shadow-lg z-[3000000000]">
             <nav className="flex justify-around py-2">
               {navigationItems.map((item) => (
@@ -155,7 +154,7 @@ export const BuyerSidebar = observer(() => {
                 </button>
               ))}
             </nav>
-          </div>,
+          </div> // <--- This comma is the problem
         )}
     </>
   );
