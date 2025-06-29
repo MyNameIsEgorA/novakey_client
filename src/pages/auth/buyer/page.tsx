@@ -13,6 +13,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "@/app/routes/base.ts";
 import { AuthService } from "@/entities/user/api.ts";
+import CustomToast from "@/shared/ui/CustomToast"; // Make sure this path is correct
 
 function NovaKeyLogo({ className = "text-2xl" }: { className?: string }) {
   return (
@@ -44,36 +45,44 @@ export function BuyerAuthPage() {
   };
 
   const [isLoading, setIsLoading] = useState(false);
+  // State for managing the toast notification
+  const [showErrorToast, setShowErrorToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+
+    let result;
     if (!isLogin) {
-      const result = await AuthService.register({
+      result = await AuthService.register({
         name: formData.fullName,
         email: formData.email,
         password: formData.password,
         password_confirmation: formData.confirmPassword,
       });
-      setIsLoading(false);
-      if (!result) {
-        return;
-      }
-      console.log("Register result", result);
-      onSuccess();
-    }
-    if (isLogin) {
-      const result = await AuthService.login({
+    } else {
+      result = await AuthService.login({
         email: formData.email,
         password: formData.password,
       });
-      setIsLoading(false);
-      if (!result) {
-        return;
-      }
-      console.log("Register result", result);
-      onSuccess();
     }
+
+    setIsLoading(false);
+
+    if (!result) {
+      // If result is falsy (indicating an error or failure)
+      setToastMessage(
+        isLogin
+          ? "Ошибка входа. Проверьте данные и повторите попытку."
+          : "Ошибка регистрации. Возможно, пользователь с таким email уже существует или данные неверны.",
+      );
+      setShowErrorToast(true);
+      return;
+    }
+
+    console.log(isLogin ? "Login result" : "Register result", result);
+    onSuccess();
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -527,6 +536,14 @@ export function BuyerAuthPage() {
           </div>
         </div>
       </div>
+
+      {/* Custom Toast component */}
+      <CustomToast
+        open={showErrorToast}
+        onOpenChange={setShowErrorToast}
+        title="Ошибка"
+        description={toastMessage}
+      />
     </div>
   );
 }
