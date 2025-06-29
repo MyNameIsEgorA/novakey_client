@@ -11,7 +11,6 @@ export const BuyerObjectInfoPage = () => {
         onBack={() => {
           navigate(-1);
         }}
-        onStartChat={() => {}}
         userType={"buyer"}
         onStartARViewer={() => {}}
       />

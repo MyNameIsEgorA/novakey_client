@@ -24,6 +24,7 @@ import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { useNavigate } from "react-router-dom";
 import { allObjectsStorage } from "@/entities/buy/modelsStorage.ts";
 import { observer } from "mobx-react-lite";
+import { chatStore } from "@/entities/chat/store.ts";
 
 interface PropertyDetailProps {
   propertyId: string;
@@ -49,11 +50,18 @@ export const PropertyDetail = observer(
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isLiked, setIsLiked] = useState(false);
     const navigate = useNavigate();
-    const goToChat = () => {
-      navigate("/buyer/chats");
-    };
+    const { sendMessage } = chatStore;
 
     const property = allObjectsStorage.getElementByIndex(+propertyId);
+
+    const goToChat = () => {
+      if (!property) {
+        navigate("/buyer/chats");
+        return;
+      }
+      sendMessage(property.user_uuid, "1");
+      navigate("/buyer/chats");
+    };
 
     if (!property) {
       return (

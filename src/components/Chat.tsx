@@ -139,7 +139,7 @@ export function Chat({ propertyId, onBack }: ChatProps) {
   };
 
   return (
-    <div className="max-h-[80dvh] bg-gray-50">
+    <div className="max-h-full bg-gray-50">
       {/* Mobile Layout */}
       <div className="lg:hidden">
         <div className="max-w-md mx-auto bg-white min-h-screen">
@@ -322,7 +322,7 @@ export function Chat({ propertyId, onBack }: ChatProps) {
                         <p className="text-sm text-gray-500 mb-1">
                           {chat.propertyName}
                         </p>
-                        <p className="text-sm text-gray-600 truncate">
+                        <p className="text-sm text-gray-600 truncate max-w-full w-[270px] mb-5">
                           {chat.lastMessage}
                         </p>
                       </div>
