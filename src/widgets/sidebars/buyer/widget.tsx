@@ -129,28 +129,31 @@ export const BuyerSidebar = () => {
         </div>
       )}
 
-      {isMobile && window.location.pathname !== "/buyer/tinder" && (
-        <div className="fixed w-[392px] bottom-0 bg-white border-t border-gray-200 shadow-lg z-[3000000000]">
-          <nav className="flex justify-around py-2">
-            {navigationItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => handleNavigation(item.page)}
-                className={`flex flex-col items-center justify-center p-2 rounded-lg transition-colors ${
-                  currentScreen === item.page
-                    ? "text-blue-600"
-                    : "text-gray-700 hover:text-blue-600"
-                }`}
-              >
-                <div className="relative">
-                  <item.icon className="w-6 h-6" />
-                </div>
-                <span className="text-xs mt-1">{item.label}</span>
-              </button>
-            ))}
-          </nav>
-        </div>
-      )}
+      {isMobile &&
+        window.location.pathname !== "/buyer/tinder" &&
+        !isMobile &&
+        window.location.pathname.includes("chat")(
+          <div className="fixed w-[392px] bottom-0 bg-white border-t border-gray-200 shadow-lg z-[3000000000]">
+            <nav className="flex justify-around py-2">
+              {navigationItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleNavigation(item.page)}
+                  className={`flex flex-col items-center justify-center p-2 rounded-lg transition-colors ${
+                    currentScreen === item.page
+                      ? "text-blue-600"
+                      : "text-gray-700 hover:text-blue-600"
+                  }`}
+                >
+                  <div className="relative">
+                    <item.icon className="w-6 h-6" />
+                  </div>
+                  <span className="text-xs mt-1">{item.label}</span>
+                </button>
+              ))}
+            </nav>
+          </div>,
+        )}
     </>
   );
 };

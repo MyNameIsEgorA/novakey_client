@@ -15,7 +15,7 @@ export const CrmPage = () => {
       />
       <div className={""}>
         <DeveloperCRM
-          onBack={() => navigate("-1")}
+          onBack={() => navigate(-1)}
           onStartChat={() => navigate(AppRoutes.developer.chats)}
         />
       </div>

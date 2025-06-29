@@ -4,11 +4,14 @@ import { useIsMobile } from "@/shared/hooks/isMobile.ts";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback.tsx";
 import { observer } from "mobx-react-lite";
 import { allObjectsStorage } from "@/entities/buy/modelsStorage.ts";
+import { useNavigate } from "react-router-dom";
+import { AppRoutes } from "@/app/routes/base.ts";
 
 export const DeveloperMainPage = observer(() => {
   const isMobile = useIsMobile();
 
   const { allObjects } = allObjectsStorage;
+  const navigate = useNavigate();
 
   return (
     <>
@@ -58,22 +61,34 @@ export const DeveloperMainPage = observer(() => {
             <div className="mb-6">
               <h2 className="text-lg mb-4">Быстрые действия</h2>
               <div className="grid grid-cols-2 gap-4">
-                <button className="bg-blue-50 p-4 rounded-xl text-left hover:bg-blue-100 transition-colors">
+                <button
+                  className="bg-blue-50 p-4 rounded-xl text-left hover:bg-blue-100 transition-colors"
+                  onClick={() => navigate(AppRoutes.developer.addObject)}
+                >
                   <Plus className="w-6 h-6 text-blue-600 mb-2" />
                   <h3 className="text-black mb-1">Добавить объект</h3>
                   <p className="text-gray-500 text-sm">Новый ЖК</p>
                 </button>
-                <button className="bg-emerald-50 p-4 rounded-xl text-left hover:bg-emerald-100 transition-colors">
+                <button
+                  className="bg-emerald-50 p-4 rounded-xl text-left hover:bg-emerald-100 transition-colors"
+                  onClick={() => navigate(AppRoutes.developer.myObjects)}
+                >
                   <List className="w-6 h-6 text-emerald-600 mb-2" />
                   <h3 className="text-black mb-1">Мои объекты</h3>
                   <p className="text-gray-500 text-sm">Списком</p>
                 </button>
-                <button className="bg-stone-50 p-4 rounded-xl text-left hover:bg-stone-100 transition-colors">
+                <button
+                  className="bg-stone-50 p-4 rounded-xl text-left hover:bg-stone-100 transition-colors"
+                  onClick={() => navigate(AppRoutes.developer.crm)}
+                >
                   <Users className="w-6 h-6 text-stone-600 mb-2" />
                   <h3 className="text-black mb-1">CRM</h3>
                   <p className="text-gray-500 text-sm">Клиенты</p>
                 </button>
-                <button className="bg-green-50 p-4 rounded-xl text-left hover:bg-green-100 transition-colors">
+                <button
+                  className="bg-green-50 p-4 rounded-xl text-left hover:bg-green-100 transition-colors"
+                  onClick={() => navigate(AppRoutes.developer.calendar)}
+                >
                   <Calendar className="w-6 h-6 text-green-600 mb-2" />
                   <h3 className="text-black mb-1">Календарь</h3>
                   <p className="text-gray-500 text-sm">Показы</p>
@@ -185,22 +200,34 @@ export const DeveloperMainPage = observer(() => {
                   <div className="mb-6">
                     <h2 className="text-lg mb-4">Быстрые действия</h2>
                     <div className="flex gap-4">
-                      <button className="bg-blue-50 w-[25%] p-4 rounded-xl text-left hover:bg-blue-100 transition-colors">
+                      <button
+                        className="bg-blue-50 w-[25%] p-4 rounded-xl text-left hover:bg-blue-100 transition-colors"
+                        onClick={() => navigate(AppRoutes.developer.addObject)}
+                      >
                         <Plus className="w-6 h-6 text-blue-600 mb-2" />
                         <h3 className="text-black mb-1">Добавить объект</h3>
                         <p className="text-gray-500 text-sm">Новый ЖК</p>
                       </button>
-                      <button className="bg-emerald-50 p-4 w-[25%] rounded-xl text-left hover:bg-emerald-100 transition-colors">
+                      <button
+                        className="bg-emerald-50 p-4 w-[25%] rounded-xl text-left hover:bg-emerald-100 transition-colors"
+                        onClick={() => navigate(AppRoutes.developer.myObjects)}
+                      >
                         <List className="w-6 h-6 text-emerald-600 mb-2" />
                         <h3 className="text-black mb-1">Мои объекты</h3>
                         <p className="text-gray-500 text-sm">Списком</p>
                       </button>
-                      <button className="bg-stone-50 p-4 rounded-xl w-[25%] text-left hover:bg-stone-100 transition-colors">
+                      <button
+                        className="bg-stone-50 p-4 rounded-xl w-[25%] text-left hover:bg-stone-100 transition-colors"
+                        onClick={() => navigate(AppRoutes.developer.crm)}
+                      >
                         <Users className="w-6 h-6 text-stone-600 mb-2" />
                         <h3 className="text-black mb-1">CRM</h3>
                         <p className="text-gray-500 text-sm">Клиенты</p>
                       </button>
-                      <button className="bg-green-50 p-4 rounded-xl w-[25%] text-left hover:bg-green-100 transition-colors">
+                      <button
+                        className="bg-green-50 p-4 rounded-xl w-[25%] text-left hover:bg-green-100 transition-colors"
+                        onClick={() => navigate(AppRoutes.developer.calendar)}
+                      >
                         <Calendar className="w-6 h-6 text-green-600 mb-2" />
                         <h3 className="text-black mb-1">Календарь</h3>
                         <p className="text-gray-500 text-sm">Показы</p>

@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { SelectPositionMap } from "@/pages/developer/addObject/map.tsx";
+import { AppRoutes } from "@/app/routes/base.ts";
 
 interface AddPropertyProps {
   onBack: () => void;
@@ -1185,7 +1186,10 @@ export function AddProperty({ onBack, onSave }: AddPropertyProps) {
               <ArrowLeft className="w-6 h-6 text-gray-600" />
             </button>
 
-            <div className="text-center mb-8">
+            <div
+              className="text-center mb-8"
+              onClick={() => navigate(AppRoutes.developer.addObject)}
+            >
               <h1 className="text-2xl text-black mb-2">Добавить объект</h1>
               <p className="text-gray-600">
                 Шаг {currentStep + 1} из {steps.length}

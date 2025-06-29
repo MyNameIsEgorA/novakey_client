@@ -96,7 +96,10 @@ export const AddObjectPage = observer(() => {
     <AddProperty
       onBack={() => navigate(-1)}
       onSave={async (propertyData: any) => {
-        const data = mapToObjectCreate(propertyData, user?.id || "user_id");
+        const data = mapToObjectCreate(
+          propertyData,
+          String(user?.id || "user_uuid"),
+        );
         await allObjectsStorage.addObject(data);
         navigate(AppRoutes.developer.myObjects);
       }}

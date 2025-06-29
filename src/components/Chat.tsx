@@ -139,7 +139,7 @@ export function Chat({ propertyId, onBack }: ChatProps) {
   };
 
   return (
-    <div className="max-h-full bg-gray-50">
+    <div className="max-h-screen bg-gray-50 overflow-y-hidden">
       {/* Mobile Layout */}
       <div className="lg:hidden">
         <div className="max-w-md mx-auto bg-white min-h-screen">
@@ -221,7 +221,7 @@ export function Chat({ propertyId, onBack }: ChatProps) {
               </div>
 
               {/* Mobile Message Input */}
-              <div className="p-4 bg-white border-t border-gray-200">
+              <div className="p-4 bg-white border-t border-gray-200 z-[30000000000000]">
                 <div className="flex items-end space-x-2">
                   <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
                     <Paperclip className="w-5 h-5" />
