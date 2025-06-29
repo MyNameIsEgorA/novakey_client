@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   Search,
-  Filter,
   Users,
   MessageSquare,
   Calendar,
@@ -11,100 +10,20 @@ import {
   MoreHorizontal,
   Star,
   Eye,
-  Trash2,
-  Edit,
   Download,
   Plus,
   CheckCircle,
-  Clock,
-  UserCheck,
   AlertCircle,
 } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { AddClientModal } from "./AddClientModal";
 import { type Client, CrmService } from "@/entities/crm/api.ts";
 import { observer } from "mobx-react-lite";
-import { userDataStore } from "@/entities/user/model.ts";
 
 interface DeveloperCRMProps {
   onBack: () => void;
   onStartChat: (userId: string) => void;
 }
-
-const customers = [
-  {
-    id: "1",
-    name: "Анна Смирнова",
-    email: "anna.smirnova@email.com",
-    phone: "+7 (999) 123-45-67",
-    avatar:
-      "https://images.unsplash.com/photo-1494790108755-2616b612b8db?w=100&h=100&fit=crop&crop=face",
-    property: 'ЖК "Северная звезда"',
-    propertyId: "1",
-    status: "interested",
-    budget: "8-10 млн ₽",
-    lastContact: "2 часа назад",
-    source: "Сайт",
-    viewings: 2,
-    stage: "Заинтересован",
-    notes: "Ищет 2-комнатную квартиру с балконом",
-    priority: "high",
-  },
-  {
-    id: "2",
-    name: "Михаил Петров",
-    email: "mikhail.petrov@email.com",
-    phone: "+7 (999) 234-56-78",
-    avatar:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
-    property: 'ЖК "Новый Горизонт"',
-    propertyId: "2",
-    status: "viewing_scheduled",
-    budget: "5-6 млн ₽",
-    lastContact: "1 день назад",
-    source: "Реклама",
-    viewings: 1,
-    stage: "Показ запланирован",
-    notes: "VR-просмотр запланирован на завтра",
-    priority: "medium",
-  },
-  {
-    id: "3",
-    name: "Елена Козлова",
-    email: "elena.kozlova@email.com",
-    phone: "+7 (999) 345-67-89",
-    avatar:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
-    property: 'ЖК "Парковый"',
-    propertyId: "3",
-    status: "contract_ready",
-    budget: "6-7 млн ₽",
-    lastContact: "3 дня назад",
-    source: "Рекомендации",
-    viewings: 3,
-    stage: "Готов к сделке",
-    notes: "Готова к заключению договора",
-    priority: "high",
-  },
-  {
-    id: "4",
-    name: "Дмитрий Волков",
-    email: "dmitry.volkov@email.com",
-    phone: "+7 (999) 456-78-90",
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
-    property: 'ЖК "Центральный"',
-    propertyId: "4",
-    status: "follow_up",
-    budget: "12-15 млн ₽",
-    lastContact: "1 неделя назад",
-    source: "Агент",
-    viewings: 1,
-    stage: "Требует внимания",
-    notes: "Не отвечает на звонки последнюю неделю",
-    priority: "low",
-  },
-];
 
 const statusConfig = {
   interested: {
@@ -141,21 +60,35 @@ export const DeveloperCRM = observer(
     const [selectedStatus, setSelectedStatus] = useState("all");
     const [viewMode, setViewMode] = useState<"table" | "cards">("table");
     const [showAddClientModal, setShowAddClientModal] = useState(false);
-    const [customersList, setCustomersList] = useState(customers);
     const [crmData, setCrmData] = useState<Client[]>([]);
-    const { user } = userDataStore;
 
     useEffect(() => {
       const getData = async () => {
-        if (!user) {
-          return;
-        }
-        const data = await CrmService.getCrmClients();
+        const data: Client[] = await CrmService.getCrmClients();
         if (!data) {
           return;
         }
-        console.log(data);
-        setCrmData(data);
+
+        const amountToAdd = 1; // You can change this value to whatever you need
+
+        const uniqueClients: Client[] = [];
+        const seenCombinations = new Set<string>();
+
+        for (const client of data) {
+          const combination = `${client.email}-${client.source}`;
+          if (!seenCombinations.has(combination)) {
+            // Create a new client object to avoid directly modifying the original data if it's not desired
+            const updatedClient: Client = {
+              ...client,
+              viewings: client.viewings + amountToAdd, // Increment viewings here
+            };
+            uniqueClients.push(updatedClient);
+            seenCombinations.add(combination);
+          }
+        }
+
+        console.log(uniqueClients);
+        setCrmData(uniqueClients);
       };
 
       getData();
@@ -172,16 +105,15 @@ export const DeveloperCRM = observer(
     });
 
     const stats = {
-      total: customersList.length,
-      interested: customersList.filter((c) => c.status === "interested").length,
-      scheduled: customersList.filter((c) => c.status === "viewing_scheduled")
-        .length,
-      ready: customersList.filter((c) => c.status === "contract_ready").length,
-      followUp: customersList.filter((c) => c.status === "follow_up").length,
+      total: crmData.length,
+      interested: crmData.filter((c) => c.status === "interested").length,
+      scheduled: crmData.filter((c) => c.status === "viewing_scheduled").length,
+      ready: crmData.filter((c) => c.status === "contract_ready").length,
+      followUp: crmData.filter((c) => c.status === "follow_up").length,
     };
 
     const handleAddClient = (clientData: any) => {
-      setCustomersList((prev) => [...prev, clientData]);
+      setCrmData((prev) => [...prev, clientData]);
     };
 
     return (
@@ -589,7 +521,10 @@ export const DeveloperCRM = observer(
                                   <div className="flex items-center">
                                     <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
                                       <ImageWithFallback
-                                        src={customer.avatar}
+                                        src={
+                                          customer.avatar ||
+                                          "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face"
+                                        }
                                         alt={customer.name}
                                         className="w-full h-full object-cover"
                                       />

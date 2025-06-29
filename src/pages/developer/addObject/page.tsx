@@ -4,6 +4,8 @@ import { AppRoutes } from "@/app/routes/base.ts";
 import { allObjectsStorage } from "@/entities/buy/modelsStorage.ts";
 import type { ObjectCreate } from "@/entities/buy/objectFullData.ts";
 import { AuthService } from "@/entities/user/api.ts";
+import { observer } from "mobx-react-lite";
+import { userDataStore } from "@/entities/user/model.ts";
 
 type OriginalInput = {
   name: string;
@@ -86,20 +88,18 @@ export function mapToObjectCreate(
   };
 }
 
-export const AddObjectPage = () => {
+export const AddObjectPage = observer(() => {
   const navigate = useNavigate();
+  const { user } = userDataStore;
 
   return (
     <AddProperty
       onBack={() => navigate(-1)}
       onSave={async (propertyData: any) => {
-        const data = mapToObjectCreate(
-          propertyData,
-          AuthService.getToken() || "",
-        );
+        const data = mapToObjectCreate(propertyData, user?.id || "user_id");
         await allObjectsStorage.addObject(data);
         navigate(AppRoutes.developer.myObjects);
       }}
     />
   );
-};
+});

@@ -69,6 +69,7 @@ export class AuthService {
   }
 
   public static getToken(): string | null {
+    console.log();
     return localStorage.getItem(AuthService.TOKEN_KEY);
   }
 
