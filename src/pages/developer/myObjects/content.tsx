@@ -1,6 +1,7 @@
 import { ArrowLeft, Filter, MapPin, Search } from "lucide-react";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback.tsx";
 import type { Dispatch, FC, SetStateAction } from "react";
+import type { ObjectFullData } from "@/entities/buy/objectFullData.ts";
 
 interface Property {
   id: string;
@@ -33,8 +34,8 @@ const statusColors = {
 };
 
 interface MyObjectsList {
-  properties: Property[];
-  filteredProperties: Property[];
+  properties: ObjectFullData[];
+  filteredProperties: ObjectFullData[];
   onPropertySelect: (id: string) => void;
   onBack: () => void;
   setShowFilters: () => void;
@@ -62,7 +63,13 @@ export const MyObjectsList: FC<MyObjectsList> = ({
   setSearchQuery,
 }) => {
   const districts = [...new Set(properties.map((p) => p.district))];
-  const roomTypes = [...new Set(properties.map((p) => p.rooms))];
+  const roomTypes = [
+    "Студия",
+    "1-комнатная",
+    "2-комнатная",
+    "3-комнатная",
+    "4-комнатная",
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50 pt-10">
@@ -154,29 +161,27 @@ export const MyObjectsList: FC<MyObjectsList> = ({
               {filteredProperties.map((property) => (
                 <div
                   key={property.id}
-                  onClick={() => onPropertySelect(property.id)}
+                  onClick={() => onPropertySelect(String(property.id))}
                   className="bg-white rounded-xl p-4 shadow-sm border cursor-pointer hover:shadow-md transition-shadow"
                 >
                   <div className="flex">
                     <div className="w-20 h-20 rounded-lg overflow-hidden mr-4 relative">
                       <ImageWithFallback
-                        src={property.image}
-                        alt={property.title}
+                        src={property.photos[0]}
+                        alt={property.name}
                         className="w-full h-full object-cover"
                       />
-                      {property.isNew && (
-                        <div className="absolute top-1 left-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded">
-                          Новый
-                        </div>
-                      )}
+                      <div className="absolute top-1 left-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded">
+                        Новый
+                      </div>
                     </div>
                     <div className="flex-1">
                       <div className="flex items-start justify-between mb-1">
-                        <h4 className="text-black pr-2">{property.title}</h4>
+                        <h4 className="text-black pr-2">{property.name}</h4>
                         <span
-                          className={`text-xs px-2 py-1 rounded-full ${statusColors[property.status]}`}
+                          className={`text-xs px-2 py-1 rounded-full ${statusColors["available"]}`}
                         >
-                          {statusLabels[property.status]}
+                          {statusLabels[property.construction_status]}
                         </span>
                       </div>
                       <div className="flex items-center text-gray-500 text-xs mb-1">
@@ -184,22 +189,22 @@ export const MyObjectsList: FC<MyObjectsList> = ({
                         {property.address}
                       </div>
                       <p className="text-gray-500 text-sm mb-1">
-                        {property.rooms}, {property.area}
+                        {property.apartment_types[0]}, {property.district}
                       </p>
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-blue-600">{property.price}</p>
+                          <p className="text-blue-600">{property.min_price}</p>
                           <p className="text-gray-400 text-xs">
-                            {property.pricePerSqm}
+                            {property.price_per_sqm}
                           </p>
                         </div>
                         <div className="flex items-center space-x-1">
-                          {property.hasAR && (
+                          {property.ar_model_url && (
                             <span className="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded">
                               AR
                             </span>
                           )}
-                          {property.hasVR && (
+                          {property.vr_tour_url && (
                             <span className="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded">
                               VR
                             </span>
@@ -298,34 +303,33 @@ export const MyObjectsList: FC<MyObjectsList> = ({
               {filteredProperties.map((property) => (
                 <div
                   key={property.id}
-                  onClick={() => onPropertySelect(property.id)}
+                  onClick={() => onPropertySelect(String(property.id))}
                   className="bg-white rounded-xl shadow-sm border cursor-pointer hover:shadow-md transition-shadow overflow-hidden"
                 >
                   <div className="relative h-48 overflow-hidden">
                     <ImageWithFallback
-                      src={property.image}
-                      alt={property.title}
+                      src={property.photos[0]}
+                      alt={property.name}
                       className="w-full h-full object-cover"
                     />
-                    {property.isNew && (
-                      <div className="absolute top-3 left-3 bg-red-500 text-white text-xs px-2 py-1 rounded">
-                        Новый
-                      </div>
-                    )}
+                    <div className="absolute top-3 left-3 bg-red-500 text-white text-xs px-2 py-1 rounded">
+                      Новый
+                    </div>
+
                     <div className="absolute top-3 right-3">
                       <span
-                        className={`text-xs px-2 py-1 rounded-full ${statusColors[property.status]}`}
+                        className={`text-xs px-2 py-1 rounded-full ${statusColors["available"]}`}
                       >
-                        {statusLabels[property.status]}
+                        {statusLabels[property.construction_status]}
                       </span>
                     </div>
                     <div className="absolute bottom-3 right-3 flex space-x-1">
-                      {property.hasAR && (
+                      {property.ar_model_url && (
                         <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded">
                           AR
                         </span>
                       )}
-                      {property.hasVR && (
+                      {property.vr_tour_url && (
                         <span className="bg-purple-500 text-white text-xs px-2 py-1 rounded">
                           VR
                         </span>
@@ -334,19 +338,21 @@ export const MyObjectsList: FC<MyObjectsList> = ({
                   </div>
 
                   <div className="p-4">
-                    <h4 className="text-black mb-2">{property.title}</h4>
+                    <h4 className="text-black mb-2">{property.name}</h4>
                     <div className="flex items-center text-gray-500 text-sm mb-2">
                       <MapPin className="w-4 h-4 mr-1" />
                       {property.address}
                     </div>
                     <p className="text-gray-500 text-sm mb-3">
-                      {property.rooms}, {property.area}, {property.floor}
+                      {property.apartment_types[0]},{" "}
+                      {Math.floor(property.min_price / property.price_per_sqm)},{" "}
+                      {property.floors_count}
                     </p>
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-blue-600">{property.price}</p>
+                        <p className="text-blue-600">{property.min_price}</p>
                         <p className="text-gray-400 text-sm">
-                          {property.pricePerSqm}
+                          {property.price_per_sqm}
                         </p>
                       </div>
                     </div>
