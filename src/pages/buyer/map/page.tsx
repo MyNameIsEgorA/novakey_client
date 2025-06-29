@@ -23,7 +23,7 @@ export const BuyerMapPage = observer(() => {
   const navigate = useNavigate();
 
   const [filters, setFilters] = useState<Filters>({
-    priceRange: [0, Math.max(...allObjects.map((object) => +object.max_price))],
+    priceRange: [0, 20000000],
     areaRange: [20, 150],
     rooms: "any",
     status: "any",

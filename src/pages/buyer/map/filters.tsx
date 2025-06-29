@@ -138,7 +138,9 @@ export const MapFilters: FC<MapFiltersProps> = ({
           />
           <div className="flex justify-between text-sm text-gray-500">
             <span>0 млн</span>
-            <span className="text-blue-600">до {filters.priceRange[1]} Р</span>
+            <span className="text-blue-600">
+              до {filters.priceRange[1] > 0 ? filters.priceRange[1] : "0"} Р
+            </span>
             <span>20 млн</span>
           </div>
         </div>
