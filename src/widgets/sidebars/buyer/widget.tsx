@@ -4,6 +4,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback.tsx";
 import { NovaKeyLogo } from "@/shared/ui/logo.tsx";
+import { observer } from "mobx-react-lite";
+import { userDataStore } from "@/entities/user/model.ts";
 
 interface NavigationItem {
   id: string;
@@ -13,10 +15,11 @@ interface NavigationItem {
   badge?: number;
 }
 
-export const BuyerSidebar = () => {
+export const BuyerSidebar = observer(() => {
   const navigate = useNavigate();
   const location = useLocation(); // Получаем текущий путь
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const { user } = userDataStore;
 
   // Обновление ширины окна при ресайзе
   useEffect(() => {
@@ -93,7 +96,7 @@ export const BuyerSidebar = () => {
               </div>
               <div className="ml-3">
                 <h3 className="text-sm font-medium text-gray-900">
-                  Анна Смирнова
+                  {user && user.name}
                 </h3>
                 <p className="text-xs text-gray-500">Покупатель</p>
               </div>
@@ -156,4 +159,4 @@ export const BuyerSidebar = () => {
         )}
     </>
   );
-};
+});

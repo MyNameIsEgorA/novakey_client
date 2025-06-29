@@ -2,17 +2,19 @@ import { useState } from "react";
 import {
   ArrowLeft,
   Mail,
+  Phone,
+  User,
   Lock,
   Eye,
   EyeOff,
-  Building2,
   Shield,
-  Users,
+  CheckCircle,
+  Building,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "@/app/routes/base.ts";
+import { AuthService } from "@/entities/user/api.ts";
 
-// Minimalist NovaKey Logo Component
 function NovaKeyLogo({ className = "text-2xl" }: { className?: string }) {
   return (
     <div className={`${className} tracking-tight`}>
@@ -23,13 +25,15 @@ function NovaKeyLogo({ className = "text-2xl" }: { className?: string }) {
 }
 
 export function DeveloperAuthPage() {
+  const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
+    fullName: "",
     email: "",
+    phone: "",
     password: "",
+    confirmPassword: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [isRequestAccess, setIsRequestAccess] = useState(false);
 
   const navigate = useNavigate();
 
@@ -40,29 +44,37 @@ export function DeveloperAuthPage() {
     navigate(AppRoutes.developer.main);
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
-    // Simulate API call
-    setTimeout(() => {
+    if (!isLogin) {
+      const result = await AuthService.register({
+        name: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+        password_confirmation: formData.confirmPassword,
+      });
+      setIsLoading(false);
+      if (!result) {
+        return;
+      }
+      console.log("Register result", result);
       onSuccess();
+    }
+    if (isLogin) {
+      const result = await AuthService.login({
+        email: formData.email,
+        password: formData.password,
+      });
       setIsLoading(false);
-    }, 2000);
-  };
-
-  const handleRequestAccess = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    // Simulate API call
-    setTimeout(() => {
-      alert(
-        "Заявка на получение доступа отправлена! Наш менеджер свяжется с вами в течение 24 часов.",
-      );
-      setIsLoading(false);
-      setIsRequestAccess(false);
-    }, 2000);
+      if (!result) {
+        return;
+      }
+      console.log("Register result", result);
+      onSuccess();
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -86,22 +98,38 @@ export function DeveloperAuthPage() {
             <div className="text-center mb-8">
               <NovaKeyLogo className="text-3xl mb-6" />
               <h1 className="text-2xl text-black mb-2">
-                {isRequestAccess ? "Получить доступ" : "Вход для застройщика"}
+                {isLogin ? "Вход" : "Регистрация"}
               </h1>
               <p className="text-gray-600">
-                {isRequestAccess
-                  ? "Заполните заявку на получение доступа"
-                  : "Войдите в панель застройщика"}
+                {isLogin
+                  ? "Добро пожаловать обратно"
+                  : "Создайте аккаунт покупателя"}
               </p>
             </div>
           </div>
 
           {/* Mobile Form */}
           <div className="px-6">
-            <form
-              onSubmit={isRequestAccess ? handleRequestAccess : handleSubmit}
-              className="space-y-6"
-            >
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {!isLogin && (
+                <div>
+                  <label className="block text-gray-700 mb-2">Полное имя</label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={formData.fullName}
+                      onChange={(e) =>
+                        handleInputChange("fullName", e.target.value)
+                      }
+                      placeholder="Анна Смирнова"
+                      className="w-full bg-gray-100 rounded-xl px-4 py-3 pl-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
+                      required={!isLogin}
+                    />
+                    <User className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
+                  </div>
+                </div>
+              )}
+
               <div>
                 <label className="block text-gray-700 mb-2">Email</label>
                 <div className="relative">
@@ -109,124 +137,127 @@ export function DeveloperAuthPage() {
                     type="email"
                     value={formData.email}
                     onChange={(e) => handleInputChange("email", e.target.value)}
-                    placeholder="developer@company.com"
-                    className="w-full bg-gray-100 rounded-xl px-4 py-3 pl-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500 transition-all"
+                    placeholder="anna@example.com"
+                    className="w-full bg-gray-100 rounded-xl px-4 py-3 pl-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
                     required
                   />
                   <Mail className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
                 </div>
               </div>
 
-              {!isRequestAccess && (
+              {!isLogin && (
                 <div>
-                  <label className="block text-gray-700 mb-2">Пароль</label>
+                  <label className="block text-gray-700 mb-2">
+                    Название компании
+                  </label>
                   <div className="relative">
                     <input
-                      type={showPassword ? "text" : "password"}
-                      value={formData.password}
+                      type="tel"
+                      value={formData.phone}
                       onChange={(e) =>
-                        handleInputChange("password", e.target.value)
+                        handleInputChange("phone", e.target.value)
                       }
-                      placeholder="Введите пароль"
-                      className="w-full bg-gray-100 rounded-xl px-4 py-3 pl-12 pr-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500 transition-all"
-                      required
+                      placeholder="СтройИнвест"
+                      className="w-full bg-gray-100 rounded-xl px-4 py-3 pl-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
+                      required={!isLogin}
                     />
-                    <Lock className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                    >
-                      {showPassword ? (
-                        <EyeOff className="w-5 h-5" />
-                      ) : (
-                        <Eye className="w-5 h-5" />
-                      )}
-                    </button>
+                    <Building className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
                   </div>
                 </div>
               )}
 
-              {isRequestAccess && (
-                <>
-                  <div>
-                    <label className="block text-gray-700 mb-2">
-                      Название компании
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="ООО 'Ваша компания'"
-                      className="w-full bg-gray-100 rounded-xl px-4 py-3 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500 transition-all"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 mb-2">Телефон</label>
-                    <input
-                      type="tel"
-                      placeholder="+7 (999) 123-45-67"
-                      className="w-full bg-gray-100 rounded-xl px-4 py-3 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500 transition-all"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 mb-2">
-                      Краткое описание деятельности
-                    </label>
-                    <textarea
-                      placeholder="Расскажите о вашей компании и проектах..."
-                      rows={3}
-                      className="w-full bg-gray-100 rounded-xl px-4 py-3 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500 transition-all resize-none"
-                      required
-                    />
-                  </div>
-                </>
-              )}
-
-              <div className="bg-emerald-50 rounded-xl p-4">
-                <div className="flex items-start">
-                  <Shield className="w-5 h-5 text-emerald-600 mr-3 mt-0.5" />
-                  <div>
-                    <h4 className="text-emerald-900 mb-1">
-                      {isRequestAccess
-                        ? "Проверка заявки"
-                        : "Доступ только для партнеров"}
-                    </h4>
-                    <p className="text-emerald-700 text-sm">
-                      {isRequestAccess
-                        ? "Мы рассмотрим вашу заявку в течение 24 часов и предоставим доступ к системе"
-                        : "Для получения доступа к системе застройщика обратитесь к менеджеру платформы"}
-                    </p>
-                  </div>
+              <div>
+                <label className="block text-gray-700 mb-2">Пароль</label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={formData.password}
+                    onChange={(e) =>
+                      handleInputChange("password", e.target.value)
+                    }
+                    placeholder="Введите пароль"
+                    className="w-full bg-gray-100 rounded-xl px-4 py-3 pl-12 pr-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
+                    required
+                  />
+                  <Lock className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
+                  </button>
                 </div>
               </div>
+
+              {!isLogin && (
+                <div>
+                  <label className="block text-gray-700 mb-2">
+                    Подтвердите пароль
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="password"
+                      value={formData.confirmPassword}
+                      onChange={(e) =>
+                        handleInputChange("confirmPassword", e.target.value)
+                      }
+                      placeholder="Повторите пароль"
+                      className="w-full bg-gray-100 rounded-xl px-4 py-3 pl-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
+                      required={!isLogin}
+                    />
+                    <Lock className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
+                  </div>
+                </div>
+              )}
+
+              {!isLogin && (
+                <div className="bg-blue-50 rounded-xl p-4">
+                  <div className="flex items-start">
+                    <Shield className="w-5 h-5 text-blue-600 mr-3 mt-0.5" />
+                    <div>
+                      <h4 className="text-blue-900 mb-1">
+                        Уведомление о госуслугах
+                      </h4>
+                      <p className="text-blue-700 text-sm">
+                        В будущем планируется интеграция с порталом госуслуг для
+                        упрощения процесса покупки недвижимости
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-emerald-600 text-white py-3 rounded-xl hover:bg-emerald-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
               >
                 {isLoading ? (
                   <>
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
-                    {isRequestAccess ? "Отправка заявки..." : "Вход..."}
+                    {isLogin ? "Вход..." : "Регистрация..."}
                   </>
-                ) : isRequestAccess ? (
-                  "Отправить заявку"
+                ) : isLogin ? (
+                  "Войти"
                 ) : (
-                  "Войти в систему"
+                  "Создать аккаунт"
                 )}
               </button>
             </form>
 
             <div className="mt-6 text-center">
               <p className="text-gray-500 text-sm">
-                {isRequestAccess ? "Уже есть доступ?" : "Нет доступа?"}{" "}
+                {isLogin ? "Нет аккаунта?" : "Уже есть аккаунт?"}{" "}
                 <button
-                  onClick={() => setIsRequestAccess(!isRequestAccess)}
-                  className="text-emerald-600 hover:text-emerald-700 transition-colors"
+                  onClick={() => setIsLogin(!isLogin)}
+                  className="text-blue-600 hover:text-blue-700 transition-colors"
                 >
-                  {isRequestAccess ? "Войти" : "Получить доступ"}
+                  {isLogin ? "Зарегистрироваться" : "Войти"}
                 </button>
               </p>
             </div>
@@ -241,31 +272,30 @@ export function DeveloperAuthPage() {
           <div className="flex-1 bg-gray-50 p-12 flex items-center">
             <div className="w-full max-w-lg">
               <div className="grid gap-6">
-                {/* CRM System Card */}
+                {/* AR/VR Experience Card */}
                 <div
                   className="relative rounded-3xl p-8 text-white overflow-hidden min-h-[200px] flex flex-col justify-between"
                   style={{
                     background:
-                      "linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%)",
+                      "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                   }}
                 >
                   <div className="absolute top-6 right-6 text-white/70 text-sm">
                     / 01
                   </div>
                   <h3 className="text-2xl leading-tight">
-                    Полная CRM система
+                    AR/VR просмотры
                     <br />
-                    для застройщиков
+                    недвижимости
                   </h3>
                 </div>
 
                 <div className="grid grid-cols-2 gap-6">
-                  {/* Analytics Card */}
                   <div
                     className="relative rounded-3xl p-6 text-white overflow-hidden min-h-[280px]"
                     style={{
                       background:
-                        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                        "linear-gradient(135deg, #a8e6cf 0%, #88d8c0 100%)",
                     }}
                   >
                     <div className="absolute top-4 right-4 text-white/70 text-sm">
@@ -273,24 +303,25 @@ export function DeveloperAuthPage() {
                     </div>
                     <div className="h-full flex flex-col justify-between">
                       <div className="text-sm">
-                        Детальная аналитика
-                        <br />и отчетность
+                        Умный поиск по
+                        <br />
+                        всем параметрам
                       </div>
                       <div>
-                        <div className="text-2xl mb-2">95%</div>
+                        <div className="text-2xl mb-2">1000+</div>
                         <div className="text-sm opacity-80">
-                          Конверсия показов
+                          Объектов в базе
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Integration Card */}
+                  {/* Testimonial Card */}
                   <div
                     className="relative rounded-3xl p-6 text-white overflow-hidden min-h-[280px]"
                     style={{
                       background:
-                        "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)",
+                        "linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%)",
                     }}
                   >
                     <div className="absolute top-4 right-4 text-white/70 text-sm">
@@ -298,14 +329,18 @@ export function DeveloperAuthPage() {
                     </div>
                     <div className="h-full flex flex-col justify-between">
                       <div className="text-lg">
-                        Интеграция с Авито,
-                        <br />
-                        Циан, ДомКлик
+                        "Нашли квартиру мечты за неделю!"
                       </div>
                       <div>
-                        <div className="flex items-center mb-2">
-                          <Users className="w-5 h-5 mr-2" />
-                          <span className="text-sm">500+ застройщиков</span>
+                        <div className="text-sm opacity-80 mb-2">
+                          Семья Ивановых
+                        </div>
+                        <div className="flex">
+                          {[...Array(5)].map((_, i) => (
+                            <span key={i} className="text-yellow-300 mr-1">
+                              ★
+                            </span>
+                          ))}
                         </div>
                       </div>
                     </div>
@@ -327,23 +362,39 @@ export function DeveloperAuthPage() {
                 </button>
 
                 <NovaKeyLogo className="text-4xl mb-6" />
-                <div className="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Building2 className="w-8 h-8 text-emerald-600" />
-                </div>
                 <h2 className="text-3xl text-black mb-2">
-                  {isRequestAccess ? "Получить доступ" : "Панель застройщика"}
+                  {isLogin ? "Добро пожаловать" : "Создать аккаунт"}
                 </h2>
                 <p className="text-gray-600">
-                  {isRequestAccess
-                    ? "Заполните заявку для получения доступа к системе"
-                    : "Войдите в систему управления проектами"}
+                  {isLogin
+                    ? "Войдите в свой аккаунт покупателя"
+                    : "Зарегистрируйтесь как покупатель"}
                 </p>
               </div>
 
-              <form
-                onSubmit={isRequestAccess ? handleRequestAccess : handleSubmit}
-                className="space-y-6"
-              >
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Desktop form fields - same as mobile but with py-4 */}
+                {!isLogin && (
+                  <div>
+                    <label className="block text-gray-700 mb-2">
+                      Полное имя
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={formData.fullName}
+                        onChange={(e) =>
+                          handleInputChange("fullName", e.target.value)
+                        }
+                        placeholder="Анна Смирнова"
+                        className="w-full bg-gray-100 rounded-xl px-4 py-4 pl-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
+                        required={!isLogin}
+                      />
+                      <User className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
+                    </div>
+                  </div>
+                )}
+
                 <div>
                   <label className="block text-gray-700 mb-2">Email</label>
                   <div className="relative">
@@ -353,128 +404,127 @@ export function DeveloperAuthPage() {
                       onChange={(e) =>
                         handleInputChange("email", e.target.value)
                       }
-                      placeholder="developer@company.com"
-                      className="w-full bg-gray-100 rounded-xl px-4 py-4 pl-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500 transition-all"
+                      placeholder="anna@example.com"
+                      className="w-full bg-gray-100 rounded-xl px-4 py-4 pl-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
                       required
                     />
                     <Mail className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
                   </div>
                 </div>
 
-                {!isRequestAccess && (
+                {!isLogin && (
                   <div>
-                    <label className="block text-gray-700 mb-2">Пароль</label>
+                    <label className="block text-gray-700 mb-2">
+                      Название компании
+                    </label>
                     <div className="relative">
                       <input
-                        type={showPassword ? "text" : "password"}
-                        value={formData.password}
+                        type="tel"
+                        value={formData.phone}
                         onChange={(e) =>
-                          handleInputChange("password", e.target.value)
+                          handleInputChange("phone", e.target.value)
                         }
-                        placeholder="Введите пароль"
-                        className="w-full bg-gray-100 rounded-xl px-4 py-4 pl-12 pr-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500 transition-all"
-                        required
+                        placeholder="СтройИнвест"
+                        className="w-full bg-gray-100 rounded-xl px-4 py-4 pl-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
+                        required={!isLogin}
                       />
-                      <Lock className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                      >
-                        {showPassword ? (
-                          <EyeOff className="w-5 h-5" />
-                        ) : (
-                          <Eye className="w-5 h-5" />
-                        )}
-                      </button>
+                      <Building className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
                     </div>
                   </div>
                 )}
 
-                {isRequestAccess && (
-                  <>
-                    <div>
-                      <label className="block text-gray-700 mb-2">
-                        Название компании
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="ООО 'Ваша компания'"
-                        className="w-full bg-gray-100 rounded-xl px-4 py-4 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500 transition-all"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-700 mb-2">
-                        Телефон
-                      </label>
-                      <input
-                        type="tel"
-                        placeholder="+7 (999) 123-45-67"
-                        className="w-full bg-gray-100 rounded-xl px-4 py-4 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500 transition-all"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-700 mb-2">
-                        Краткое описание деятельности
-                      </label>
-                      <textarea
-                        placeholder="Расскажите о вашей компании и проектах..."
-                        rows={4}
-                        className="w-full bg-gray-100 rounded-xl px-4 py-4 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500 transition-all resize-none"
-                        required
-                      />
-                    </div>
-                  </>
-                )}
-
-                <div className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl p-6 border border-emerald-200">
-                  <div className="flex items-start">
-                    <Shield className="w-6 h-6 text-emerald-600 mr-3 mt-0.5" />
-                    <div>
-                      <h4 className="text-emerald-900 mb-2">
-                        {isRequestAccess
-                          ? "Быстрое рассмотрение заявки"
-                          : "Доступ только для партнеров"}
-                      </h4>
-                      <p className="text-emerald-700 text-sm leading-relaxed">
-                        {isRequestAccess
-                          ? "Мы рассмотрим вашу заявку в течение 24 часов и предоставим полный доступ к платформе NovaKey для застройщиков"
-                          : "Для получения доступа к системе застройщика и управления проектами обратитесь к менеджеру платформы NovaKey"}
-                      </p>
-                    </div>
+                <div>
+                  <label className="block text-gray-700 mb-2">Пароль</label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      value={formData.password}
+                      onChange={(e) =>
+                        handleInputChange("password", e.target.value)
+                      }
+                      placeholder="Введите пароль"
+                      className="w-full bg-gray-100 rounded-xl px-4 py-4 pl-12 pr-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
+                      required
+                    />
+                    <Lock className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
+                    </button>
                   </div>
                 </div>
+
+                {!isLogin && (
+                  <div>
+                    <label className="block text-gray-700 mb-2">
+                      Подтвердите пароль
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="password"
+                        value={formData.confirmPassword}
+                        onChange={(e) =>
+                          handleInputChange("confirmPassword", e.target.value)
+                        }
+                        placeholder="Повторите пароль"
+                        className="w-full bg-gray-100 rounded-xl px-4 py-4 pl-12 placeholder-gray-400 border-0 outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all"
+                        required={!isLogin}
+                      />
+                      <Lock className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
+                    </div>
+                  </div>
+                )}
+
+                {!isLogin && (
+                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-200">
+                    <div className="flex items-start">
+                      <CheckCircle className="w-6 h-6 text-blue-600 mr-3 mt-0.5" />
+                      <div>
+                        <h4 className="text-blue-900 mb-2">
+                          Интеграция с госуслугами
+                        </h4>
+                        <p className="text-blue-700 text-sm leading-relaxed">
+                          В скором времени планируется интеграция с порталом
+                          госуслуг для упрощения процесса покупки недвижимости
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-emerald-600 text-white py-4 rounded-xl hover:bg-emerald-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-lg"
+                  className="w-full bg-blue-600 text-white py-4 rounded-xl hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-lg"
                 >
                   {isLoading ? (
                     <>
                       <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
-                      {isRequestAccess
-                        ? "Отправка заявки..."
-                        : "Выполняется вход..."}
+                      {isLogin ? "Выполняется вход..." : "Создание аккаунта..."}
                     </>
-                  ) : isRequestAccess ? (
-                    "Отправить заявку на доступ"
+                  ) : isLogin ? (
+                    "Войти в аккаунт"
                   ) : (
-                    "Войти в систему"
+                    "Создать аккаунт"
                   )}
                 </button>
               </form>
 
               <div className="mt-8 text-center">
                 <p className="text-gray-500">
-                  {isRequestAccess ? "Уже есть доступ?" : "Нет доступа?"}{" "}
+                  {isLogin ? "Нет аккаунта?" : "Уже есть аккаунт?"}{" "}
                   <button
-                    onClick={() => setIsRequestAccess(!isRequestAccess)}
-                    className="text-emerald-600 hover:text-emerald-700 transition-colors"
+                    onClick={() => setIsLogin(!isLogin)}
+                    className="text-blue-600 hover:text-blue-700 transition-colors"
                   >
-                    {isRequestAccess ? "Войти в систему" : "Получить доступ"}
+                    {isLogin ? "Зарегистрироваться" : "Войти"}
                   </button>
                 </p>
               </div>

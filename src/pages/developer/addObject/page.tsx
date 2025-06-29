@@ -3,9 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "@/app/routes/base.ts";
 import { allObjectsStorage } from "@/entities/buy/modelsStorage.ts";
 import type { ObjectCreate } from "@/entities/buy/objectFullData.ts";
-import { AuthService } from "@/entities/user/api.ts";
+// import { AuthService } from "@/entities/user/api.ts"; // Not used in this snippet
 import { observer } from "mobx-react-lite";
 import { userDataStore } from "@/entities/user/model.ts";
+
+import React from "react";
+import CustomToast from "@/shared/ui/CustomToast.tsx"; // Import React to use useState
 
 type OriginalInput = {
   name: string;
@@ -91,20 +94,35 @@ export function mapToObjectCreate(
 export const AddObjectPage = observer(() => {
   const navigate = useNavigate();
   const { user } = userDataStore;
+  const [showErrorToast, setShowErrorToast] = React.useState(false);
 
   return (
-    <AddProperty
-      onBack={() => navigate(-1)}
-      onSave={async (propertyData: any) => {
-        const data = mapToObjectCreate(
-          propertyData,
-          String(user?.id || "user_uuid"),
-        );
-        const result: boolean = await allObjectsStorage.addObject(data);
-        if (result) {
-          navigate(AppRoutes.developer.myObjects);
-        }
-      }}
-    />
+    <>
+      <AddProperty
+        onBack={() => navigate(-1)}
+        onSave={async (propertyData: any) => {
+          const data = mapToObjectCreate(
+            propertyData,
+            String(user?.id || "user_uuid"),
+          );
+          const result: boolean = await allObjectsStorage.addObject(data);
+          if (result) {
+            navigate(AppRoutes.developer.myObjects);
+          } else {
+            setShowErrorToast(true); // Show the toast on failure
+          }
+        }}
+      />
+      <CustomToast
+        open={showErrorToast}
+        onOpenChange={setShowErrorToast}
+        title="Ошибка сохранения!"
+        description="Не удалось сохранить информацию об объекте. Пожалуйста, попробуйте еще раз."
+        actionText="Повторить"
+        onActionClick={async () => {
+          setShowErrorToast(false);
+        }}
+      />
+    </>
   );
 });
