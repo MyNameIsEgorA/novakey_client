@@ -440,7 +440,7 @@ export function Chat({ propertyId, onBack }: ChatProps) {
           </div>
 
           {/* Desktop Chat Content */}
-          <div className="col-span-8 flex h-full flex-col">
+          <div className="col-span-8 flex overflow-y-auto h-full flex-col">
             {selectedChat && selectedChatData ? (
               <>
                 {/* Desktop Chat Header */}
@@ -492,7 +492,7 @@ export function Chat({ propertyId, onBack }: ChatProps) {
                 </div>
 
                 {/* Desktop Messages */}
-                <div className="flex-1 overflow-y-auto p-8 space-y-6">
+                <div className="flex-1 overflow-y-auto h-full p-8 space-y-6">
                   {currentMessages.map((message) => (
                     <div
                       key={message.id}
@@ -532,7 +532,7 @@ export function Chat({ propertyId, onBack }: ChatProps) {
                 </div>
 
                 {/* Desktop Message Input */}
-                <div className="p-8 bg-white mt-auto bottom-0 border-t border-gray-200 z-[30000000000000000]">
+                <div className="p-8 mb-20 bg-white mt-auto bottom-0 border-t border-gray-200 z-[30000000000000000]">
                   <div className="flex items-end space-x-4">
                     <button className="p-3 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
                       <Paperclip className="w-6 h-6" />
