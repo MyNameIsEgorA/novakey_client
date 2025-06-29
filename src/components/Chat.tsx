@@ -19,6 +19,15 @@ interface ChatProps {
   onBack: () => void;
 }
 
+interface Message {
+  id: string;
+  text: string;
+  sender: "me" | "other";
+  timestamp: string;
+  type: "text" | "image";
+  imageUrl?: string;
+}
+
 const chatsList = [
   {
     id: "1",
@@ -70,7 +79,7 @@ const chatsList = [
   },
 ];
 
-const messages = [
+const initialMessages: Message[] = [
   {
     id: "1",
     text: 'Здравствуйте! Интересует ли вас квартира в ЖК "Северная звезда"?',
@@ -116,6 +125,8 @@ export function Chat({ propertyId, onBack }: ChatProps) {
   );
   const [newMessage, setNewMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentMessages, setCurrentMessages] =
+    useState<Message[]>(initialMessages); // New state for messages
 
   const selectedChatData = chatsList.find((chat) => chat.id === selectedChat);
   const filteredChats = chatsList.filter(
@@ -125,9 +136,21 @@ export function Chat({ propertyId, onBack }: ChatProps) {
   );
 
   const handleSendMessage = () => {
-    if (newMessage.trim()) {
-      console.log("Sending message:", newMessage);
-      setNewMessage("");
+    if (newMessage.trim() && selectedChat) {
+      const timestamp = new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      const newMsg: Message = {
+        id: Date.now().toString(), // Unique ID for the new message
+        text: newMessage.trim(),
+        sender: "me",
+        timestamp: timestamp,
+        type: "text",
+      };
+      setCurrentMessages((prevMessages) => [...prevMessages, newMsg]); // Add new message to the state
+      setNewMessage(""); // Clear the input field
+      // You might also want to update the lastMessage in chatsList for the selected chat here
     }
   };
 
@@ -184,7 +207,7 @@ export function Chat({ propertyId, onBack }: ChatProps) {
 
               {/* Mobile Messages */}
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                {messages.map((message) => (
+                {currentMessages.map((message) => (
                   <div
                     key={message.id}
                     className={`flex ${message.sender === "me" ? "justify-end" : "justify-start"}`}
@@ -470,7 +493,7 @@ export function Chat({ propertyId, onBack }: ChatProps) {
 
                 {/* Desktop Messages */}
                 <div className="flex-1 overflow-y-auto p-8 space-y-6">
-                  {messages.map((message) => (
+                  {currentMessages.map((message) => (
                     <div
                       key={message.id}
                       className={`flex ${message.sender === "me" ? "justify-end" : "justify-start"}`}

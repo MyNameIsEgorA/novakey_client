@@ -31,9 +31,10 @@ class AllObjectsStorage {
         data,
       );
       console.log(response.data);
+      return true;
     } catch (e: unknown) {
       console.log(e);
-      return;
+      return false;
     }
   };
 

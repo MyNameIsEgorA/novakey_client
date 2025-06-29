@@ -100,8 +100,10 @@ export const AddObjectPage = observer(() => {
           propertyData,
           String(user?.id || "user_uuid"),
         );
-        await allObjectsStorage.addObject(data);
-        navigate(AppRoutes.developer.myObjects);
+        const result: boolean = await allObjectsStorage.addObject(data);
+        if (result) {
+          navigate(AppRoutes.developer.myObjects);
+        }
       }}
     />
   );

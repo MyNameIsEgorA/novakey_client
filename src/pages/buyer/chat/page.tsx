@@ -9,7 +9,7 @@ export const BuyerChatPage = observer(() => {
   console.log(JSON.stringify(Object.entries(chats)));
   return (
     <div>
-      <Chat onBack={() => navigate(-1)} />;
+      <Chat onBack={() => navigate(-1)} />
     </div>
   );
 });
