@@ -14,8 +14,9 @@ export const ArPage = () => {
       <BuyerHeader
         hideOnMobile={true}
         title={"AR-просмотр апартаментов"}
-        description={"Здесь вы можете посмотреть квартиру, не выходя из дома"}
+        description={"Здесь вы можете посмотреть помещение, не выходя из дома"}
       />
+      <div className={"lg:hidden"}>123</div>
       <iframe
         src={arModelUrl}
         width="100%"

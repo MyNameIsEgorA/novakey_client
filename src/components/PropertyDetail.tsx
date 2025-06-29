@@ -62,7 +62,6 @@ export const PropertyDetail = observer(
         navigate("/buyer/chats");
         return;
       }
-      sendMessage(property.user_uuid, "1");
       navigate("/buyer/chats");
     };
 
@@ -92,9 +91,9 @@ export const PropertyDetail = observer(
     const goToAr = () => {
       const propertyName = property?.name;
       CrmService.createCrmClient({
-        name: user.name,
+        name: user.name || "Неизвестный пользователь",
         phone: "Номер неизвестен",
-        email: user.email,
+        email: user.email || "No email",
         priority: "high",
         source: `AR-просмотр ${propertyName}`,
       });
