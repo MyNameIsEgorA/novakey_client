@@ -25,6 +25,8 @@ import { useNavigate } from "react-router-dom";
 import { allObjectsStorage } from "@/entities/buy/modelsStorage.ts";
 import { observer } from "mobx-react-lite";
 import { chatStore } from "@/entities/chat/store.ts";
+import { userDataStore } from "@/entities/user/model.ts";
+import { CrmService } from "@/entities/crm/api.ts";
 
 interface PropertyDetailProps {
   propertyId: string;
@@ -46,10 +48,11 @@ const amenityIcons: { [key: string]: any } = {
 };
 
 export const PropertyDetail = observer(
-  ({ propertyId, onBack, onStartARViewer, userType }: PropertyDetailProps) => {
+  ({ propertyId, onBack, userType }: PropertyDetailProps) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isLiked, setIsLiked] = useState(false);
     const navigate = useNavigate();
+    const { user } = userDataStore;
     const { sendMessage } = chatStore;
 
     const property = allObjectsStorage.getElementByIndex(+propertyId);
@@ -87,6 +90,14 @@ export const PropertyDetail = observer(
     };
 
     const goToAr = () => {
+      const propertyName = property?.name;
+      CrmService.createCrmClient({
+        name: user.name,
+        phone: "Номер неизвестен",
+        email: user.email,
+        priority: "high",
+        source: `AR-просмотр ${propertyName}`,
+      });
       navigate(`/buyer/ar?url=${property.ar_model_url}`);
     };
 

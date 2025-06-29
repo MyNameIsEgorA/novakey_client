@@ -1,7 +1,6 @@
 import { MapFilters } from "@/pages/buyer/map/filters.tsx";
 import { BuyerHeader } from "@/pages/buyer/main/header.tsx";
 import { useEffect, useState } from "react";
-import { getAllAvailableObjects } from "@/entities/buy/model.ts";
 import type { Filters } from "@/shared/type/filters.ts";
 import { BuyerMap } from "@/pages/buyer/map/map.tsx";
 import { SelectedElement } from "@/pages/buyer/map/selectedElement.tsx";

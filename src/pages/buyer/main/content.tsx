@@ -174,7 +174,7 @@ export const BuyerMainContent = observer(() => {
                   предпочтения и покажет лучшие варианты
                 </p>
                 <button
-                  onClick={() => navigate(`/buyer/list?type=tinder`)}
+                  onClick={() => navigate(`/buyer/tinder`)}
                   className="w-full bg-gradient-to-r from-slate-600 to-stone-600 text-white py-2 rounded-lg hover:from-slate-700 hover:to-stone-700 transition-all"
                 >
                   Попробовать
