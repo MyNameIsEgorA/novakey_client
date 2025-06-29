@@ -78,7 +78,8 @@ export function mapToObjectCreate(
     price_per_sqm: parseFloat(input.pricePerSqm),
     min_price: parseFloat(input.priceRange.min),
     max_price: parseFloat(input.priceRange.max),
-    payment_plans: input.paymentPlans,
+    payment_plans:
+      input.paymentPlans.length > 0 ? input.paymentPlans : ["Кредит"],
     photos: input.images,
     vr_tour_url: input.virtualTourUrl,
     ar_model_url: input.arModelUrl,

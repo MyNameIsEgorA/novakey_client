@@ -13,7 +13,7 @@ class AllObjectsStorage {
     this.initData();
   }
 
-  private initData = async () => {
+  public initData = async () => {
     try {
       const response = await axios.get(this.BaseUrl + "/residential-complexes");
       console.log("INIT", response.data);
@@ -30,7 +30,7 @@ class AllObjectsStorage {
         `${this.BaseUrl}/residential-complexes`,
         data,
       );
-      console.log(response.data);
+      this.allObjects.push(response.data);
       return true;
     } catch (e: unknown) {
       console.log(e);
