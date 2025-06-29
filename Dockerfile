@@ -3,44 +3,41 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Копируем только package.json и lock-файл для установки зависимостей
+# Устанавливаем зависимости
 COPY package*.json ./
 RUN npm ci
 
-# Копируем остальной исходный код
+# Копируем исходники
 COPY . .
 
-# Аргумент сборки и переменная окружения
-
+# Аргументы окружения
 ARG VITE_HTTP
 ARG VITE_WSS
 ENV VITE_HTTP=$VITE_HTTP
 ENV VITE_WSS=$VITE_WSS
 
-# Сборка проекта
+# Сборка
 RUN npm run build
 
-# Этап 2: финальный минимальный образ
+# Этап 2: финальный образ
 FROM node:22-alpine
 
 WORKDIR /app
 
-# Устанавливаем только продакшн-зависимости (если нужно)
-# COPY package*.json ./
-# RUN npm install --omit=dev
+# Установим простой HTTP-сервер
+RUN npm install -g serve
 
-# Копируем только собранный frontend
+# Копируем сборку
 COPY --from=builder /app/dist ./dist
 
-# Экспонируем порт для preview-сервера
+# Открываем порт
 EXPOSE 4177
 
-# Устанавливаем переменную окружения
-
+# Переменные окружения
 ARG VITE_HTTP
 ARG VITE_WSS
 ENV VITE_HTTP=$VITE_HTTP
 ENV VITE_WSS=$VITE_WSS
 
-# Запускаем сервер предпросмотра Vite
-CMD ["npx", "vite", "preview", "--host", "0.0.0.0", "--port", "4177"]
+# Запуск сервера
+CMD ["serve", "-s", "dist", "-l", "4177"]
