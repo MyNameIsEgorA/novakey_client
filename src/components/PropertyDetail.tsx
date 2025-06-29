@@ -20,7 +20,6 @@ import {
   ChevronRight,
   Calculator,
 } from "lucide-react";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { useNavigate } from "react-router-dom";
 import { allObjectsStorage } from "@/entities/buy/modelsStorage.ts";
 import { observer } from "mobx-react-lite";
@@ -102,8 +101,10 @@ export const PropertyDetail = observer(
           priority: "high",
           source: `AR-просмотр ${propertyName}`,
         });
+        navigate(`/buyer/ar?url=${property.ar_model_url}`);
       } catch (e) {
-        return navigate(
+        console.log(e);
+        navigate(
           "/buyer/ar?url=https://portfolio3.3dpanorama.spb.ru/2025/02/nowicola/",
         );
       }
