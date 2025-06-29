@@ -89,6 +89,10 @@ export const PropertyDetail = observer(
     };
 
     const goToAr = () => {
+      if (!user) {
+        navigate(`/buyer/ar?url=${property.ar_model_url}`);
+        return;
+      }
       const propertyName = property?.name;
       CrmService.createCrmClient({
         name: user.name || "Неизвестный пользователь",
@@ -97,7 +101,6 @@ export const PropertyDetail = observer(
         priority: "high",
         source: `AR-просмотр ${propertyName}`,
       });
-      navigate(`/buyer/ar?url=${property.ar_model_url}`);
     };
 
     const prevImage = () => {
