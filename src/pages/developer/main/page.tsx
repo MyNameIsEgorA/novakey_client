@@ -6,12 +6,14 @@ import { observer } from "mobx-react-lite";
 import { allObjectsStorage } from "@/entities/buy/modelsStorage.ts";
 import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "@/app/routes/base.ts";
+import { userDataStore } from "@/entities/user/model.ts";
 
 export const DeveloperMainPage = observer(() => {
   const isMobile = useIsMobile();
 
   const { allObjects } = allObjectsStorage;
   const navigate = useNavigate();
+  const { user } = userDataStore;
 
   return (
     <>
@@ -21,7 +23,7 @@ export const DeveloperMainPage = observer(() => {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <p className="text-gray-500 text-sm mb-1">Добро пожаловать,</p>
-                <h1 className="text-black">Александр Иванов</h1>
+                <h1 className="text-black">{user.name || ""}</h1>
 
                 <p className="text-sm text-emerald-600">
                   ООО "СтройИнвест" • Рейтинг 4.8 ⭐
@@ -30,7 +32,7 @@ export const DeveloperMainPage = observer(() => {
               <button className="w-12 h-12 rounded-full overflow-hidden hover:ring-2 hover:ring-blue-500 transition-all">
                 <ImageWithFallback
                   src={
-                    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
+                    "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face"
                   }
                   alt="Profile"
                   className="w-full h-full object-cover"

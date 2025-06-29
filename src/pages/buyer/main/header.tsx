@@ -6,6 +6,7 @@ import { observer } from "mobx-react-lite";
 import { notificationStore } from "@/shared/model/notifications.ts";
 import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "@/app/routes/base.ts";
+import { userDataStore } from "@/entities/user/model.ts";
 
 export interface BuyerHeaderProps {
   title?: string;
@@ -22,6 +23,7 @@ export const BuyerHeader: FC<BuyerHeaderProps> = observer(
     const { unreadCount } = notificationStore;
     const isMobile = useIsMobile();
     const navigate = useNavigate();
+    const { user } = userDataStore;
 
     return (
       <>
@@ -63,12 +65,12 @@ export const BuyerHeader: FC<BuyerHeaderProps> = observer(
             <div className="flex items-center justify-between mb-6">
               <div>
                 <p className="text-gray-500 text-sm mb-1">Доброе утро,</p>
-                <h1 className="text-black">Анна</h1>
+                <h1 className="text-black">{user?.name || ""}</h1>
               </div>
               <button className="w-12 h-12 rounded-full overflow-hidden hover:ring-2 hover:ring-blue-500 transition-all">
                 <ImageWithFallback
                   src={
-                    "https://images.unsplash.com/photo-1494790108755-2616b612b8db?w=100&h=100&fit=crop&crop=face"
+                    "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face"
                   }
                   alt="Profile"
                   className="w-full h-full object-cover"

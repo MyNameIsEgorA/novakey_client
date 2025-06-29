@@ -226,7 +226,10 @@ export const DeveloperCRM = observer(
                         <div className="flex items-center">
                           <div className="w-12 h-12 rounded-full overflow-hidden mr-3">
                             <ImageWithFallback
-                              src={customer.avatar}
+                              src={
+                                customer.avatar ||
+                                "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face"
+                              }
                               alt={customer.name}
                               className="w-full h-full object-cover"
                             />
