@@ -15,7 +15,9 @@ import {
   CheckCircle,
   Bookmark,
 } from "lucide-react";
-import { PropertyCard } from "@/pages/buyer/tinder/card.tsx"; // Импортируем новый компонент
+import { PropertyCard } from "@/pages/buyer/tinder/card.tsx";
+import { allObjectsStorage } from "@/entities/buy/modelsStorage.ts";
+import { useNavigate } from "react-router-dom"; // Импортируем новый компонент
 
 interface Property {
   id: string;
@@ -43,113 +45,113 @@ interface PropertySwiperProps {
   onPropertyDislike: (propertyId: string) => void;
 }
 
-const properties: Property[] = [
-  {
-    id: "1",
-    title: 'ЖК "Северная звезда"',
-    price: "8,5 млн ₽",
-    pricePerSqm: "130,000 ₽/м²",
-    area: "65 м²",
-    rooms: "2-комн.",
-    floor: "12/16 эт.",
-    address: "ул. Северная, 15",
-    district: "Северный",
-    images: [
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=600&h=800&fit-crop",
-    ],
-    amenities: ["Парковка", "Лифт", "Консьерж", "Фитнес-зал"],
-    status: "Сдан",
-    rating: 4.8,
-    description:
-      "Современная квартира с панорамными окнами и качественной отделкой в тихом районе",
-    developer: "СтройИнвест",
-    views: "342",
-    saved: "28",
-  },
-  {
-    id: "2",
-    title: 'ЖК "Новый Горизонт"',
-    price: "5,2 млн ₽",
-    pricePerSqm: "123,000 ₽/м²",
-    area: "42 м²",
-    rooms: "1-комн.",
-    floor: "8/20 эт.",
-    address: "пр. Мира, 45",
-    district: "Центр",
-    images: [
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&h=800&fit-crop",
-      "https://images.unsplash.com/photo-1556912173-46c336c7fd55?w=600&h=800&fit-crop",
-    ],
-    amenities: [
-      "Подземная парковка",
-      "Лифт",
-      "Видеонаблюдение",
-      "Детская площадка",
-    ],
-    status: "Строительство",
-    rating: 4.6,
-    description:
-      "Уютная студия в центре города с развитой инфраструктурой рядом",
-    developer: "ГлавСтрой",
-    views: "156",
-    saved: "12",
-  },
-  {
-    id: "3",
-    title: 'ЖК "Парковый"',
-    price: "6,8 млн ₽",
-    pricePerSqm: "125,000 ₽/м²",
-    area: "54 м²",
-    rooms: "2-комн.",
-    floor: "5/12 эт.",
-    address: "ул. Парковая, 8",
-    district: "Южный",
-    images: [
-      "https://images.unsplash.com/photo-1571055107559-3e67626fa8be?w=600&h=800&fit-crop",
-      "https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?w=600&h=800&fit-crop",
-      "https://images.unsplash.com/photo-1540518614846-7eded47c8c1c?w=600&h=800&fit-crop",
-    ],
-    amenities: ["Закрытая территория", "Лифт", "Парковка", "Консьерж"],
-    status: "Отделка",
-    rating: 4.9,
-    description: "Комфортная квартира рядом с парком и школой",
-    developer: "ПаркДевелопмент",
-    views: "298",
-    saved: "45",
-  },
-  {
-    id: "4",
-    title: 'ЖК "Центральный"',
-    price: "12,5 млн ₽",
-    pricePerSqm: "145,000 ₽/м²",
-    area: "86 м²",
-    rooms: "3-комн.",
-    floor: "15/25 эт.",
-    address: "ул. Центральная, 1",
-    district: "Центр",
-    images: [
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=600&h=800&fit-crop",
-      "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=600&h=800&fit-crop",
-    ],
-    amenities: [
-      "Подземная парковка",
-      "Лифт",
-      "Консьерж",
-      "Фитнес-зал",
-      "Детская площадка",
-    ],
-    status: "Сдан",
-    rating: 4.7,
-    description: "Премиальная квартира в самом центре с видом на город",
-    developer: "Элит-Строй",
-    views: "567",
-    saved: "89",
-  },
-];
+// const properties: Property[] = [
+//   {
+//     id: "1",
+//     title: 'ЖК "Северная звезда"',
+//     price: "8,5 млн ₽",
+//     pricePerSqm: "130,000 ₽/м²",
+//     area: "65 м²",
+//     rooms: "2-комн.",
+//     floor: "12/16 эт.",
+//     address: "ул. Северная, 15",
+//     district: "Северный",
+//     images: [
+//       "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&h=800&fit=crop",
+//       "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=800&fit=crop",
+//       "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=600&h=800&fit-crop",
+//     ],
+//     amenities: ["Парковка", "Лифт", "Консьерж", "Фитнес-зал"],
+//     status: "Сдан",
+//     rating: 4.8,
+//     description:
+//       "Современная квартира с панорамными окнами и качественной отделкой в тихом районе",
+//     developer: "СтройИнвест",
+//     views: "342",
+//     saved: "28",
+//   },
+//   {
+//     id: "2",
+//     title: 'ЖК "Новый Горизонт"',
+//     price: "5,2 млн ₽",
+//     pricePerSqm: "123,000 ₽/м²",
+//     area: "42 м²",
+//     rooms: "1-комн.",
+//     floor: "8/20 эт.",
+//     address: "пр. Мира, 45",
+//     district: "Центр",
+//     images: [
+//       "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&h=800&fit=crop",
+//       "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&h=800&fit-crop",
+//       "https://images.unsplash.com/photo-1556912173-46c336c7fd55?w=600&h=800&fit-crop",
+//     ],
+//     amenities: [
+//       "Подземная парковка",
+//       "Лифт",
+//       "Видеонаблюдение",
+//       "Детская площадка",
+//     ],
+//     status: "Строительство",
+//     rating: 4.6,
+//     description:
+//       "Уютная студия в центре города с развитой инфраструктурой рядом",
+//     developer: "ГлавСтрой",
+//     views: "156",
+//     saved: "12",
+//   },
+//   {
+//     id: "3",
+//     title: 'ЖК "Парковый"',
+//     price: "6,8 млн ₽",
+//     pricePerSqm: "125,000 ₽/м²",
+//     area: "54 м²",
+//     rooms: "2-комн.",
+//     floor: "5/12 эт.",
+//     address: "ул. Парковая, 8",
+//     district: "Южный",
+//     images: [
+//       "https://images.unsplash.com/photo-1571055107559-3e67626fa8be?w=600&h=800&fit-crop",
+//       "https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?w=600&h=800&fit-crop",
+//       "https://images.unsplash.com/photo-1540518614846-7eded47c8c1c?w=600&h=800&fit-crop",
+//     ],
+//     amenities: ["Закрытая территория", "Лифт", "Парковка", "Консьерж"],
+//     status: "Отделка",
+//     rating: 4.9,
+//     description: "Комфортная квартира рядом с парком и школой",
+//     developer: "ПаркДевелопмент",
+//     views: "298",
+//     saved: "45",
+//   },
+//   {
+//     id: "4",
+//     title: 'ЖК "Центральный"',
+//     price: "12,5 млн ₽",
+//     pricePerSqm: "145,000 ₽/м²",
+//     area: "86 м²",
+//     rooms: "3-комн.",
+//     floor: "15/25 эт.",
+//     address: "ул. Центральная, 1",
+//     district: "Центр",
+//     images: [
+//       "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&h=800&fit=crop",
+//       "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=600&h=800&fit-crop",
+//       "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=600&h=800&fit-crop",
+//     ],
+//     amenities: [
+//       "Подземная парковка",
+//       "Лифт",
+//       "Консьерж",
+//       "Фитнес-зал",
+//       "Детская площадка",
+//     ],
+//     status: "Сдан",
+//     rating: 4.7,
+//     description: "Премиальная квартира в самом центре с видом на город",
+//     developer: "Элит-Строй",
+//     views: "567",
+//     saved: "89",
+//   },
+// ];
 
 export function PropertySwiper({
   onBack,
@@ -162,6 +164,7 @@ export function PropertySwiper({
   const [imageIndex, setImageIndex] = useState(0);
   const [showPreferences, setShowPreferences] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+  const { allObjects: properties } = allObjectsStorage;
   const startPos = useRef({ x: 0, y: 0 });
 
   const currentProperty = properties[currentIndex];
@@ -209,6 +212,7 @@ export function PropertySwiper({
     const deltaY = e.clientY - startPos.current.y;
     setDragOffset({ x: deltaX, y: deltaY });
   };
+  const navigate = useNavigate();
 
   const handleMouseUp = () => {
     if (!isDragging) return;
@@ -228,14 +232,14 @@ export function PropertySwiper({
 
   const handleLike = () => {
     if (currentProperty) {
-      onPropertyLike(currentProperty.id);
+      onPropertyLike(String(currentProperty.id));
       nextCard();
     }
   };
 
   const handleDislike = () => {
     if (currentProperty) {
-      onPropertyDislike(currentProperty.id);
+      onPropertyDislike(String(currentProperty.id));
       nextCard();
     }
   };
@@ -278,7 +282,7 @@ export function PropertySwiper({
   };
 
   const nextImage = () => {
-    if (currentProperty && imageIndex < currentProperty.images.length - 1) {
+    if (currentProperty && imageIndex < currentProperty.photos.length - 1) {
       setImageIndex(imageIndex + 1);
     }
   };
@@ -384,7 +388,12 @@ export function PropertySwiper({
           </div>
 
           {/* Cards Stack */}
-          <div className="relative flex-1 px-6 py-4">
+          <div
+            className="relative flex-1 px-6 py-4"
+            onDoubleClick={() =>
+              navigate(`/buyer/object_info/${currentProperty.id}`)
+            }
+          >
             {/* Next card (behind) */}
             {nextProperty && (
               <div
@@ -514,7 +523,12 @@ export function PropertySwiper({
             </div>
 
             {/* Cards Stack */}
-            <div className="relative mb-8">
+            <div
+              className="relative mb-8"
+              onDoubleClick={() =>
+                navigate(`/buyer/object_info/${currentProperty.id}`)
+              }
+            >
               {/* Next card (behind) */}
               {nextProperty && (
                 <div
