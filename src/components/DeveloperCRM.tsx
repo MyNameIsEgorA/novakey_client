@@ -19,6 +19,8 @@ import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { AddClientModal } from "./AddClientModal";
 import { type Client, CrmService } from "@/entities/crm/api.ts";
 import { observer } from "mobx-react-lite";
+import { useNavigate } from "react-router-dom";
+import { AppRoutes } from "@/app/routes/base.ts";
 
 interface DeveloperCRMProps {
   onBack: () => void;
@@ -61,6 +63,7 @@ export const DeveloperCRM = observer(
     const [viewMode, setViewMode] = useState<"table" | "cards">("table");
     const [showAddClientModal, setShowAddClientModal] = useState(false);
     const [crmData, setCrmData] = useState<Client[]>([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
       const getData = async () => {
@@ -567,24 +570,32 @@ export const DeveloperCRM = observer(
                                 <td className="px-6 py-4">
                                   <div className="flex items-center space-x-2">
                                     <button
-                                      onClick={() => onStartChat(customer.id)}
+                                      onClick={() =>
+                                        navigate(AppRoutes.developer.chats)
+                                      }
                                       className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors"
                                       title="Чат"
                                     >
                                       <MessageSquare className="w-4 h-4" />
                                     </button>
-                                    <button
-                                      className="p-2 text-green-600 hover:bg-green-100 rounded-lg transition-colors"
-                                      title="Позвонить"
-                                    >
-                                      <Phone className="w-4 h-4" />
-                                    </button>
-                                    <button
-                                      className="p-2 text-purple-600 hover:bg-purple-100 rounded-lg transition-colors"
-                                      title="Email"
-                                    >
-                                      <Mail className="w-4 h-4" />
-                                    </button>
+                                    {customer.phone !== "Номер неизвестен" && (
+                                      <a
+                                        href={`tel:${customer.phone}`}
+                                        className="p-2 text-green-600 hover:bg-green-100 rounded-lg transition-colors"
+                                        title="Позвонить"
+                                      >
+                                        <Phone className="w-4 h-4" />
+                                      </a>
+                                    )}
+                                    {customer.email && (
+                                      <a
+                                        href={`mailto:${customer.email}`}
+                                        className="p-2 text-purple-600 hover:bg-purple-100 rounded-lg transition-colors"
+                                        title="Email"
+                                      >
+                                        <Mail className="w-4 h-4" />
+                                      </a>
+                                    )}
                                     <button
                                       className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                                       title="Ещё"
@@ -683,24 +694,30 @@ export const DeveloperCRM = observer(
                             </div>
                             <div className="flex space-x-2">
                               <button
-                                onClick={() => onStartChat(customer.id)}
+                                onClick={() =>
+                                  navigate(AppRoutes.developer.chats)
+                                }
                                 className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
                                 title="Чат"
                               >
                                 <MessageSquare className="w-4 h-4" />
                               </button>
-                              <button
-                                className="p-2 bg-green-100 text-green-600 rounded-lg hover:bg-green-200 transition-colors"
-                                title="Позвонить"
-                              >
-                                <Phone className="w-4 h-4" />
-                              </button>
-                              <button
-                                className="p-2 bg-purple-100 text-purple-600 rounded-lg hover:bg-purple-200 transition-colors"
-                                title="Email"
-                              >
-                                <Mail className="w-4 h-4" />
-                              </button>
+                              {customer.phone !== "Номер неизвестен" && (
+                                <button
+                                  className="p-2 bg-green-100 text-green-600 rounded-lg hover:bg-green-200 transition-colors"
+                                  title="Позвонить"
+                                >
+                                  <Phone className="w-4 h-4" />
+                                </button>
+                              )}
+                              {customer.email && (
+                                <button
+                                  className="p-2 bg-purple-100 text-purple-600 rounded-lg hover:bg-purple-200 transition-colors"
+                                  title="Email"
+                                >
+                                  <Mail className="w-4 h-4" />
+                                </button>
+                              )}
                             </div>
                           </div>
                         </div>
